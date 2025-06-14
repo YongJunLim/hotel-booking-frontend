@@ -1,0 +1,17 @@
+import { Link } from 'wouter'
+
+export const HomePage = () => {
+  return (
+    <>
+      <h1 className="text-4xl font-bold mb-8">Hotel Booking</h1>
+      <p className="mb-4">Welcome to our hotel booking platform!</p>
+      {/* May be preferable to use wouter's navigate for the actual search component */}
+      <Link
+        href="/results/WD0M?checkin=2025-10-01&checkout=2025-10-07&lang=en_US&currency=SGD&country_code=SG&guests=2|2"
+        className="btn btn-primary"
+      >
+        Search Hotels in WD0M
+      </Link>
+    </>
+  )
+}
