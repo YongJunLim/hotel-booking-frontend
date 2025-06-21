@@ -2,7 +2,7 @@ import { Link } from 'wouter'
 import useAuthStore from '../store'
 
 export const HomePage = () => {
-  const {logout} = useAuthStore()
+  const { logout } = useAuthStore()
   return (
     <>
       <h1 className="text-4xl font-bold mb-8">Hotel Booking</h1>
@@ -20,11 +20,11 @@ export const HomePage = () => {
       >
         Login
       </Link>
-      <button onClick={handleLogOut} className='btn btn-primary'>Logout</button>
+      <button onClick={handleLogOut} className="btn btn-primary">Logout</button>
     </>
   )
-//Logout to clear the sessionStorage(remove logged in status)
-  function handleLogOut(){
+  // Logout to clear the sessionStorage(remove logged in status)
+  function handleLogOut() {
     console.log('logged out')
     logout()
   }
