@@ -33,7 +33,7 @@ export default function DropdownWithButtons() {
 
   function CheckAdultAndChildren() {
     let str: string
-    if (sum >= 1) {
+    if (sum > 1) {
       str = 'Guests'
     }
     else {
@@ -44,7 +44,7 @@ export default function DropdownWithButtons() {
 
   function CheckRoom() {
     let str: string
-    if (Room >= 1) {
+    if (Room > 1) {
       str = 'Rooms'
     }
     else {

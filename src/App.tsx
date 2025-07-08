@@ -14,7 +14,7 @@ function App() {
         <Route path="/" component={HomePage} />
         <Route path="/results/:destination_id" component={ResultsPage} />
         <Route path="/hotels/detail/:hotel_id" component={HotelDetailPage} />
-        <Route path="/signup" component={Signup}/>
+        <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
 
         /* 404 fallback route */
