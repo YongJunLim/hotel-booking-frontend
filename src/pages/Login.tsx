@@ -1,4 +1,4 @@
-import { Link } from 'wouter'
+import { Link, useLocation } from 'wouter'
 import useAuthStore from '../store'
 import { useState } from 'react'
 
@@ -7,6 +7,7 @@ export const Login = () => {
   const [msgClass, setMsgClass] = useState('')
   const { login } = useAuthStore()
   const isLoggedIn = useAuthStore(state => state.isLoggedIn)
+  const [,nav] = useLocation()
 
   interface LoginResponse {
     data: {
@@ -69,17 +70,25 @@ export const Login = () => {
     })
     const msg = (await response.json()) as LoginResponse
     // Handle login
-    if (isLoggedIn) {
+
+    const isSuccess = response.ok && msg.data?.token
+
+    if (isSuccess) {
       sessionStorage.setItem('accessToken', msg.data.token)
+      sessionStorage.setItem('email', msg.data.email)
       login()
-      // console.log(msg.data.token)
-      // console.log("logged in?",isLoggedIn)
       setMsgClass('text-green-800')
+      console.log(msg.data.email)
+      console.log(msg.message)
+      nav('/')
     }
     else {
+      console.log(msg.message)
       setMsgClass('text-red-800')
     }
     setMessage(msg.message)
+
+    console.log(isLoggedIn)
   }
 
   async function onSubmitClick(): Promise<void> {

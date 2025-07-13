@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Link } from 'wouter'
+import { Link, useLocation } from 'wouter'
 
 export const Signup = () => {
   const [message, setMessage] = useState('')
   const [msgClass, setMsgClass] = useState('')
+  const [, nav] = useLocation()
 
   interface signUpResponse {
     success: boolean
@@ -66,6 +67,7 @@ export const Signup = () => {
     // User successfully created
       if (msg.success) {
         setMsgClass('text-green-800')
+        nav('/login')
       }
       // Error
       else {
@@ -76,7 +78,7 @@ export const Signup = () => {
     // Response unsuccesful due to missing inputs
     else {
       setMsgClass('text-red-800')
-      setMessage('Missing Input')
+      setMessage(msg.message)
     }
   }
 
