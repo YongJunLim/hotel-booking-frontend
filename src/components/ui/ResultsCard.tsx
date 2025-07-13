@@ -1,11 +1,11 @@
-import type { SearchParams, Hotel, HotelPrice } from "../../types/params";
+import type { Hotel } from '../../types/params'
 
 interface Results {
-  hotel: Hotel;
-  hotelprice: HotelPrice;
-  checkin?: string;
-  checkout?: string;
-  guests?: string;
+  hotel: Hotel
+  hotelprice?: number
+  checkin?: string
+  checkout?: string
+  guests?: string
 }
 
 export const HotelCard = ({
@@ -16,26 +16,39 @@ export const HotelCard = ({
   guests,
 }: Results) => {
   return (
-    <div className="card card-side shadow-md mb-4 p-4 bg-white">
-      <img
-        src={`https://example.com/${hotel.image_details.prefix}1${hotel.image_details.suffix}`}
-        alt={hotel.name}
-        className="w-32 h-32 object-cover rounded"
-      />
-      <div className="ml-4">
+    <div className="card card-side bg-base-100 shadow-sm">
+      <figure className="p-4">
+        <img
+          src={`${hotel.image_details.prefix}0${hotel.image_details.suffix}`}
+          alt={hotel.name}
+          className="w-50 h-50 object-cover rounded"
+        />
+      </figure>
+      <div className="card-body">
         <h2 className="text-xl font-semibold">{hotel.name}</h2>
         <p>{hotel.address}</p>
-        <p>{hotel.rating} stars</p>
-        <p className="text-green-600 font-semibold">${hotelprice.price}</p>
-        <button
-          className="btn btn-primary mt-2"
-          onClick={() => {
-            window.location.href = `/hotel/${hotel.id}?checkin=${checkin}&checkout=${checkout}&guests=${guests}`;
-          }}
-        >
-          View Rooms
-        </button>
+        <p>
+          {hotel.rating}
+          {' '}
+          stars
+        </p>
+        <div>
+          <p className="text-green-600 font-semibold text-xl flex justify-end">
+            $
+            {hotelprice}
+          </p>
+        </div>
+        <div className="flex justify-end">
+          <button
+            className="btn btn-primary mt-2"
+            onClick={() => {
+              window.location.href = `/hotel/${hotel.id}?checkin=${checkin}&checkout=${checkout}&guests=${guests}`
+            }}
+          >
+            View Rooms
+          </button>
+        </div>
       </div>
     </div>
-  );
-};
+  )
+}

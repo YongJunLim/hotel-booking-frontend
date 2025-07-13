@@ -17,15 +17,6 @@ export const ResultsPage = () => {
   const priceAPI = `http://localhost:9000/api/v1/hotels/prices?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`;
   const hotelAPI = `http://localhost:9000/api/v1/hotels?destination_id=${destinationId}`;
 
-  //const priceSWR = useSWR(priceAPI, fetcher);
-  console.log("Params:", {
-    destinationId,
-    checkin,
-    checkout,
-    guests,
-  });
-  console.log("API URLs:", { priceAPI, hotelAPI });
-
   const {
     data: pricedata,
     error: priceerror,
@@ -50,7 +41,6 @@ export const ResultsPage = () => {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
   });
-
   const stichedata =
     hoteldata && pricedata?.hotels
       ? hoteldata
@@ -65,7 +55,11 @@ export const ResultsPage = () => {
             };
           })
           .filter((hotel: any) => hotel.price !== undefined)
+          .sort((a: any, b: any) => a.price - b.price)
       : [];
+
+  const isloading =
+    priceloading || hotelloading || pricedata?.completed !== true;
 
   return (
     <>
@@ -80,14 +74,11 @@ export const ResultsPage = () => {
 
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">Hotel Search Results</h2>
-        {!priceloading &&
-          hotelloading &&
-          !pricedata?.completed &&
-          !hoteldata?.completed && (
-            <span>
-              Please wait a moment as we fetch the best prices for you...
-            </span>
-          )}
+        {isloading && (
+          <span>
+            Please wait a moment as we fetch the best prices for you...
+          </span>
+        )}
 
         {hotelerror && (
           <div className="hotel alert-error">
@@ -108,28 +99,7 @@ export const ResultsPage = () => {
         )}
       </div>
 
-      {/* <div className="DataView">
-      </div>     {data ? (
-             data.map((user: string) => {
-               return <h1>{user}</h1>;
-             })
-           ) : (
-             <h1>Loading</h1>
-           )}
-         </div>
-       </div> */}
-
-      {stichedata?.completed ? (
-        <>
-          <div className="flex items-center gap-2 mb-4">
-            {stichedata.completed && (
-              <span className="text-lg text-base-content/70">
-                Last updated: {new Date().toLocaleString()}
-              </span>
-            )}
-          </div>
-        </>
-      ) : (
+      {priceloading || hotelloading ? (
         <div className={priceloading && hotelloading ? "mt-16" : "mt-8"}>
           <div className="card card-side bg-base-100 shadow-sm">
             <figure className="p-10">
@@ -149,6 +119,16 @@ export const ResultsPage = () => {
             </div>
           </div>
         </div>
+      ) : (
+        <>
+          <div className="flex items-center gap-2 mb-4">
+            {stichedata.completed && (
+              <span className="text-lg text-base-content/70">
+                Last updated: {new Date().toLocaleString()}
+              </span>
+            )}
+          </div>
+        </>
       )}
 
       <div className="p-4">
