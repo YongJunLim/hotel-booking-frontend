@@ -1,6 +1,8 @@
 import { Link } from 'wouter'
+
 import { useState, useEffect } from 'react'
 import DeleteToast from './DeleteAccount'
+
 import useAuthStore from '../store'
 
 export const UserPage = () => {
@@ -9,30 +11,31 @@ export const UserPage = () => {
       firstName: string
       email: string
     }
-
   }
+
   const [firstname, setfirstName] = useState('')
   const [email, setemail] = useState('')
   const [isClick, setIsClick] = useState(false)
   const isLoggedIn = useAuthStore(state => state.isLoggedIn)
-
-useEffect(() => {
-void (async () => {
-    try {
-    await getEmail()
+  useEffect(() => {
+    void (async () => {
+      try {
+        await getEmail()
       }
       catch (err) {
-    console.error(err)
-    }
-})()
-}, [isLoggedIn])
+        console.error(err)
+      }
+    })()
+  }, [isLoggedIn])
 
   function handleClick() {
     setIsClick(true)
   }
+
   function closeToast() {
     setIsClick(false)
   }
+
   async function getEmail(): Promise<void> {
     let token: string | null
     console.log('isloggedin', isLoggedIn)
@@ -68,9 +71,8 @@ void (async () => {
           </Link>
         </div>
       </nav>
-
       {/* Account detail page */}
-      <div id="detail" className={`${isClick ? 'opacity-50' : 'opacity-100'}  items-center justify-between mx-auto w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700`}>
+      <div id="detail" className={`${isClick ? 'opacity-50' : 'opacity-100'} items-center justify-between mx-auto w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700`}>
         <form className="space-y-6" action="#">
           <h5 className="text-xl font-medium text-gray-900 dark:text-white">Account Details</h5>
           <div className="flex">
@@ -96,6 +98,7 @@ void (async () => {
       </div>
 
       {/* Delete Account Toast */}
+
       {isClick
         ? (
           <DeleteToast

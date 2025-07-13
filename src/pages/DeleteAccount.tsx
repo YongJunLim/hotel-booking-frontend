@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import useAuthStore from '../store'
+import { useLocation } from 'wouter'
 
 interface deleteAccountProp {
   open: boolean
   onClose: () => void
+
 }
 
 interface deleteResponse {
@@ -17,18 +19,19 @@ function DeleteToast({ open, onClose }: deleteAccountProp) {
   const { logout } = useAuthStore()
   const curEmail = useAuthStore(state => state.email)
   const [msg, setmsg] = useState('')
+  const [,nav] = useLocation()
 
   function closeClick() {
     setIsActive(false)
     onClose()
   }
+
   useEffect(() => {
     setIsActive(open)
   }, [open])
 
   async function DeleteUser(): Promise<void> {
     const pwd_del = document.getElementById('passwd_del') as HTMLInputElement
-
     let token: string | null
     if (isLoggedIn) {
       console.log('isloggedin', isLoggedIn)
@@ -46,10 +49,16 @@ function DeleteToast({ open, onClose }: deleteAccountProp) {
           password: pwd_del.value,
         }),
       })
+
       const msg = await res.json() as deleteResponse
-      logout()
-      setmsg(msg.message)
-      console.log(msg)
+      if (res.ok) {
+        logout()
+        sessionStorage.setItem('toast', msg.message)
+        nav('/')
+      }
+      else {
+        setmsg(msg.message || 'Account deletion failed.')
+      }
     }
     else {
       setmsg('Please sign in first')
