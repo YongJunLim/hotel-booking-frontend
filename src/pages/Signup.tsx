@@ -49,39 +49,40 @@ export const Signup = () => {
     const name_inp = document.getElementById('name') as HTMLInputElement
     const email_inp = document.getElementById('email') as HTMLInputElement
     const passwd_inp = document.getElementById('passwd') as HTMLInputElement
-    // Sign up API call
-    const res = await fetch('http://localhost:9000/api/v1/users/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        firstName: name_inp.value,
-        email: email_inp.value,
-        password: passwd_inp.value,
-      }),
-    })
-    const msg = (await res.json()) as signUpResponse
-    // Response successful
-    if (res.ok) {
-    // User successfully created
-      if (msg.success) {
-        setMsgClass('text-green-800')
-        nav('/login')
-      }
-      // Error
-      else {
-        setMsgClass('text-red-800')
-      }
-      setMessage(msg.message)
-    }
-    // Response unsuccesful due to missing inputs
-    else {
+
+    if (name_inp.value == '' || email_inp.value == '' || passwd_inp.value == '') {
       setMsgClass('text-red-800')
-      setMessage(msg.message)
+      setMessage('Missing fields.')
+    }
+    else {
+      // Sign up API call
+      const res = await fetch('http://localhost:9000/api/v1/users/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: name_inp.value,
+          email: email_inp.value,
+          password: passwd_inp.value,
+        }),
+      })
+      const msg = (await res.json()) as signUpResponse
+      // Response successful
+      if (res.ok) {
+        // User successfully created
+        if (msg.success) {
+          setMsgClass('text-green-800')
+          nav('/login')
+        }
+        // Error
+        else {
+          setMsgClass('text-red-800')
+        }
+        setMessage(msg.message)
+      }
     }
   }
-
   async function onSubmitClick() {
     await submitNewUser()
   }

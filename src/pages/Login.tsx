@@ -6,7 +6,6 @@ export const Login = () => {
   const [message, setMessage] = useState('')
   const [msgClass, setMsgClass] = useState('')
   const { login } = useAuthStore()
-  const isLoggedIn = useAuthStore(state => state.isLoggedIn)
   const [,nav] = useLocation()
 
   interface LoginResponse {
@@ -17,6 +16,11 @@ export const Login = () => {
       token: string
     }
     message: string
+    error?: {
+      issues?: {
+        message: string
+      }[]
+    }
   }
 
   return (
@@ -24,7 +28,6 @@ export const Login = () => {
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
         <h1 className="text-4xl font-bold mb-8 flex">Hotel Booking</h1>
       </div>
-
       <p className="mb-4 text-2xl font-bold flex">Login Form</p>
       {/* May be preferable to use wouter's navigate for the actual search component */}
       <div className="grid gap-6 mb-6 md:grid-cols-2 w-1/2">
@@ -54,10 +57,13 @@ export const Login = () => {
   )
 
   // Login button
+
   async function loginUser(): Promise<void> {
     const email_inp = document.getElementById('email') as HTMLInputElement
     const passwd_inp = document.getElementById('passwd') as HTMLInputElement
+
     // Login API call
+    console.log('email,password', email_inp.value, passwd_inp.value)
     const response = await fetch('http://localhost:9000/api/v1/users/login', {
       method: 'POST',
       headers: {
@@ -69,10 +75,10 @@ export const Login = () => {
       }),
     })
     const msg = (await response.json()) as LoginResponse
+    console.log(msg)
+    console.log(msg.error?.issues?.[0]?.message)
     // Handle login
-
     const isSuccess = response.ok && msg.data?.token
-
     if (isSuccess) {
       sessionStorage.setItem('accessToken', msg.data.token)
       sessionStorage.setItem('email', msg.data.email)
@@ -83,14 +89,14 @@ export const Login = () => {
       nav('/')
     }
     else {
+      const zodError = msg.error?.issues?.[0]?.message
+      const fallbackmsg = msg.message
       console.log(msg.message)
+      console.log(zodError)
+      setMessage(zodError || fallbackmsg)
       setMsgClass('text-red-800')
     }
-    setMessage(msg.message)
-
-    console.log(isLoggedIn)
   }
-
   async function onSubmitClick(): Promise<void> {
     await loginUser()
   }
