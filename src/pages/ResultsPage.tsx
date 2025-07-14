@@ -2,6 +2,9 @@ import { useParams, Link } from "wouter";
 import { useSearchParams } from "../hooks/useSearchParams";
 import { BookingDetails } from "../components/ui/BookingDetails";
 import { HotelCard } from "../components/ui/ResultsCard";
+import { useMemo, useState } from "react";
+import type { StitchedHotel } from "../types/params";
+import Sortdropdown from "../SortDropDown";
 import useSWR from "swr";
 
 const fetcher = (url: string) => fetch(url).then((response) => response.json());
@@ -46,20 +49,36 @@ export const ResultsPage = () => {
       ? hoteldata
           .map((hotel: any) => {
             const priceinfo = pricedata.hotels.find(
-              (price: any) => price.id === hotel.id
+              (price: any) => price.id === hotel.id //match id
             );
             return {
               ...hotel,
               price: priceinfo?.price,
-              searchRank: priceinfo?.searchRank,
+              searchRank: priceinfo?.searchRank, //honestly idk whats this
             };
           })
           .filter((hotel: any) => hotel.price !== undefined)
-          .sort((a: any, b: any) => a.price - b.price)
+          .sort((a: any, b: any) => a.price - b.price) //bubble sort yuckk
       : [];
 
   const isloading =
     priceloading || hotelloading || pricedata?.completed !== true;
+
+  //sort for dropdown
+  const [sortby, setsortby] = useState("Price (Ascending)");
+  const sortedlist: StitchedHotel[] = useMemo(() => {
+    const datacopy = [...stichedata];
+    if (sortby === "Price (Ascending)") {
+      datacopy.sort((a: any, b: any) => a.price - b.price);
+    } else if (sortby === "Price (Descending)") {
+      datacopy.sort((a: any, b: any) => b.price - a.price);
+    } else if (sortby === "Rating (Ascending)") {
+      datacopy.sort((a: any, b: any) => a.rating - b.rating);
+    } else if (sortby === "Rating (Descending)") {
+      datacopy.sort((a: any, b: any) => b.rating - a.rating);
+    }
+    return datacopy;
+  }, [stichedata, sortby]);
 
   return (
     <>
@@ -81,7 +100,7 @@ export const ResultsPage = () => {
         )}
 
         {hotelerror && (
-          <div className="hotel alert-error">
+          <div className="text-red-800 bg-yellow-400">
             <span>
               Error loading hotel data:
               {hotelerror.message}
@@ -90,7 +109,7 @@ export const ResultsPage = () => {
         )}
 
         {priceerror && (
-          <div className="price alert-error">
+          <div className="text-red-800 bg-yellow-400">
             <span>
               Error loading price data:
               {priceerror.message}
@@ -121,32 +140,37 @@ export const ResultsPage = () => {
         </div>
       ) : (
         <>
-          <div className="flex items-center gap-2 mb-4">
-            {stichedata.completed && (
-              <span className="text-lg text-base-content/70">
-                Last updated: {new Date().toLocaleString()}
-              </span>
+          <div className="flex items-center justify-between mb-5">
+            <span className="text-lg text-base-content/70">
+              Last updated: {new Date().toLocaleString()}
+            </span>
+            <div className="flex justify-end">
+              <Sortdropdown selectedvalue={sortby} setvalue={setsortby} />
+            </div>
+          </div>
+
+          <div className="p-5">
+            {isloading ? null : stichedata.length > 0 ? (
+              <>
+                {sortedlist.map((hotel: any) => (
+                  <HotelCard
+                    key={hotel.id}
+                    hotel={hotel}
+                    hotelprice={hotel.price}
+                    checkin={checkin}
+                    checkout={checkout}
+                    guests={guests}
+                  />
+                ))}
+              </>
+            ) : (
+              <p className="content-center text-yellow-700 bg-gray-700">
+                No matching hotels found. Please try a different criteria!
+              </p>
             )}
           </div>
         </>
       )}
-
-      <div className="p-4">
-        {stichedata.length > 0 ? (
-          stichedata.map((hotel: any) => (
-            <HotelCard
-              key={hotel.id}
-              hotel={hotel}
-              hotelprice={hotel.price}
-              checkin={checkin}
-              checkout={checkout}
-              guests={guests}
-            />
-          ))
-        ) : (
-          <p>No hotels found.</p>
-        )}
-      </div>
 
       <Link
         href="/hotels/detail/atH8?destination_id=WD0M&checkin=2025-10-01&checkout=2025-10-07&lang=en_US&currency=SGD&country_code=SG&guests=2|2"
