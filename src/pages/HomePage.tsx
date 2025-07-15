@@ -1,13 +1,12 @@
 import { Link } from 'wouter'
 // import useAuthStore from '../store'
-import Front_page_image from './../assets/travel.jpg'
 import { useState } from 'react'
-import { MyComboBox, MyItem } from './../ComboBox'
 import DropdownWithButtons from '../DropDown'
-import rawDest from './destinations.json'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { MyAccountDropdown } from './MyAccount'
+import type { Destination } from '../types/destination'
+import { TypeaheadSearch } from '../components/ui/TypeaheadSearch'
 
 function ReactDatePicker() {
   const [startDate, setStartDate] = useState<Date | null>(null)
@@ -63,42 +62,31 @@ function ReactDatePicker() {
   )
 }
 
-interface Destination {
-  term: string
-}
-
-const dest = rawDest as Destination[]
-
 export const HomePage = () => {
   // const { logout } = useAuthStore()
+  const handleDestinationSelect = (destination: Destination) => {
+    console.log('Selected destination:', destination)
+  }
   return (
     <>
       <div>
-        <img
-          src={Front_page_image}
-          style={{ width: '100vw', height: '25vh', objectFit: 'cover' }}
-        />
+        <img className="h-96 w-full object-cover" src="/travel.jpg" />
       </div>
-      <div
+      {/* <div
         style={{
-          display: 'flex',
-          gap: '20px',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          display: "flex",
+          gap: "20px",
+          alignItems: "center",
+          justifyContent: "space-between",
         }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      > */}
+      <div className="flex py-4 items-center justify-between gap-8">
+        {/* <div style={{ display: "flex", alignItems: "center", gap: "8px" }}> */}
+        <div className="flex items-center gap-2">
           <h1 className="text-4xl font-bold mb-4">Hotel Booking</h1>
         </div>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            gap: '8px',
-          }}
-        >
-          <MyAccountDropdown></MyAccountDropdown>
+        <div className="flex items-center gap-2">
+          <MyAccountDropdown />
         </div>
       </div>
       <div>
@@ -108,15 +96,22 @@ export const HomePage = () => {
         <DropdownWithButtons></DropdownWithButtons>
       </div>
       <div className="flex gap-8 py-4 width-100vw">
-        <div style={{ width: '50vw' }}>
+        {/* <div style={{ width: "50vw" }}>
           <MyComboBox>
-            {dest.map(dest => (
+            {dest.map((dest) => (
               <MyItem key={dest.term} id={dest.term}>
                 {dest.term}
               </MyItem>
             ))}
           </MyComboBox>
-        </div>
+        </div> */}
+        <TypeaheadSearch
+          onSelect={handleDestinationSelect}
+          placeholder="Search destinations..."
+          className="w-96"
+          limit={5}
+          threshold={0.3}
+        />
         <div>
           <div style={{ border: '1px solid #ccc' }} className="p-2 rounded">
             <ReactDatePicker></ReactDatePicker>

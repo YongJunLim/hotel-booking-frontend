@@ -27,6 +27,7 @@
     "react-dom": "^19.1.0",
     "react-stately": "^3.39.0",
     "rsuite": "^5.83.1",
+    "swr": "^2.3.4",
     "tailwindcss": "^4.1.10",
     "wouter": "^3.7.1",
     "zod": "^3.25.64",
