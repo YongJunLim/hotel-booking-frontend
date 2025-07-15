@@ -1,4 +1,5 @@
 import { Link } from 'wouter'
+// import useAuthStore from '../store'
 import Front_page_image from './../assets/travel.jpg'
 import { useState } from 'react'
 import { MyComboBox, MyItem } from './../ComboBox'
@@ -19,7 +20,9 @@ function ReactDatePicker() {
   }
   const handleSubmit = () => {
     if (startDate && endDate) {
-      alert(`Selected range: ${startDate.toDateString()} - ${endDate.toDateString()}`)
+      alert(
+        `Selected range: ${startDate.toDateString()} - ${endDate.toDateString()}`,
+      )
     }
   }
   const isBothSelected = startDate !== null && endDate !== null
@@ -53,15 +56,12 @@ function ReactDatePicker() {
         />
       </div>
 
-      <button
-        onClick={handleSubmit}
-        disabled={!isBothSelected}
-      >
+      <button onClick={handleSubmit} disabled={!isBothSelected}>
         Apply
       </button>
     </div>
   )
-};
+}
 
 interface Destination {
   term: string
@@ -70,24 +70,39 @@ interface Destination {
 const dest = rawDest as Destination[]
 
 export const HomePage = () => {
+  // const { logout } = useAuthStore()
   return (
     <>
       <div>
-        <img src={Front_page_image} style={{ width: '100vw', height: '25vh', objectFit: 'cover' }} />
+        <img
+          src={Front_page_image}
+          style={{ width: '100vw', height: '25vh', objectFit: 'cover' }}
+        />
       </div>
-      <div style={{ display: 'flex', gap: '20px', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div
+        style={{
+          display: 'flex',
+          gap: '20px',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <h1 className="text-4xl font-bold mb-4">Hotel Booking</h1>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
-          <MyAccountDropdown>
-
-          </MyAccountDropdown>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            gap: '8px',
+          }}
+        >
+          <MyAccountDropdown></MyAccountDropdown>
         </div>
       </div>
       <div>
         <p className="mb-4">Welcome to our hotel booking platform!</p>
-
       </div>
       <div>
         <DropdownWithButtons></DropdownWithButtons>
