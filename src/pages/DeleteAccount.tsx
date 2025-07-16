@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import useAuthStore from '../store'
 import { useLocation } from 'wouter'
+import { BACKEND_URL } from '../config/api'
 
 interface deleteAccountProp {
   open: boolean
   onClose: () => void
-
 }
 
 interface deleteResponse {
@@ -19,7 +19,7 @@ function DeleteToast({ open, onClose }: deleteAccountProp) {
   const { logout } = useAuthStore()
   const curEmail = useAuthStore(state => state.email)
   const [msg, setmsg] = useState('')
-  const [,nav] = useLocation()
+  const [, nav] = useLocation()
 
   function closeClick() {
     setIsActive(false)
@@ -41,16 +41,19 @@ function DeleteToast({ open, onClose }: deleteAccountProp) {
       if (token == null) {
         token = ''
       }
-      const res = await fetch('http://localhost:9000/api/v1/users/delete', {
+      const res = await fetch(`${BACKEND_URL}/users/delete`, {
         method: 'POST',
-        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           email: curEmail,
           password: pwd_del.value,
         }),
       })
 
-      const msg = await res.json() as deleteResponse
+      const msg = (await res.json()) as deleteResponse
       if (res.ok) {
         logout()
         sessionStorage.setItem('toast', msg.message)
@@ -68,24 +71,76 @@ function DeleteToast({ open, onClose }: deleteAccountProp) {
   return isActive
     ? (
       <>
-        <div id="toast-interactive" className="mx-auto m-8 item-center w-full max-w-sm p-4 text-gray-500 bg-white rounded-lg shadow-sm dark:bg-gray-800 dark:text-gray-400" role="alert">
+        <div
+          id="toast-interactive"
+          className="mx-auto m-8 item-center w-full max-w-sm p-4 text-gray-500 bg-white rounded-lg shadow-sm dark:bg-gray-800 dark:text-gray-400"
+          role="alert"
+        >
           <div className="flex">
             <div className="inline-flex items-center justify-center shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
-              <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                className="w-5 h-5"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM10 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-4a1 1 0 0 1-2 0V6a1 1 0 0 1 2 0v5Z" />
               </svg>
             </div>
             <div className="ms-3 text-sm font-normal">
-              <span className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">Termination of Account</span>
-              <div className="mb-2 text-sm font-normal">Are you sure? This action is irreversible.</div>
-              <div className="mb-2 text-sm font-normal">Key in your password.</div>
-              <input type="password" name="passwd_del" id="passwd_del" placeholder="••••••••" className="m-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" />
-              <a href="#" onClick={() => { void DeleteUser() }} id="deleteAccount" className="m-2 inline-flex justify-center w-full px-2 py-1.5 text-xs font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800">Yes, delete my account</a>
+              <span className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">
+                Termination of Account
+              </span>
+              <div className="mb-2 text-sm font-normal">
+                Are you sure? This action is irreversible.
+              </div>
+              <div className="mb-2 text-sm font-normal">
+                Key in your password.
+              </div>
+              <input
+                type="password"
+                name="passwd_del"
+                id="passwd_del"
+                placeholder="••••••••"
+                className="m-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+              />
+              <a
+                href="#"
+                onClick={() => {
+                  void DeleteUser()
+                }}
+                id="deleteAccount"
+                className="m-2 inline-flex justify-center w-full px-2 py-1.5 text-xs font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800"
+              >
+                Yes, delete my account
+              </a>
               <p>{msg}</p>
             </div>
-            <button type="button" id="closeButton" onClick={() => { void closeClick() }} className="ms-auto -mx-1.5 -my-1.5 bg-white items-center justify-center shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-interactive" aria-label="Close">
-              <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+            <button
+              type="button"
+              id="closeButton"
+              onClick={() => {
+                void closeClick()
+              }}
+              className="ms-auto -mx-1.5 -my-1.5 bg-white items-center justify-center shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+              data-dismiss-target="#toast-interactive"
+              aria-label="Close"
+            >
+              <svg
+                className="w-3 h-3"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 14"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
               </svg>
             </button>
           </div>

@@ -3,8 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import useSWR from 'swr'
 import type { Destination } from '../../types/destination'
 import type { DestinationResponse } from '../../types/api'
-
-const baseUrl = 'http://localhost:9000/api/v1/'
+import { BACKEND_URL } from '../../config/api'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
@@ -36,7 +35,7 @@ export const TypeaheadSearch = ({
           limit: limit.toString(),
           threshold: threshold.toString(),
         })
-        return `${baseUrl}destinations?${params.toString()}`
+        return `${BACKEND_URL}destinations?${params.toString()}`
       })()
       : null
   const { data, error, isLoading } = useSWR<DestinationResponse, Error>(

@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'wouter'
 import useAuthStore from '../store'
 import { useState } from 'react'
+import { BACKEND_URL } from '../config/api'
 
 export const Login = () => {
   const [message, setMessage] = useState('')
@@ -89,7 +90,7 @@ export const Login = () => {
 
     // Login API call
     console.log('email,password', email_inp.value, passwd_inp.value)
-    const response = await fetch('http://localhost:9000/api/v1/users/login', {
+    const response = await fetch(`${BACKEND_URL}/users/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
