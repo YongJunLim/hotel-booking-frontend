@@ -12,6 +12,7 @@ import type {
 import Sortdropdown from '../components/ui/SortDropDown'
 // import FilterCheckBox from "../components/ui/FilterCheckBox";
 import useSWR from 'swr'
+import { BACKEND_URL } from '../config/api'
 
 const fetcher = (url: string) => fetch(url).then(response => response.json())
 
@@ -23,8 +24,8 @@ export const ResultsPage = () => {
   const checkout = searchParams.checkout ?? undefined
   const guests = searchParams.guests ?? undefined
 
-  const priceAPI = `http://localhost:9000/api/v1/hotels/prices?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`
-  const hotelAPI = `http://localhost:9000/api/v1/hotels?destination_id=${destinationId}`
+  const priceAPI = `${BACKEND_URL}/hotels/prices?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`
+  const hotelAPI = `${BACKEND_URL}/hotels?destination_id=${destinationId}`
 
   const {
     data: pricedata,
@@ -140,69 +141,67 @@ export const ResultsPage = () => {
         )}
       </div>
 
-      {
-        priceloading || hotelloading
-          ? (
-            <div className={priceloading && hotelloading ? 'mt-16' : 'mt-8'}>
-              <div className="card card-side bg-base-100 shadow-sm">
-                <figure className="p-10">
-                  <div className="skeleton h-48 w-48 shrink-0 rounded-xl"></div>
-                </figure>
-                <div className="card-body py-12">
-                  <div className="flex-1">
-                    <div className="skeleton h-6 w-48"></div>
-                    <div className="flex flex-wrap mt-4 gap-4">
-                      <div className="skeleton h-6 w-20 rounded-full"></div>
-                      <div className="skeleton h-6 w-20 rounded-full"></div>
-                    </div>
+      {priceloading || hotelloading
+        ? (
+          <div className={priceloading && hotelloading ? 'mt-16' : 'mt-8'}>
+            <div className="card card-side bg-base-100 shadow-sm">
+              <figure className="p-10">
+                <div className="skeleton h-48 w-48 shrink-0 rounded-xl"></div>
+              </figure>
+              <div className="card-body py-12">
+                <div className="flex-1">
+                  <div className="skeleton h-6 w-48"></div>
+                  <div className="flex flex-wrap mt-4 gap-4">
+                    <div className="skeleton h-6 w-20 rounded-full"></div>
+                    <div className="skeleton h-6 w-20 rounded-full"></div>
                   </div>
-                  <div className="card-actions justify-end">
-                    <div className="skeleton h-12 w-20 rounded-lg"></div>
-                  </div>
+                </div>
+                <div className="card-actions justify-end">
+                  <div className="skeleton h-12 w-20 rounded-lg"></div>
                 </div>
               </div>
             </div>
-          )
-          : (
-            <>
-              <div className="flex items-center justify-between mb-5">
-                <span className="text-lg text-base-content/70">
-                  Last updated:
-                  {' '}
-                  {new Date().toLocaleString()}
-                </span>
-                <div className="flex justify-end">
-                  <Sortdropdown selectedvalue={sortby} setvalue={setsortby} />
-                </div>
+          </div>
+        )
+        : (
+          <>
+            <div className="flex items-center justify-between mb-5">
+              <span className="text-lg text-base-content/70">
+                Last updated:
+                {' '}
+                {new Date().toLocaleString()}
+              </span>
+              <div className="flex justify-end">
+                <Sortdropdown selectedvalue={sortby} setvalue={setsortby} />
               </div>
+            </div>
 
-              <div className="p-5">
-                {isloading
-                  ? null
-                  : stichedata.length > 0
-                    ? (
-                      <>
-                        {sortedlist.map((hotel: StitchedHotel) => (
-                          <HotelCard
-                            key={hotel.id}
-                            hotel={hotel}
-                            hotelprice={hotel.price}
-                            checkin={checkin}
-                            checkout={checkout}
-                            guests={guests}
-                          />
-                        ))}
-                      </>
-                    )
-                    : (
-                      <p className="content-center text-yellow-700 bg-gray-700">
-                        No matching hotels found. Please try a different criteria!
-                      </p>
-                    )}
-              </div>
-            </>
-          )
-      }
+            <div className="p-5">
+              {isloading
+                ? null
+                : stichedata.length > 0
+                  ? (
+                    <>
+                      {sortedlist.map((hotel: StitchedHotel) => (
+                        <HotelCard
+                          key={hotel.id}
+                          hotel={hotel}
+                          hotelprice={hotel.price}
+                          checkin={checkin}
+                          checkout={checkout}
+                          guests={guests}
+                        />
+                      ))}
+                    </>
+                  )
+                  : (
+                    <p className="content-center text-yellow-700 bg-gray-700">
+                      No matching hotels found. Please try a different criteria!
+                    </p>
+                  )}
+            </div>
+          </>
+        )}
 
       <Link
         href="/hotels/detail/atH8?destination_id=WD0M&checkin=2025-10-01&checkout=2025-10-07&lang=en_US&currency=SGD&country_code=SG&guests=2|2"
