@@ -35,7 +35,7 @@ export const TypeaheadSearch = ({
           limit: limit.toString(),
           threshold: threshold.toString(),
         })
-        return `${BACKEND_URL}destinations?${params.toString()}`
+        return `${BACKEND_URL}/destinations?${params.toString()}`
       })()
       : null
   const { data, error, isLoading } = useSWR<DestinationResponse, Error>(
