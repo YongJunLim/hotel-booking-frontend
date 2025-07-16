@@ -1,4 +1,5 @@
 import type { Hotel } from '../../types/params'
+import StarUI from './StarRating'
 
 interface Results {
   hotel: Hotel
@@ -27,11 +28,9 @@ export const HotelCard = ({
       <div className="card-body">
         <h2 className="text-xl font-semibold">{hotel.name}</h2>
         <p>{hotel.address}</p>
-        <p>
-          {hotel.rating}
-          {' '}
-          stars
-        </p>
+        <div>
+          <StarUI rating={hotel.rating} name={`rating-${hotel.id}`} />
+        </div>
         <div>
           <p className="text-green-600 font-semibold text-xl flex justify-end">
             $
