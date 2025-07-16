@@ -1,15 +1,15 @@
 interface SortDropdownProps {
-  selectedvalue: string;
-  setvalue: React.Dispatch<React.SetStateAction<string>>; //update string state value with usestate
+  selectedvalue: string
+  setvalue: React.Dispatch<React.SetStateAction<string>> // update string state value with usestate
 }
 
 export default function Sortdropdown({
   selectedvalue,
   setvalue,
 }: SortDropdownProps) {
-  const handleChange = (event: any) => {
-    setvalue(event.target.value);
-  };
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setvalue(event.target.value)
+  }
 
   return (
     <div>
@@ -21,5 +21,5 @@ export default function Sortdropdown({
         <option value="Rating (Descending)">Rating (Descending)</option>
       </select>
     </div>
-  );
+  )
 }
