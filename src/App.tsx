@@ -6,6 +6,7 @@ import { ResultsPage } from './pages/ResultsPage'
 import { HotelDetailPage } from './pages/HotelDetailPage'
 import { Signup } from './pages/Signup'
 import { Login } from './pages/Login'
+import { UserPage } from './pages/UserPage'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/hotels/detail/:hotel_id" component={HotelDetailPage} />
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
+        <Route path="/user" component={UserPage} />
 
         /* 404 fallback route */
         <Route component={NotFound} />
