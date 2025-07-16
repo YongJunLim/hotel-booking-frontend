@@ -25,6 +25,12 @@ export const HotelDetailPage = () => {
         hotelId={hotelId}
       />
       <Link
+        href={`/booking/${params.hotel_id}?destination_id=${searchParams.destination_id}&checkin=${searchParams.checkin}&checkout=${searchParams.checkout}&lang=${searchParams.lang}&currency=${searchParams.currency}&country_code=${searchParams.country_code}&guests=${searchParams.guests}`}
+        className="btn btn-primary"
+      >
+        Book Now
+      </Link>
+      <Link
         href="/results/WD0M?checkin=2025-10-01&checkout=2025-10-07&lang=en_US&currency=SGD&country_code=SG&guests=2|2"
         className="btn btn-secondary mr-4"
       >
