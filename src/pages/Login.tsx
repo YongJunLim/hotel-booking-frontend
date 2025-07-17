@@ -1,12 +1,21 @@
 import { Link, useLocation } from 'wouter'
 import useAuthStore from '../store'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export const Login = () => {
   const [message, setMessage] = useState('')
   const [msgClass, setMsgClass] = useState('')
   const { login } = useAuthStore()
-  const [, nav] = useLocation()
+  const [,nav] = useLocation()
+  const tmsg = sessionStorage.getItem('toast')
+  const { timeout } = useAuthStore()
+
+  useEffect(() => {
+    if (tmsg != null) {
+      const timer = setTimeout(() => timeout(), 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [tmsg, timeout])
 
   interface LoginResponse {
     data: {
@@ -25,12 +34,18 @@ export const Login = () => {
 
   return (
     <>
+      {tmsg != null
+        ? (
+          <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
+            {tmsg}
+          </div>
+        )
+        : null}
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
         <h1 className="text-4xl font-bold mb-8 flex">Hotel Booking</h1>
       </div>
 
       <p className="mb-4 text-2xl font-bold flex">Login Form</p>
-      {/* May be preferable to use wouter's navigate for the actual search component */}
       <div className="grid gap-6 mb-6 md:grid-cols-2 w-1/2">
         <p>Email:</p>
         <input
@@ -100,17 +115,13 @@ export const Login = () => {
       }),
     })
     const msg = (await response.json()) as LoginResponse
-    console.log(msg)
-    console.log(msg.error?.issues?.[0]?.message)
     // Handle login
     const isSuccess = response.ok && msg.data?.token
     if (isSuccess) {
       sessionStorage.setItem('accessToken', msg.data.token)
-      sessionStorage.setItem('email', msg.data.email)
+      sessionStorage.setItem('details', JSON.stringify({ email: msg.data.email, firstName: msg.data.firstName }))
+      sessionStorage.setItem('toast', msg.message)
       login()
-      setMsgClass('text-green-800')
-      console.log(msg.data.email)
-      console.log(msg.message)
       nav('/')
     }
     else {

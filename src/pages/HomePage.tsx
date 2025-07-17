@@ -1,13 +1,14 @@
 import { Link } from 'wouter'
 // import useAuthStore from '../store'
 import Front_page_image from './../assets/travel.jpg'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { MyComboBox, MyItem } from './../ComboBox'
 import DropdownWithButtons from '../DropDown'
 import rawDest from './destinations.json'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import { MyAccountDropdown } from './MyAccount'
+import { MyAccountDropdown } from '../components/ui/MyAccount'
+import useAuthStore from '../store'
 
 function ReactDatePicker() {
   const [startDate, setStartDate] = useState<Date | null>(null)
@@ -70,7 +71,15 @@ interface Destination {
 const dest = rawDest as Destination[]
 
 export const HomePage = () => {
-  // const { logout } = useAuthStore()
+  const toastmsg = useAuthStore(state => state.toast)
+  const { timeout } = useAuthStore()
+
+  useEffect(() => {
+    if (toastmsg != '') {
+      const timer = setTimeout(() => timeout(), 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [toastmsg, timeout])
   return (
     <>
       <div>
@@ -90,15 +99,17 @@ export const HomePage = () => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <h1 className="text-4xl font-bold mb-4">Hotel Booking</h1>
         </div>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            gap: '8px',
-          }}
-        >
-          <MyAccountDropdown></MyAccountDropdown>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
+          {toastmsg != ''
+            ? (
+              <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
+                {toastmsg}
+              </div>
+            )
+            : null}
+          <MyAccountDropdown>
+
+          </MyAccountDropdown>
         </div>
       </div>
       <div>
