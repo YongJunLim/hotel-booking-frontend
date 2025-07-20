@@ -1,5 +1,4 @@
 import { useState } from 'react'
-//import { useAdultStore, useChildStore, useRoomStore } from './States'
 import { useFormStore } from './store'
 
 const incrementBy = (setFn: (val: number | ((prev: number) => number)) => void, amount: number)  => {
