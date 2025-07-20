@@ -1,28 +1,27 @@
-import { Link } from 'wouter'
 // import useAuthStore from '../store'
 import { useEffect } from 'react'
 import DropdownWithButtons from '../DropDown'
 import { MyAccountDropdown } from './MyAccount'
-import { destinationTypes, type Destination } from '../types/destination'
+import { type Destination } from '../types/destination'
 import { TypeaheadSearch } from '../components/ui/TypeaheadSearch'
 import DayPicker from '../DayPicker'
-import { type Country, useRangeStore, useAdultStore, useChildStore, useRoomStore, useCountryStore } from '../States'
+import { type Country } from '../types/forms'
+import { useFormStore, useCountryStore } from '../store'
 import { useForm, type SubmitHandler  } from 'react-hook-form';
 import { useLocation } from 'wouter';
 
 
 export const HomePage = () => {
-  // const { logout } = useAuthStore()
-  const { range, } = useRangeStore();
-  const { Adult, } = useAdultStore();
-  const { Child, } = useChildStore();
-  const { Room, } = useRoomStore();
+  const range = useFormStore((s) => s.range);
+  const Adult = useFormStore((s) => s.Adult);
+  const Child = useFormStore((s) => s.Children);
+  const Room = useFormStore((s) => s.Room);
   const { country, setCountry } = useCountryStore();
 
   const from  = range?.from;
   const to = range?.to;
-  const start = from?.toISOString().split("T")[0];
-  const end = to?.toISOString().split("T")[0];
+  const start = from?.toLocaleDateString("sv-SE");
+  const end = to?.toLocaleDateString("sv-SE"); 
   const sum = Adult + Child;
 
   const handleDestinationSelect = (destination: Destination) => {
@@ -64,7 +63,7 @@ export const HomePage = () => {
     setValue('sum_', sum);
     setValue('Room_', Room);
     setValue('country_', country)
-  }, [start, end, sum, Room]);
+  }, [start, end, sum, Room, country]);
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data.country_);
@@ -160,7 +159,7 @@ export const HomePage = () => {
             <input type="hidden" {...register("end_", { required: "Please select an end date." })} />
             <input type="hidden" {...register("sum_", { required: "Please select the number of guests." })} />
             <input type="hidden" {...register("Room_", { required: "Please select the number of rooms you require." })} />
-            <input type="hidden" {...register("Room_", { required: "Please enter a destination." })} />
+            <input type="hidden" {...register("country_", { required: "Please enter a destination." })} />
           </div>
           {errors.start_ && <p className="text-red-500">{errors.start_.message}</p>}
           {errors.end_ && <p className="text-red-500">{errors.end_.message}</p>}

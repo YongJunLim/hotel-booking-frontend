@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { useAdultStore, useChildStore, useRoomStore } from './States'
+//import { useAdultStore, useChildStore, useRoomStore } from './States'
+import { useFormStore } from './store'
 
 const incrementBy = (setFn: (val: number | ((prev: number) => number)) => void, amount: number)  => {
   setFn((prev) => {
@@ -7,7 +8,7 @@ const incrementBy = (setFn: (val: number | ((prev: number) => number)) => void, 
       return prev + amount
     }
     else {
-      return prev // no change
+      return prev
     }
   })
 }
@@ -18,7 +19,7 @@ const decrementBy = (setFn: (val: number | ((prev: number) => number)) => void, 
       return prev - amount
     }
     else {
-      return prev // no change
+      return prev
     }
   })
 }
@@ -26,9 +27,12 @@ const decrementBy = (setFn: (val: number | ((prev: number) => number)) => void, 
 export default function DropdownWithButtons() {
   const [isOpen, setIsOpen] = useState(false)
 
-  const { Adult, setAdult } = useAdultStore();
-  const { Child, setChild } = useChildStore();
-  const { Room, setRoom } = useRoomStore();
+  const Adult = useFormStore((s) => s.Adult);
+  const Child = useFormStore((s) => s.Children);
+  const Room = useFormStore((s) => s.Room);
+  const setAdult = useFormStore((s) => s.setAdult);
+  const setChild = useFormStore((s) => s.setChildren);
+  const setRoom = useFormStore((s) => s.setRoom);
 
   const sum = Adult + Child
 
@@ -55,7 +59,7 @@ export default function DropdownWithButtons() {
   };
 
   return (
-    <div style={{ position: 'relative', display: 'inline-block' }}>
+    <div className="relative inline-block">
       <button onClick={() => setIsOpen(!isOpen)}>
         {sum}
         {' '}
@@ -71,26 +75,14 @@ export default function DropdownWithButtons() {
       </button>
 
       {isOpen && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '100%',
-            left: 0,
-            backgroundColor: 'white',
-            border: '1px solid #ccc',
-            boxShadow: '0 2px 5px rgba(0,0,0,0.15)',
-            zIndex: 1000,
-            minWidth: 150,
-          }}
-          
-        >
-          <div style={{ display: 'flex', gap: '20px', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div className="absolute top-full left-0 bg-white border border-gray-300 shadow-md z-[1000] min-w-[150px]">
+          <div className="flex gap-5 items-center justify-between">
+            <div className="flex gap-2 items-center">
               <p>Adults</p>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div className="flex gap-2 items-center">
               <button
-                style={{ display: 'block', width: '100%', padding: '8px' }}
+                className="block w-full p-2"
                 onClick={() => {
                   decrementBy(setAdult, 1)
                 }}
@@ -104,7 +96,7 @@ export default function DropdownWithButtons() {
               {' '}
               {}
               <button
-                style={{ display: 'block', width: '100%', padding: '8px' }}
+                className="block w-full p-2"
                 onClick={() => {
                   incrementBy(setAdult, 1)
                 }}
@@ -113,13 +105,13 @@ export default function DropdownWithButtons() {
               </button>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '20px', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="flex gap-5 items-center justify-between">
+            <div className="flex gap-2 items-center">
               <p>Children</p>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
+            <div className="flex items-center justify-end gap-2">
               <button
-                style={{ display: 'block', width: '100%', padding: '8px' }}
+                className="block w-full p-2"
                 onClick={() => {
                   decrementBy(setChild, 1)
                 }}
@@ -133,7 +125,7 @@ export default function DropdownWithButtons() {
               {' '}
               {}
               <button
-                style={{ display: 'block', width: '100%', padding: '8px' }}
+                className="block w-full p-2"
                 onClick={() => {
                   incrementBy(setChild, 1)
                 }}
@@ -142,13 +134,13 @@ export default function DropdownWithButtons() {
               </button>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '20px', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="flex gap-5 items-center justify-between">
+            <div className="flex gap-2 items-center">
               <p>Rooms</p>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
+            <div className="flex items-center justify-end gap-2">
               <button
-                style={{ display: 'block', width: '100%', padding: '8px' }}
+                className="block w-full p-2"
                 onClick={() => {
                   decrementBy(setRoom, 1)
                 }}
@@ -162,7 +154,7 @@ export default function DropdownWithButtons() {
               {' '}
               {}
               <button
-                style={{ display: 'block', width: '100%', padding: '8px' }}
+                className="block w-full p-2"
                 onClick={() => {
                   incrementBy(setRoom, 1)
                 }}

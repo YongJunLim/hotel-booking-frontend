@@ -1,9 +1,9 @@
-//import { useState } from "react";
 import { DayPicker } from "react-day-picker";
-import { useRangeStore } from '../src/States';
+import { useFormStore } from "./store";
 
 export default function App() {
-  const { range, setRange } = useRangeStore();
+  const range = useFormStore((s) => s.range);
+  const setRange = useFormStore((s) => s.setRange);
   return (
     <>
     <div className = "flex gap-10">

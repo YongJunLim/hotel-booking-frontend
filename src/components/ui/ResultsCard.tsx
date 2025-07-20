@@ -6,6 +6,7 @@ interface Results {
   checkin?: string
   checkout?: string
   guests?: string
+  destination?: string
 }
 
 export const HotelCard = ({
@@ -14,6 +15,7 @@ export const HotelCard = ({
   checkin,
   checkout,
   guests,
+  destination,
 }: Results) => {
   return (
     <div className="card card-side bg-base-100 shadow-sm">
@@ -42,7 +44,7 @@ export const HotelCard = ({
           <button
             className="btn btn-primary mt-2"
             onClick={() => {
-              window.location.href = `/hotel/${hotel.id}?checkin=${checkin}&checkout=${checkout}&guests=${guests}`
+              window.location.href = `/hotels/detail/${hotel.id}?checkin=${checkin}&checkout=${checkout}&guests=${guests}`
             }}
           >
             View Rooms
