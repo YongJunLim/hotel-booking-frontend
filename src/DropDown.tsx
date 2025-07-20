@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { useAdultStore, useChildStore, useRoomStore } from './States'
 
-const incrementBy = (setFn: React.Dispatch<React.SetStateAction<number>>, amount: number) => {
+const incrementBy = (setFn: (val: number | ((prev: number) => number)) => void, amount: number)  => {
   setFn((prev) => {
-    if (prev < 10) {
+    if (prev < 5) {
       return prev + amount
     }
     else {
@@ -11,7 +12,7 @@ const incrementBy = (setFn: React.Dispatch<React.SetStateAction<number>>, amount
   })
 }
 
-const decrementBy = (setFn: React.Dispatch<React.SetStateAction<number>>, amount: number) => {
+const decrementBy = (setFn: (val: number | ((prev: number) => number)) => void, amount: number)  => {
   setFn((prev) => {
     if (prev > 0) {
       return prev - amount
@@ -25,9 +26,9 @@ const decrementBy = (setFn: React.Dispatch<React.SetStateAction<number>>, amount
 export default function DropdownWithButtons() {
   const [isOpen, setIsOpen] = useState(false)
 
-  const [Adult, setAdult] = useState<number>(0)
-  const [Child, setChild] = useState<number>(0)
-  const [Room, setRoom] = useState<number>(0)
+  const { Adult, setAdult } = useAdultStore();
+  const { Child, setChild } = useChildStore();
+  const { Room, setRoom } = useRoomStore();
 
   const sum = Adult + Child
 
@@ -81,6 +82,7 @@ export default function DropdownWithButtons() {
             zIndex: 1000,
             minWidth: 150,
           }}
+          
         >
           <div style={{ display: 'flex', gap: '20px', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
