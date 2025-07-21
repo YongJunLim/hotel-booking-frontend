@@ -70,7 +70,6 @@ export const HotelDetailPage = () => {
         destinationId={destinationId || undefined}
         hotelId={hotelId}
       />
-
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">Room Options</h2>
 
