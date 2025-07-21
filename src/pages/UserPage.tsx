@@ -1,31 +1,32 @@
-import { Link } from "wouter";
-import { useState, useEffect } from "react";
-import DeleteToast from "./DeleteAccount";
-import useAuthStore from "../store";
-import { RedirectToast } from "../components/ui/Redirect";
+import { Link } from 'wouter'
+import { useState, useEffect } from 'react'
+import DeleteToast from './DeleteAccount'
+import useAuthStore from '../store'
+import { RedirectToast } from '../components/ui/Redirect'
 
 export const UserPage = () => {
-  const [firstname, setfirstName] = useState("");
-  const [email, setemail] = useState("");
-  const [isClick, setIsClick] = useState(false);
-  const { isLoggedIn, userdetails } = useAuthStore();
-  const [showRedirectToast, setShowRedirectToast] = useState(false);
+  const [firstname, setfirstName] = useState('')
+  const [email, setemail] = useState('')
+  const [isClick, setIsClick] = useState(false)
+  const { isLoggedIn, userdetails } = useAuthStore()
+  const [showRedirectToast, setShowRedirectToast] = useState(false)
 
   useEffect(() => {
     if (!isLoggedIn) {
-      setShowRedirectToast(true);
-    } else {
-      setemail(userdetails.email);
-      setfirstName(userdetails.firstName);
+      setShowRedirectToast(true)
     }
-  }, [isLoggedIn, userdetails.email, userdetails.firstName]);
+    else {
+      setemail(userdetails.email)
+      setfirstName(userdetails.firstName)
+    }
+  }, [isLoggedIn, userdetails.email, userdetails.firstName])
 
   function handleClick() {
-    setIsClick(true);
+    setIsClick(true)
   }
 
   function closeToast() {
-    setIsClick(false);
+    setIsClick(false)
   }
 
   return (
@@ -46,7 +47,7 @@ export const UserPage = () => {
           </nav>
           <div
             id="detail"
-            className={`${isClick ? "opacity-50" : "opacity-100"} items-center justify-between mx-auto w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700`}
+            className={`${isClick ? 'opacity-50' : 'opacity-100'} items-center justify-between mx-auto w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700`}
           >
             <form className="space-y-6" action="#">
               <h5 className="text-xl font-medium text-gray-900 dark:text-white">
@@ -126,5 +127,5 @@ export const UserPage = () => {
       {/* Delete Account Toast */}
       {isClick ? <DeleteToast open={isClick} onClose={closeToast} /> : null}
     </>
-  );
-};
+  )
+}

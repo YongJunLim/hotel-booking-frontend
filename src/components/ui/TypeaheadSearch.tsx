@@ -1,6 +1,6 @@
 // https://www.learnui.design/blog/4-rules-intuitive-ux.html#2-abd-anything-but-dropdowns
 import { useState, useEffect, useRef } from 'react'
-import { flushSync } from "react-dom";
+import { flushSync } from 'react-dom'
 import useSWR from 'swr'
 import type { Destination } from '../../types/destination'
 import type { DestinationResponse } from '../../types/api'
@@ -27,10 +27,10 @@ export const TypeaheadSearch = ({
   const [isOpen, setIsOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLUListElement>(null)
-  const maxVisibleItems = 4;
-  const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null);
-  const [startIndex, setStartIndex] = useState(0);
-  const justSelectedRef = useRef(false);
+  const maxVisibleItems = 4
+  const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null)
+  const [startIndex, setStartIndex] = useState(0)
+  const justSelectedRef = useRef(false)
   // Build API URL with limit and threshold parameters
   const apiUrl
     = query.length >= 2
@@ -68,43 +68,43 @@ export const TypeaheadSearch = ({
     flushSync(() => {
       setQuery(destination.term)
       setIsOpen(false)
-      justSelectedRef.current = true;
-    });
+      justSelectedRef.current = true
+    })
     onSelect?.(destination)
   }
-  const visibleOptions = suggestions.slice(startIndex, startIndex + maxVisibleItems);
+  const visibleOptions = suggestions.slice(startIndex, startIndex + maxVisibleItems)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
       setHighlightedIndex((prev) => {
-        const next = Math.min((prev ?? -1) + 1, suggestions.length - 1);
+        const next = Math.min((prev ?? -1) + 1, suggestions.length - 1)
         if (next >= startIndex + maxVisibleItems) {
-          setStartIndex((s) => s + 1);
+          setStartIndex(s => s + 1)
         }
-        return next;
-      });
+        return next
+      })
     }
 
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
       setHighlightedIndex((prev) => {
-        const next = Math.max((prev ?? 1) - 1, 0);
+        const next = Math.max((prev ?? 1) - 1, 0)
         if (next < startIndex) {
-          setStartIndex((s) => Math.max(s - 1, 0));
+          setStartIndex(s => Math.max(s - 1, 0))
         }
-        return next;
-      });
+        return next
+      })
     }
 
-    if (e.key === "Enter") {
-      e.preventDefault();
+    if (e.key === 'Enter') {
+      e.preventDefault()
       if (highlightedIndex !== null && highlightedIndex >= 0 && highlightedIndex < suggestions.length) {
-        const selectedItem = suggestions[highlightedIndex];
-        handleSelect(selectedItem);
+        const selectedItem = suggestions[highlightedIndex]
+        handleSelect(selectedItem)
       }
     }
-  };
-  
+  }
+
   return (
     <div className={`dropdown relative ${className}`}>
       <input
@@ -151,10 +151,12 @@ export const TypeaheadSearch = ({
           {!isLoading
             && !error
             && visibleOptions.map((destination, index) => (
-              <li key={`${destination.uid}-${index}`}
-              className={`px-2 py-2 cursor-pointer ${
-                (startIndex + index) === highlightedIndex ? 'bg-blue-500 text-white' : ''
-              }`}>
+              <li
+                key={`${destination.uid}-${index}`}
+                className={`px-2 py-2 cursor-pointer ${
+                  (startIndex + index) === highlightedIndex ? 'bg-blue-500 text-white' : ''
+                }`}
+              >
                 <button onClick={() => handleSelect(destination)}>
                   <div className="flex-1 min-w-0 max-w-full">
                     <p className="truncate">{destination.term}</p>

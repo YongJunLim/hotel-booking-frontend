@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useFormStore } from './store'
 
-const incrementBy = (setFn: (val: number | ((prev: number) => number)) => void, amount: number)  => {
+const incrementBy = (setFn: (val: number | ((prev: number) => number)) => void, amount: number) => {
   setFn((prev) => {
     if (prev < 5) {
       return prev + amount
@@ -12,7 +12,7 @@ const incrementBy = (setFn: (val: number | ((prev: number) => number)) => void, 
   })
 }
 
-const decrementBy = (setFn: (val: number | ((prev: number) => number)) => void, amount: number)  => {
+const decrementBy = (setFn: (val: number | ((prev: number) => number)) => void, amount: number) => {
   setFn((prev) => {
     if (prev > 0) {
       return prev - amount
@@ -26,12 +26,12 @@ const decrementBy = (setFn: (val: number | ((prev: number) => number)) => void, 
 export default function DropdownWithButtons() {
   const [isOpen, setIsOpen] = useState(false)
 
-  const Adult = useFormStore((s) => s.Adult);
-  const Child = useFormStore((s) => s.Children);
-  const Room = useFormStore((s) => s.Room);
-  const setAdult = useFormStore((s) => s.setAdult);
-  const setChild = useFormStore((s) => s.setChildren);
-  const setRoom = useFormStore((s) => s.setRoom);
+  const Adult = useFormStore(s => s.Adult)
+  const Child = useFormStore(s => s.Children)
+  const Room = useFormStore(s => s.Room)
+  const setAdult = useFormStore(s => s.setAdult)
+  const setChild = useFormStore(s => s.setChildren)
+  const setRoom = useFormStore(s => s.setRoom)
 
   const sum = Adult + Child
 
