@@ -1,13 +1,27 @@
 import type { Room } from '../../types/hotel'
+import { useLocation } from 'wouter'
 
 interface RoomCardProps {
   room: Room
   currency?: string
+  hotelId?: string
+  destinationId?: string
+  checkin?: string
+  checkout?: string
+  guests?: string
 }
 
-export const RoomCard = ({ room, currency }: RoomCardProps) => {
+export const RoomCard = ({
+  room,
+  currency,
+  hotelId,
+  destinationId,
+  checkin,
+  checkout,
+  guests,
+}: RoomCardProps) => {
   const heroImage = room.images?.[0]
-
+  const [, navigate] = useLocation()
   return (
     <div className="card card-side bg-base-100 shadow-sm">
       <figure className="p-4">
@@ -38,7 +52,15 @@ export const RoomCard = ({ room, currency }: RoomCardProps) => {
           </div>
         </div>
         <div className="card-actions justify-end">
-          <button className="btn btn-primary btn-lg">Book</button>
+          <button
+            className="btn btn-primary btn-lg"
+            onClick={() =>
+              navigate(
+                `/booking/${hotelId}?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&lang=en_US&currency=SGD&country_code=SG&guests=${guests}`,
+              )}
+          >
+            Book Now
+          </button>
         </div>
       </div>
     </div>

@@ -117,6 +117,11 @@ export const HotelDetailPage = () => {
                               key={room.key}
                               room={room}
                               currency={searchParams.currency || undefined}
+                              hotelId={params.hotel_id}
+                              destinationId={searchParams.destination_id}
+                              checkin={searchParams.checkin}
+                              checkout={searchParams.checkout}
+                              guests={searchParams.guests}
                             />
                           ))}
                         </div>
