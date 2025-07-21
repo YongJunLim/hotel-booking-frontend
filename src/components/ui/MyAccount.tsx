@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'wouter'
-import useAuthStore from '../store'
+import useAuthStore from '../../store'
 
 export const MyAccountDropdown = () => {
   const { logout } = useAuthStore()

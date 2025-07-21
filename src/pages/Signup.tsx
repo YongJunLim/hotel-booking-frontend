@@ -97,19 +97,20 @@ export const Signup = () => {
         }),
       })
       const msg = (await res.json()) as signUpResponse
+      setMessage(msg.message)
       // Response successful
       if (res.ok) {
         // User successfully created
         if (msg.success) {
-          setMsgClass('text-green-800')
+          sessionStorage.setItem('toast', msg.message)
           nav('/login')
         }
         // Error
         else {
           setMsgClass('text-red-800')
         }
-        setMessage(msg.message)
       }
+      setMsgClass('text-red-800')
     }
   }
   async function onSubmitClick() {

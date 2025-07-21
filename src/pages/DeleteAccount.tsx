@@ -17,7 +17,7 @@ function DeleteToast({ open, onClose }: deleteAccountProp) {
   const [isActive, setIsActive] = useState(false)
   const isLoggedIn = useAuthStore(state => state.isLoggedIn)
   const { logout } = useAuthStore()
-  const curEmail = useAuthStore(state => state.email)
+  const curEmail = useAuthStore(state => state.userdetails.email)
   const [msg, setmsg] = useState('')
   const [, nav] = useLocation()
 
