@@ -1,46 +1,45 @@
-import { Link, useLocation } from 'wouter'
-import useAuthStore from '../store'
-import { useState, useEffect } from 'react'
+import { Link, useLocation } from "wouter";
+import useAuthStore from "../store";
+import { useState, useEffect } from "react";
+import { BACKEND_URL } from "../config/api";
 
 export const Login = () => {
-  const [message, setMessage] = useState('')
-  const [msgClass, setMsgClass] = useState('')
-  const { login } = useAuthStore()
-  const [,nav] = useLocation()
-  const tmsg = sessionStorage.getItem('toast')
-  const { timeout } = useAuthStore()
+  const [message, setMessage] = useState("");
+  const [msgClass, setMsgClass] = useState("");
+  const { login } = useAuthStore();
+  const [, nav] = useLocation();
+  const tmsg = sessionStorage.getItem("toast");
+  const { timeout } = useAuthStore();
 
   useEffect(() => {
     if (tmsg != null) {
-      const timer = setTimeout(() => timeout(), 2000)
-      return () => clearTimeout(timer)
+      const timer = setTimeout(() => timeout(), 2000);
+      return () => clearTimeout(timer);
     }
-  }, [tmsg, timeout])
+  }, [tmsg, timeout]);
 
   interface LoginResponse {
     data: {
-      firstName: string
-      email: string
-      isAdmin: boolean
-      token: string
-    }
-    message: string
+      firstName: string;
+      email: string;
+      isAdmin: boolean;
+      token: string;
+    };
+    message: string;
     error?: {
       issues?: {
-        message: string
-      }[]
-    }
+        message: string;
+      }[];
+    };
   }
 
   return (
     <>
-      {tmsg != null
-        ? (
-          <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
-            {tmsg}
-          </div>
-        )
-        : null}
+      {tmsg != null ? (
+        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
+          {tmsg}
+        </div>
+      ) : null}
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
         <h1 className="text-4xl font-bold mb-8 flex">Hotel Booking</h1>
       </div>
@@ -76,7 +75,7 @@ export const Login = () => {
       <button
         id="login"
         onClick={() => {
-          void onSubmitClick()
+          void onSubmitClick();
         }}
         className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800"
       >
@@ -94,46 +93,51 @@ export const Login = () => {
       </Link>
       <p className={`${msgClass}`}>{message}</p>
     </>
-  )
+  );
 
   // Login button
 
   async function loginUser(): Promise<void> {
-    const email_inp = document.getElementById('email') as HTMLInputElement
-    const passwd_inp = document.getElementById('passwd') as HTMLInputElement
+    const email_inp = document.getElementById("email") as HTMLInputElement;
+    const passwd_inp = document.getElementById("passwd") as HTMLInputElement;
 
     // Login API call
-    console.log('email,password', email_inp.value, passwd_inp.value)
-    const response = await fetch('http://localhost:9000/api/v1/users/login', {
-      method: 'POST',
+    console.log("email,password", email_inp.value, passwd_inp.value);
+    const response = await fetch(`${BACKEND_URL}/users/login`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: email_inp.value,
         password: passwd_inp.value,
       }),
-    })
-    const msg = (await response.json()) as LoginResponse
+    });
+    const msg = (await response.json()) as LoginResponse;
     // Handle login
-    const isSuccess = response.ok && msg.data?.token
+    const isSuccess = response.ok && msg.data?.token;
     if (isSuccess) {
-      sessionStorage.setItem('accessToken', msg.data.token)
-      sessionStorage.setItem('details', JSON.stringify({ email: msg.data.email, firstName: msg.data.firstName }))
-      sessionStorage.setItem('toast', msg.message)
-      login()
-      nav('/')
-    }
-    else {
-      const zodError = msg.error?.issues?.[0]?.message
-      const fallbackmsg = msg.message
-      console.log(msg.message)
-      console.log(zodError)
-      setMessage(zodError || fallbackmsg)
-      setMsgClass('text-red-800')
+      sessionStorage.setItem("accessToken", msg.data.token);
+      sessionStorage.setItem(
+        "details",
+        JSON.stringify({
+          email: msg.data.email,
+          firstName: msg.data.firstName,
+        }),
+      );
+      sessionStorage.setItem("toast", msg.message);
+      login();
+      nav("/");
+    } else {
+      const zodError = msg.error?.issues?.[0]?.message;
+      const fallbackmsg = msg.message;
+      console.log(msg.message);
+      console.log(zodError);
+      setMessage(zodError || fallbackmsg);
+      setMsgClass("text-red-800");
     }
   }
   async function onSubmitClick(): Promise<void> {
-    await loginUser()
+    await loginUser();
   }
-}
+};

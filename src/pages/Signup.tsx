@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'wouter'
+import { BACKEND_URL } from '../config/api'
 
 export const Signup = () => {
   const [message, setMessage] = useState('')
@@ -23,25 +24,49 @@ export const Signup = () => {
       <p className="mb-4 text-2xl font-bold flex">Sign-up Form</p>
       <div className="grid gap-6 mb-6 md:grid-cols-2 w-1/2">
         <p>Name:</p>
-        <input id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+        <input
+          id="name"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="John"
+          required
+        />
         <p>Email:</p>
-        <input type="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="john@company.com" required />
+        <input
+          type="email"
+          id="email"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="john@company.com"
+          required
+        />
         <p>Password:</p>
-        <input id="passwd" type="password" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="•••••••••" required />
+        <input
+          id="passwd"
+          type="password"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="•••••••••"
+          required
+        />
       </div>
-      <button id="signup" onClick={() => { void onSubmitClick() }} className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+      <button
+        id="signup"
+        onClick={() => {
+          void onSubmitClick()
+        }}
+        className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800"
+      >
         <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">
           Sign Up
         </span>
       </button>
-      <Link href="/" className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 ">
+      <Link
+        href="/"
+        className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 "
+      >
         <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">
           Back to Home
         </span>
       </Link>
-      <p className={`${msgClass}`}>
-        {message}
-      </p>
+      <p className={`${msgClass}`}>{message}</p>
     </>
   )
 
@@ -50,13 +75,17 @@ export const Signup = () => {
     const email_inp = document.getElementById('email') as HTMLInputElement
     const passwd_inp = document.getElementById('passwd') as HTMLInputElement
 
-    if (name_inp.value == '' || email_inp.value == '' || passwd_inp.value == '') {
+    if (
+      name_inp.value == ''
+      || email_inp.value == ''
+      || passwd_inp.value == ''
+    ) {
       setMsgClass('text-red-800')
       setMessage('Missing fields.')
     }
     else {
       // Sign up API call
-      const res = await fetch('http://localhost:9000/api/v1/users/signup', {
+      const res = await fetch(`${BACKEND_URL}/users/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
