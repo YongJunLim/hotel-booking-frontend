@@ -1,4 +1,5 @@
 import type { Hotel } from '../../types/params'
+import { useLocation } from 'wouter'
 
 interface Results {
   hotel: Hotel
@@ -6,7 +7,7 @@ interface Results {
   checkin?: string
   checkout?: string
   guests?: string
-  destination?: string
+  destinationId?: string
 }
 
 export const HotelCard = ({
@@ -15,8 +16,10 @@ export const HotelCard = ({
   checkin,
   checkout,
   guests,
-  destination,
+  destinationId,
 }: Results) => {
+  const [, navigate] = useLocation()
+
   return (
     <div className="card card-side bg-base-100 shadow-sm">
       <figure className="p-4">
@@ -44,7 +47,9 @@ export const HotelCard = ({
           <button
             className="btn btn-primary mt-2"
             onClick={() => {
-              window.location.href = `/hotels/detail/${hotel.id}?checkin=${checkin}&checkout=${checkout}&guests=${guests}`
+              navigate(
+                `/hotels/detail/${hotel.id}?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&lang=en_US&currency=SGD&country_code=SG&guests=${guests}`,
+              )
             }}
           >
             View Rooms

@@ -136,7 +136,7 @@ export const HomePage = () => {
     }
 
     navigate(
-      `/results/${country.uid}?checkin=${start}&checkout=${end}&lang=en_US&currency=SGD&country_code=${country.term}&guests=${sum}|${Room}`,
+      `/results/${country.uid}?checkin=${start}&checkout=${end}&lang=en_US&currency=SGD&country_code=SG&guests=${sum}|${Room}`,
     )
   }
 
