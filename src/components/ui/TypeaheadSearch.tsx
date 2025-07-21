@@ -62,7 +62,12 @@ export const TypeaheadSearch = ({
     }
   }, [query, data])
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Reset the justSelected flag when user starts typing
+    justSelectedRef.current = false
     setQuery(e.target.value)
+    // Reset highlighted index when query changes
+    setHighlightedIndex(null)
+    setStartIndex(0)
   }
   const handleSelect = (destination: Destination) => {
     flushSync(() => {
@@ -71,8 +76,16 @@ export const TypeaheadSearch = ({
       justSelectedRef.current = true
     })
     onSelect?.(destination)
+
+    // Reset the flag after a short delay to allow future searches
+    setTimeout(() => {
+      justSelectedRef.current = false
+    }, 100)
   }
-  const visibleOptions = suggestions.slice(startIndex, startIndex + maxVisibleItems)
+  const visibleOptions = suggestions.slice(
+    startIndex,
+    startIndex + maxVisibleItems,
+  )
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault()
@@ -98,7 +111,11 @@ export const TypeaheadSearch = ({
 
     if (e.key === 'Enter') {
       e.preventDefault()
-      if (highlightedIndex !== null && highlightedIndex >= 0 && highlightedIndex < suggestions.length) {
+      if (
+        highlightedIndex !== null
+        && highlightedIndex >= 0
+        && highlightedIndex < suggestions.length
+      ) {
         const selectedItem = suggestions[highlightedIndex]
         handleSelect(selectedItem)
       }
@@ -154,7 +171,9 @@ export const TypeaheadSearch = ({
               <li
                 key={`${destination.uid}-${index}`}
                 className={`px-2 py-2 cursor-pointer ${
-                  (startIndex + index) === highlightedIndex ? 'bg-blue-500 text-white' : ''
+                  startIndex + index === highlightedIndex
+                    ? 'bg-blue-500 text-white'
+                    : ''
                 }`}
               >
                 <button onClick={() => handleSelect(destination)}>
