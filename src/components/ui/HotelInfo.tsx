@@ -1,6 +1,7 @@
 import useSWR from 'swr'
 import { BACKEND_URL } from '../../config/api'
 import type { Hotel } from '../../types/hotel'
+import { MapView } from './MapView'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
@@ -49,15 +50,10 @@ export const HotelInfo = ({ hotelId }: HotelInfoProps) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
-          <p className="text-sm font-semibold text-base-content/70">Location</p>
-          <p>
-            Latitude:
-            {data.latitude}
+          <p className="text-sm font-semibold text-base-content/70 mb-2">
+            Location
           </p>
-          <p>
-            Longitude:
-            {data.longitude}
-          </p>
+          <MapView lat={data.latitude} lng={data.longitude} />
           <p className="mt-2">{data.address}</p>
         </div>
 
