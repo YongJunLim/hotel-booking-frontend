@@ -2,6 +2,7 @@ import { useParams, Link } from 'wouter'
 import { useSearchParams } from '../hooks/useSearchParams'
 import { BookingDetails } from '../components/ui/BookingDetails'
 import { HotelCard } from '../components/ui/ResultsCard'
+import { NavBar } from '../components/layout/NavBar'
 import { useMemo, useState } from 'react'
 import type {
   StitchedHotel,
@@ -101,13 +102,10 @@ export const ResultsPage = () => {
 
   // filter stars checkbox
 
+  const pageTitle = `Search Results for ${destinationId}`
   return (
     <>
-      <h1 className="text-4xl font-bold mb-8">
-        Search Results for
-        {' '}
-        {destinationId}
-      </h1>
+      <NavBar pageTitle={pageTitle} />
 
       <BookingDetails
         searchParams={searchParams}
