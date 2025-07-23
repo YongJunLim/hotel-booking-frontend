@@ -1,7 +1,8 @@
-import useAuthStore from '../store'
+// import useAuthStore from "../store";
 import { useEffect } from 'react'
 import DropdownWithButtons from '../DropDown'
-import { MyAccountDropdown } from '../components/ui/MyAccount'
+import { NavBar } from '../components/layout/NavBar'
+// import { MyAccountDropdown } from "../components/ui/MyAccount";
 import { type Destination } from '../types/destination'
 import { TypeaheadSearch } from '../components/ui/TypeaheadSearch'
 import DayPicker from '../DayPicker'
@@ -11,15 +12,15 @@ import { useForm, type SubmitHandler } from 'react-hook-form'
 import { useLocation } from 'wouter'
 
 export const HomePage = () => {
-  const toastmsg = useAuthStore(state => state.toast)
-  const { timeout } = useAuthStore()
+  // const toastmsg = useAuthStore(state => state.toast)
+  // const { timeout } = useAuthStore()
 
-  useEffect(() => {
-    if (toastmsg != '') {
-      const timer = setTimeout(() => timeout(), 2000)
-      return () => clearTimeout(timer)
-    }
-  }, [toastmsg, timeout])
+  // useEffect(() => {
+  //   if (toastmsg != '') {
+  //     const timer = setTimeout(() => timeout(), 2000)
+  //     return () => clearTimeout(timer)
+  //   }
+  // }, [toastmsg, timeout])
   const range = useFormStore(s => s.range)
   const Adult = useFormStore(s => s.Adult)
   const Child = useFormStore(s => s.Children)
@@ -145,22 +146,21 @@ export const HomePage = () => {
       <div>
         <img className="h-96 w-full object-cover" src="/travel.jpg" />
       </div>
-      <div className="flex py-4 items-center justify-between gap-8">
+      {/* <div className="flex py-4 items-center justify-between gap-8">
         <div className="flex items-center gap-2">
           <h1 className="text-4xl font-bold mb-4">Hotel Booking</h1>
-        </div>
-        {/* <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}> */}
-        <div className="flex items-center gap-2">
-          {toastmsg != ''
-            ? (
-              <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
-                {toastmsg}
-              </div>
-            )
-            : null}
+        </div> */}
+      {/* <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}> */}
+      {/* <div className="flex items-center gap-2">
+          {toastmsg != "" ? (
+            <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
+              {toastmsg}
+            </div>
+          ) : null}
           <MyAccountDropdown />
         </div>
-      </div>
+      </div> */}
+      <NavBar pageTitle="Hotel Booking" />
       <div>
         <p className="mb-4">Welcome to our hotel booking platform!</p>
       </div>

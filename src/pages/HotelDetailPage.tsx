@@ -7,6 +7,7 @@ import type { PriceBaseResponse } from '../types/api'
 import type { Room } from '../types/hotel'
 import { BACKEND_URL } from '../config/api'
 import { HotelInfo } from '../components/ui/HotelInfo'
+import { NavBar } from '../components/layout/NavBar'
 
 interface HotelPriceResponse extends PriceBaseResponse {
   rooms: Room[]
@@ -52,17 +53,10 @@ export const HotelDetailPage = () => {
       {} as Record<string, Room[]>,
     ) || {}
 
+  const pageTitle = `Hotel Details for ${hotelId}`
   return (
     <>
-      <h1 className="text-4xl font-bold mb-8">
-        Hotel Details for
-        {' '}
-        {hotelId}
-        {' '}
-        {destinationId ? 'in' : ''}
-        {' '}
-        {destinationId}
-      </h1>
+      <NavBar pageTitle={pageTitle} />
 
       {hotelId && <HotelInfo hotelId={hotelId} />}
       <BookingDetails
