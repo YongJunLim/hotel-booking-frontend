@@ -10,9 +10,11 @@ import type {
   PriceInfo,
 } from '../types/params'
 import Sortdropdown from '../components/ui/SortDropDown'
-// import FilterCheckBox from "../components/ui/FilterCheckBox";
 import useSWR from 'swr'
-import { BACKEND_URL } from '../config/api'
+import StarRatingFilter from '../components/ui/FilterStar'
+// import { BACKEND_URL } from "../config/api";
+
+const baseURL = import.meta.env.VITE_BACKEND_URL
 
 const fetcher = (url: string) => fetch(url).then(response => response.json())
 
@@ -24,8 +26,8 @@ export const ResultsPage = () => {
   const checkout = searchParams.checkout ?? undefined
   const guests = searchParams.guests ?? undefined
 
-  const priceAPI = `${BACKEND_URL}/hotels/prices?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`
-  const hotelAPI = `${BACKEND_URL}/hotels?destination_id=${destinationId}`
+  const priceAPI = `${baseURL}/hotels/prices?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`
+  const hotelAPI = `${baseURL}/hotels?destination_id=${destinationId}`
 
   const {
     data: pricedata,
@@ -72,10 +74,23 @@ export const ResultsPage = () => {
   const isloading
     = priceloading || hotelloading || pricedata?.completed !== true
 
+  // filter stars range
+  const [minstar, setminstar] = useState(0.5)
+  const [maxstar, setmaxstar] = useState(5)
+  const starfilterlist: StitchedHotel[] = useMemo(() => {
+    if (maxstar >= minstar) {
+      return stichedata.filter(
+        hotel => hotel.rating >= minstar && hotel.rating <= maxstar,
+      )
+    }
+    else {
+      return []
+    }
+  }, [stichedata, minstar, maxstar])
   // sort for dropdown
   const [sortby, setsortby] = useState('Price (Ascending)')
   const sortedlist: StitchedHotel[] = useMemo(() => {
-    const datacopy = [...stichedata]
+    const datacopy = [...starfilterlist]
     if (sortby === 'Price (Ascending)') {
       datacopy.sort(
         (a: StitchedHotel, b: StitchedHotel) => a.price! - b.price!,
@@ -97,9 +112,7 @@ export const ResultsPage = () => {
       )
     }
     return datacopy
-  }, [stichedata, sortby])
-
-  // filter stars checkbox
+  }, [starfilterlist, sortby])
 
   return (
     <>
@@ -141,7 +154,7 @@ export const ResultsPage = () => {
         )}
       </div>
 
-      {priceloading || hotelloading
+      {isloading
         ? (
           <div className={priceloading && hotelloading ? 'mt-16' : 'mt-8'}>
             <div className="card card-side bg-base-100 shadow-sm">
@@ -165,7 +178,7 @@ export const ResultsPage = () => {
         )
         : (
           <>
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex  justify-between mb-5">
               <span className="text-lg text-base-content/70">
                 Last updated:
                 {' '}
@@ -176,42 +189,57 @@ export const ResultsPage = () => {
               </div>
             </div>
 
-            <div className="p-5">
-              {isloading
-                ? null
-                : stichedata.length > 0
-                  ? (
-                    <>
-                      {sortedlist.map((hotel: StitchedHotel) => (
-                        <HotelCard
-                          key={hotel.id}
-                          hotel={hotel}
-                          hotelprice={hotel.price}
-                          checkin={checkin}
-                          checkout={checkout}
-                          guests={guests}
-                        />
-                      ))}
-                    </>
-                  )
-                  : (
-                    <p className="content-center text-yellow-700 bg-gray-700">
-                      No matching hotels found. Please try a different criteria!
-                    </p>
-                  )}
+            <div className="flex gap-15 pt-5">
+              <aside className="rounded-lg wrap-content h-50 border-4 border-double pr-3 pt-3  ">
+                <div className="pl-3">
+                  <h2 className="text-lg font-semibold flex justify-centre pb-2 ">
+                    {' '}
+                    Filter By:
+                  </h2>
+                  <hr className="border-t border-gray-300 mb-3" />
+                  <StarRatingFilter
+                    minstar={minstar}
+                    maxstar={maxstar}
+                    setminstar={setminstar}
+                    setmaxstar={setmaxstar}
+                  >
+                  </StarRatingFilter>
+                </div>
+              </aside>
+
+              <div className="space-y-5">
+                {isloading
+                  ? null
+                  : sortedlist.length > 0
+                    ? (
+                      <>
+                        {sortedlist.map((hotel: StitchedHotel) => (
+                          <HotelCard
+                            key={hotel.id}
+                            hotel={hotel}
+                            hotelprice={hotel.price}
+                            checkin={checkin}
+                            checkout={checkout}
+                            guests={guests}
+                          />
+                        ))}
+                      </>
+                    )
+                    : (
+                      <p className="content-center text-yellow-700 bg-gray-700">
+                        No matching hotels found. Please try a different criteria!
+                      </p>
+                    )}
+              </div>
             </div>
           </>
         )}
 
-      <Link
-        href="/hotels/detail/atH8?destination_id=WD0M&checkin=2025-10-01&checkout=2025-10-07&lang=en_US&currency=SGD&country_code=SG&guests=2|2"
-        className="btn btn-secondary mr-4"
-      >
-        View Hotel Details
-      </Link>
-      <Link href="/" className="btn btn-outline">
-        Back to Home
-      </Link>
+      <div className="pt-17">
+        <Link href="/" className="btn btn-outline">
+          Back to Home
+        </Link>
+      </div>
     </>
   )
 }
