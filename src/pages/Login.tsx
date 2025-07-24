@@ -12,6 +12,8 @@ export const Login = () => {
   const setToast = useAuthStore(state => state.setToast)
   const toast = useAuthStore(state => state.toast)
   const clearToast = useAuthStore(state => state.clearToast)
+  const redirectUrl = useAuthStore(state => state.redirectUrl)
+  const clearRedirectUrl = useAuthStore(state => state.clearRedirectUrl)
   const [, nav] = useLocation()
   // const tmsg = sessionStorage.getItem("toast");
   // const { timeout } = useAuthStore();
@@ -145,7 +147,14 @@ export const Login = () => {
         msg.data.token,
       )
       setToast(msg.message)
-      nav('/')
+      // Redirect to stored URL or home
+      if (redirectUrl) {
+        clearRedirectUrl()
+        nav(redirectUrl)
+      }
+      else {
+        nav('/')
+      }
     }
     else {
       const zodError = msg.error?.issues?.[0]?.message

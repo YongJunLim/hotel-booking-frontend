@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useLocation, useSearch } from 'wouter'
 import { MyAccountDropdown } from '../ui/MyAccount'
 // import useAuthStore from '../../store'
 import useAuthStore from '../../stores/AuthStore'
@@ -8,6 +10,18 @@ interface NavBarProps {
 
 export const NavBar = ({ pageTitle }: NavBarProps) => {
   const toastMsg = useAuthStore(state => state.toast)
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn)
+  const setRedirectUrl = useAuthStore(state => state.setRedirectUrl)
+  const [location] = useLocation()
+  const search = useSearch()
+
+  // Save current URL whenever user navigates while not logged in
+  useEffect(() => {
+    if (!isLoggedIn && location !== '/login' && location !== '/signup') {
+      const currentUrl = location + (search ? `?${search}` : '')
+      setRedirectUrl(currentUrl)
+    }
+  }, [location, search, isLoggedIn, setRedirectUrl])
 
   return (
     <div className="navbar p-0 bg-base-100">

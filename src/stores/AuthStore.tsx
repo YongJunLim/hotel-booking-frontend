@@ -7,6 +7,7 @@ interface AuthStore {
   userDetails: UserDetails
   toast: string
   accessToken: string | null
+  redirectUrl: string
   login: (userDetails: UserDetails, token: string) => void
   logout: () => void
   silentLogout: () => void
@@ -14,6 +15,8 @@ interface AuthStore {
   setToast: (toastMsg: string) => void
   checkAuthStatus: () => void
   isTokenValid: () => boolean
+  setRedirectUrl: (url: string) => void
+  clearRedirectUrl: () => void
 }
 
 interface JWTPayload {
@@ -56,6 +59,8 @@ const useAuthStore = create<AuthStore>()(
             toast: 'You have been signed out.',
           })
 
+          get().clearRedirectUrl()
+
           // Auto-clear logout toast
           setTimeout(() => get().clearToast(), 3000)
         },
@@ -77,6 +82,14 @@ const useAuthStore = create<AuthStore>()(
         setToast: (toastMsg: string) => {
           set({ toast: toastMsg })
           setTimeout(() => get().clearToast(), 3000)
+        },
+
+        setRedirectUrl: (url: string) => {
+          set({ redirectUrl: url })
+        },
+
+        clearRedirectUrl: () => {
+          set({ redirectUrl: null })
         },
 
         checkAuthStatus: () => {
@@ -140,6 +153,7 @@ const useAuthStore = create<AuthStore>()(
           isLoggedIn: state.isLoggedIn,
           userDetails: state.userDetails,
           accessToken: state.accessToken,
+          redirectUrl: state.redirectUrl,
         }),
       },
     ),
