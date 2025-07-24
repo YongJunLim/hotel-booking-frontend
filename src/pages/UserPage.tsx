@@ -1,14 +1,17 @@
 import { Link } from 'wouter'
 import { useState, useEffect } from 'react'
 import DeleteToast from './DeleteAccount'
-import useAuthStore from '../store'
+// import useAuthStore from '../store'
+import useAuthStore from '../stores/AuthStore'
 import { RedirectToast } from '../components/ui/Redirect'
 
 export const UserPage = () => {
-  const [firstname, setfirstName] = useState('')
-  const [email, setemail] = useState('')
+  const [firstname, setFirstName] = useState('')
+  const [email, setEmail] = useState('')
   const [isClick, setIsClick] = useState(false)
-  const { isLoggedIn, userdetails } = useAuthStore()
+  // const { isLoggedIn, userdetails } = useAuthStore();
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn)
+  const userDetails = useAuthStore(state => state.userDetails)
   const [showRedirectToast, setShowRedirectToast] = useState(false)
 
   useEffect(() => {
@@ -16,10 +19,10 @@ export const UserPage = () => {
       setShowRedirectToast(true)
     }
     else {
-      setemail(userdetails.email)
-      setfirstName(userdetails.firstName)
+      setEmail(userDetails.email)
+      setFirstName(userDetails.firstName)
     }
-  }, [isLoggedIn, userdetails.email, userdetails.firstName])
+  }, [isLoggedIn, userDetails.email, userDetails.firstName])
 
   function handleClick() {
     setIsClick(true)

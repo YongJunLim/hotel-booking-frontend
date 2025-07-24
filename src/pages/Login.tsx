@@ -1,22 +1,29 @@
 import { Link, useLocation } from 'wouter'
-import useAuthStore from '../store'
+// import useAuthStore from '../store'
+import useAuthStore from '../stores/AuthStore'
 import { useState, useEffect } from 'react'
 import { BACKEND_URL } from '../config/api'
 
 export const Login = () => {
   const [message, setMessage] = useState('')
   const [msgClass, setMsgClass] = useState('')
-  const { login } = useAuthStore()
+  // const { login } = useAuthStore();
+  const login = useAuthStore(state => state.login)
+  const setToast = useAuthStore(state => state.setToast)
+  const toast = useAuthStore(state => state.toast)
+  const clearToast = useAuthStore(state => state.clearToast)
   const [, nav] = useLocation()
-  const tmsg = sessionStorage.getItem('toast')
-  const { timeout } = useAuthStore()
+  // const tmsg = sessionStorage.getItem("toast");
+  // const { timeout } = useAuthStore();
 
   useEffect(() => {
-    if (tmsg != null) {
-      const timer = setTimeout(() => timeout(), 2000)
+    // if (tmsg != null) {
+    if (toast) {
+      // const timer = setTimeout(() => timeout(), 2000);
+      const timer = setTimeout(() => clearToast(), 3000)
       return () => clearTimeout(timer)
     }
-  }, [tmsg, timeout])
+  }, [toast, clearToast])
 
   interface LoginResponse {
     data: {
@@ -35,13 +42,14 @@ export const Login = () => {
 
   return (
     <>
-      {tmsg != null
-        ? (
-          <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
-            {tmsg}
-          </div>
-        )
-        : null}
+      {/* {tmsg != null ? ( */}
+      {/* eslint-disable-next-line @stylistic/multiline-ternary */}
+      {toast !== '' ? (
+        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
+          {/* {tmsg} */}
+          {toast}
+        </div>
+      ) : null}
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
         <h1 className="text-4xl font-bold mb-8 flex">Hotel Booking</h1>
       </div>
@@ -119,16 +127,24 @@ export const Login = () => {
     // Handle login
     const isSuccess = response.ok && msg.data?.token
     if (isSuccess) {
-      sessionStorage.setItem('accessToken', msg.data.token)
-      sessionStorage.setItem(
-        'details',
-        JSON.stringify({
+      // sessionStorage.setItem("accessToken", msg.data.token);
+      // sessionStorage.setItem(
+      //   "details",
+      //   JSON.stringify({
+      //     email: msg.data.email,
+      //     firstName: msg.data.firstName,
+      //   }),
+      // );
+      // sessionStorage.setItem("toast", msg.message);
+      // login();
+      login(
+        {
           email: msg.data.email,
           firstName: msg.data.firstName,
-        }),
+        },
+        msg.data.token,
       )
-      sessionStorage.setItem('toast', msg.message)
-      login()
+      setToast(msg.message)
       nav('/')
     }
     else {

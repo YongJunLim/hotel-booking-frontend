@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Link } from 'wouter'
-import useAuthStore from '../../store'
+// import useAuthStore from '../../store'
+import useAuthStore from '../../stores/AuthStore'
 
 export const MyAccountDropdown = () => {
-  const { logout } = useAuthStore()
+  // const { logout } = useAuthStore();
+  const logout = useAuthStore(state => state.logout)
   const isLoggedIn = useAuthStore(state => state.isLoggedIn)
   const [isOpen, setIsOpen] = useState(false)
   const toggleDropdown = () => setIsOpen(!isOpen)

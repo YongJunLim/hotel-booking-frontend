@@ -1,13 +1,15 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'wouter'
 import { BACKEND_URL } from '../config/api'
+import useAuthStore from '../stores/AuthStore'
 
 export const Signup = () => {
   const [message, setMessage] = useState('')
   const [msgClass, setMsgClass] = useState('')
+  const setToast = useAuthStore(state => state.setToast)
   const [, nav] = useLocation()
 
-  interface signUpResponse {
+  interface SignUpResponse {
     success: boolean
     data: {
       firstName: string
@@ -96,13 +98,14 @@ export const Signup = () => {
           password: passwd_inp.value,
         }),
       })
-      const msg = (await res.json()) as signUpResponse
+      const msg = (await res.json()) as SignUpResponse
       setMessage(msg.message)
       // Response successful
       if (res.ok) {
         // User successfully created
         if (msg.success) {
-          sessionStorage.setItem('toast', msg.message)
+          // sessionStorage.setItem("toast", msg.message);
+          setToast(msg.message)
           nav('/login')
         }
         // Error

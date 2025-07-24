@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Route, Switch } from 'wouter'
 import { RootLayout } from './components/layout/RootLayout'
 import { NotFound } from './components/ui/NotFound'
@@ -8,8 +9,16 @@ import { HotelDetailPage } from './pages/HotelDetailPage'
 import { Signup } from './pages/Signup'
 import { Login } from './pages/Login'
 import { UserPage } from './pages/UserPage'
+import useAuthStore from './stores/AuthStore'
 
 function App() {
+  const checkAuthStatus = useAuthStore(state => state.checkAuthStatus)
+
+  // Check auth status on app load
+  useEffect(() => {
+    checkAuthStatus()
+  }, [checkAuthStatus])
+
   return (
     <RootLayout>
       <Switch>
@@ -20,7 +29,6 @@ function App() {
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
         <Route path="/user" component={UserPage} />
-
         /* 404 fallback route */
         <Route component={NotFound} />
       </Switch>
