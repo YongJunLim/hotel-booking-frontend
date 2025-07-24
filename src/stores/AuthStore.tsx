@@ -9,6 +9,7 @@ interface AuthStore {
   accessToken: string | null
   login: (userDetails: UserDetails, token: string) => void
   logout: () => void
+  silentLogout: () => void
   clearToast: () => void
   setToast: (toastMsg: string) => void
   checkAuthStatus: () => void
@@ -59,13 +60,22 @@ const useAuthStore = create<AuthStore>()(
           setTimeout(() => get().clearToast(), 3000)
         },
 
+        silentLogout: () => {
+          // Clear auth data without showing toast
+          set({
+            isLoggedIn: false,
+            userDetails: { email: '', firstName: '' },
+            accessToken: null,
+            toast: '', // Don't set a toast message
+          })
+        },
+
         clearToast: () => {
           set({ toast: '' })
         },
 
         setToast: (toastMsg: string) => {
           set({ toast: toastMsg })
-
           setTimeout(() => get().clearToast(), 3000)
         },
 
@@ -84,11 +94,11 @@ const useAuthStore = create<AuthStore>()(
             }
             catch (error) {
               console.error('Failed to parse user details:', error)
-              get().logout()
+              get().silentLogout()
             }
           }
           else {
-            get().logout()
+            get().silentLogout()
           }
         },
 

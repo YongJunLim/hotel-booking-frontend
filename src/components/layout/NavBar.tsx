@@ -1,7 +1,6 @@
 import { MyAccountDropdown } from '../ui/MyAccount'
 // import useAuthStore from '../../store'
 import useAuthStore from '../../stores/AuthStore'
-import { useEffect } from 'react'
 
 interface NavBarProps {
   pageTitle: string
@@ -9,14 +8,7 @@ interface NavBarProps {
 
 export const NavBar = ({ pageTitle }: NavBarProps) => {
   const toastMsg = useAuthStore(state => state.toast)
-  const clearToast = useAuthStore(state => state.clearToast)
 
-  useEffect(() => {
-    if (toastMsg !== '') {
-      const timer = setTimeout(() => clearToast(), 3000)
-      return () => clearTimeout(timer)
-    }
-  }, [toastMsg, clearToast])
   return (
     <div className="navbar p-0 bg-base-100">
       <div className="flex-1">
