@@ -14,6 +14,7 @@ import Sortdropdown from '../components/ui/SortDropDown'
 // import FilterCheckBox from "../components/ui/FilterCheckBox";
 import useSWR from 'swr'
 import { BACKEND_URL } from '../config/api'
+import { MapSelect } from '../components/ui/MapSelect'
 
 const fetcher = (url: string) => fetch(url).then(response => response.json())
 
@@ -211,6 +212,9 @@ export const ResultsPage = () => {
       <Link href="/" className="btn btn-outline">
         Back to Home
       </Link>
+      <div className='pt-8'>
+        <MapSelect hotels={sortedlist} checkin={checkin} checkout={checkout} guests={guests} destinationId={destinationId} />
+      </div>
     </>
   )
 }
