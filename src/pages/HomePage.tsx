@@ -16,7 +16,7 @@ export const HomePage = () => {
 
   useEffect(() => {
     if (toastmsg != '') {
-      const timer = setTimeout(() => timeout(), 2000)
+      const timer = setTimeout(() => timeout(), 3000)
       return () => clearTimeout(timer)
     }
   }, [toastmsg, timeout])
