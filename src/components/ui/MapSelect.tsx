@@ -48,7 +48,7 @@ export const MapSelect = ({ hotels, destinationId, checkin, checkout, guests }: 
   }, [hotels]);
 
   return (
-    <div className="w-full h-100 rounded-lg overflow-hidden">
+    <div className="w-full h-75 rounded-lg overflow-hidden">
       <Map
         ref={mapRef}
         initialViewState={{

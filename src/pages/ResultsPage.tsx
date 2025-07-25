@@ -115,6 +115,9 @@ export const ResultsPage = () => {
 
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">Hotel Search Results</h2>
+        <div className='pt-8'>
+          <MapSelect hotels={sortedlist} checkin={checkin} checkout={checkout} guests={guests} destinationId={destinationId} />
+        </div>
         {isloading && (
           <span>
             Please wait a moment as we fetch the best prices for you...
@@ -212,9 +215,6 @@ export const ResultsPage = () => {
       <Link href="/" className="btn btn-outline">
         Back to Home
       </Link>
-      <div className='pt-8'>
-        <MapSelect hotels={sortedlist} checkin={checkin} checkout={checkout} guests={guests} destinationId={destinationId} />
-      </div>
     </>
   )
 }

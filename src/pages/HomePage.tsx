@@ -1,11 +1,11 @@
 // import useAuthStore from "../store";
 import { useEffect } from 'react'
-import DropdownWithButtons from '../DropDown'
+import DropdownWithButtons from '../components/ui/DropDown'
 import { NavBar } from '../components/layout/NavBar'
 // import { MyAccountDropdown } from "../components/ui/MyAccount";
 import { type Destination } from '../types/destination'
 import { TypeaheadSearch } from '../components/ui/TypeaheadSearch'
-import DayPicker from '../DayPicker'
+import DayPicker from '../components/ui/DayPicker'
 import { type Country } from '../types/forms'
 import { useFormStore, useCountryStore } from '../store'
 import { useForm, type SubmitHandler } from 'react-hook-form'
@@ -81,26 +81,15 @@ export const HomePage = () => {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data.country_)
-    if (data.start_ == undefined) {
-      setError('start_', {
-        type: 'manual',
-        message: 'Please select a start date.',
-      })
-      return
+    if (data.start_ == undefined || data.end_ == undefined) {
+      setError("root", {
+        type: "manual",
+        message: "Please select a start date and an end date.",
+      });
+      return;
     }
     else {
-      clearErrors('start_')
-    }
-
-    if (data.end_ == undefined) {
-      setError('end_', {
-        type: 'manual',
-        message: 'Please select an end date.',
-      })
-      return
-    }
-    else {
-      clearErrors('end_')
+      clearErrors("root");
     }
 
     if (data.sum_ == 0) {
@@ -164,76 +153,59 @@ export const HomePage = () => {
       <div>
         <p className="mb-4">Welcome to our hotel booking platform!</p>
       </div>
-      <div className="border border-gray-300 w-fit flex p-2">
+      <div className="w-full border border-gray-400 rounded-lg p-4">
         <DropdownWithButtons></DropdownWithButtons>
-      </div>
-      <div className="flex gap-8 py-4 width-100vw">
-        <TypeaheadSearch
-          onSelect={handleDestinationSelect}
-          placeholder="Search destinations..."
-          className="w-250"
-          limit={5}
-          threshold={0.3}
-        />
-        <div className="p-2 rounded border border-gray-300 width-30vw">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-8 py-4 w-full">
+          <TypeaheadSearch
+            onSelect={handleDestinationSelect}
+            placeholder="Search destinations..."
+            className="w-full md:w-[70%] min-w-[300px]"
+            limit={5}
+            threshold={0.3}
+          />
           <DayPicker></DayPicker>
         </div>
-      </div>
-      <div>
-        <form
-          onSubmit={(e) => {
-            void handleSubmit(onSubmit)(e)
-          }}
-          className="space-y-4"
-        >
-          <div>
-            <input
-              type="hidden"
-              {...register('start_', {
-                required: 'Please select a start date.',
-              })}
-            />
-            <input
-              type="hidden"
-              {...register('end_', { required: 'Please select an end date.' })}
-            />
-            <input
-              type="hidden"
-              {...register('sum_', {
-                required: 'Please select the number of guests.',
-              })}
-            />
-            <input
-              type="hidden"
-              {...register('Room_', {
-                required: 'Please select the number of rooms you require.',
-              })}
-            />
-            <input
-              type="hidden"
-              {...register('country_', {
-                required: 'Please enter a destination.',
-              })}
-            />
-          </div>
-          {errors.start_ && (
-            <p className="text-red-500">{errors.start_.message}</p>
-          )}
-          {errors.end_ && <p className="text-red-500">{errors.end_.message}</p>}
-          {errors.sum_ && <p className="text-red-500">{errors.sum_.message}</p>}
-          {errors.Room_ && (
-            <p className="text-red-500">{errors.Room_.message}</p>
-          )}
-          {errors.country_ && (
-            <p className="text-red-500">{errors.country_.message}</p>
-          )}
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-3 py-1 rounded"
+        <div>
+          <form
+            onSubmit={(e) => {
+              void handleSubmit(onSubmit)(e)
+            }}
+            className="space-y-4"
           >
-            Search
-          </button>
-        </form>
+            <div>
+              <input
+                type="hidden"
+                {...register('sum_', {
+                  required: 'Please select the number of guests.',
+                })}
+              />
+              <input
+                type="hidden"
+                {...register('Room_', {
+                  required: 'Please select the number of rooms you require.',
+                })}
+              />
+              <input
+                type="hidden"
+                {...register('country_', {
+                  required: 'Please enter a destination.',
+                })}
+              />
+            </div>
+            {errors.start_ && (<p className="text-red-500">{errors.start_.message}</p>)}
+            {errors.end_ && <p className="text-red-500">{errors.end_.message}</p>}
+            {errors.root && <p className="text-red-500">{errors.root.message}</p>}
+            {errors.sum_ && <p className="text-red-500">{errors.sum_.message}</p>}
+            {errors.Room_ && <p className="text-red-500">{errors.Room_.message}</p>}
+            {errors.country_ && <p className="text-red-500">{errors.country_.message}</p>}
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-3 py-1 rounded"
+            >
+              Search
+            </button>
+          </form>
+        </div>
       </div>
     </>
   )

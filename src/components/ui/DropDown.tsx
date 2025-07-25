@@ -58,7 +58,7 @@ export default function DropdownWithButtons() {
   };
 
   return (
-    <div className="relative inline-block">
+    <div className="relative border rounded-lg border-gray-300 flex p-2 w-fit h-fit">
       <button onClick={() => setIsOpen(!isOpen)}>
         {sum}
         {' '}
@@ -74,7 +74,7 @@ export default function DropdownWithButtons() {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 bg-white border border-gray-300 shadow-md z-[1000] min-w-[150px]">
+        <div className="absolute top-full left-0 mt-2 bg-white border border-gray-300 shadow-md z-[1000] w-full">
           <div className="flex gap-5 items-center justify-between">
             <div className="flex gap-2 items-center">
               <p>Adults</p>
@@ -162,7 +162,6 @@ export default function DropdownWithButtons() {
               </button>
             </div>
           </div>
-
         </div>
       )}
     </div>
