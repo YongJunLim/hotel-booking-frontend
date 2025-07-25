@@ -1,11 +1,11 @@
-import StarUI from './StarRating'
+import StarUI from "./StarRating.tsx";
 
 type FilterStarprops = {
-  minstar: number
-  maxstar: number
-  setminstar: (val: number) => void
-  setmaxstar: (val: number) => void
-}
+  minstar: number;
+  maxstar: number;
+  setminstar: (val: number) => void;
+  setmaxstar: (val: number) => void;
+};
 
 export default function StarRatingFilter({
   minstar,
@@ -14,25 +14,25 @@ export default function StarRatingFilter({
   setmaxstar,
 }: FilterStarprops) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-row gap-4">
       <div>
-        <p className="font-bold">Min Rating</p>
+        <p className="font-bold text-lg flex justify-center">Min Rating</p>
         <StarUI
           name="min-rating"
           rating={minstar}
-          onChange={val => setminstar(val)}
+          onChange={(val) => setminstar(val)}
           readonly={false}
         />
       </div>
       <div>
-        <p className="font-bold">Max Rating</p>
+        <p className="font-bold text-lg flex justify-center">Max Rating</p>
         <StarUI
           name="max-rating"
           rating={maxstar}
-          onChange={val => setmaxstar(val)}
+          onChange={(val) => setmaxstar(val)}
           readonly={false}
         />
       </div>
     </div>
-  )
+  );
 }
