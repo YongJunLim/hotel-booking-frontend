@@ -121,7 +121,8 @@ export const HomePage = () => {
       <div>
         {/* May be preferable to use wouter's navigate for the actual search component */}
         <Link
-          href="/results/WD0M?checkin=2025-10-01&checkout=2025-10-07&lang=en_US&currency=SGD&country_code=SG&guests=2|2"
+          // href="/results/WD0M?checkin=2025-10-01&checkout=2025-10-07&lang=en_US&currency=SGD&country_code=SG&guests=2|2" //stub link for easy testing
+          href="/results/RsBU?checkin=2025-09-01&checkout=2025-09-05&lang=en_US&currency=SGD&country_code=SG&guests=2|1" // stub link for more than 10 hotels
           className="btn btn-primary"
         >
           Search Hotels in WD0M
