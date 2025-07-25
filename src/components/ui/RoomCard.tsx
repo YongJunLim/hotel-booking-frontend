@@ -55,13 +55,15 @@ export const RoomCard = ({ room }: RoomCardProps) => {
         isRoomSelected ? 'bg-primary/10 border-2 border-primary' : 'bg-base-100'
       }`}
     >
-      <figure className="p-4 flex shrink-0">
-        <img
-          src={heroImage.url}
-          alt={room.roomNormalizedDescription}
-          className="h-48 rounded-xl aspect-square"
-        />
-      </figure>
+      {heroImage && (
+        <figure className="p-4 flex shrink-0">
+          <img
+            src={heroImage.url}
+            alt={room.roomNormalizedDescription}
+            className="h-48 rounded-xl aspect-square"
+          />
+        </figure>
+      )}
       <div className="card-body">
         <div className="flex-1">
           {room.roomAdditionalInfo?.breakfastInfo && (
@@ -107,14 +109,14 @@ export const RoomCard = ({ room }: RoomCardProps) => {
               {/* Add Room Button */}
               <button
                 className={`btn ${
-                  isLoggedIn && !isRoomSelected
+                  isLoggedIn && canAddMoreRooms()
                     ? 'btn-primary'
                     : 'btn-primary btn-disabled'
                 }`}
                 onClick={handleAddRoom}
-                disabled={!isLoggedIn || !canAddMoreRooms() || isRoomSelected}
+                disabled={!isLoggedIn || !canAddMoreRooms()}
               >
-                Add Room
+                {isRoomSelected ? 'Add Another' : 'Add Room'}
               </button>
             </div>
           </div>

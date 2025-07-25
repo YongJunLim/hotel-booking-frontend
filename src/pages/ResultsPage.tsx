@@ -15,6 +15,7 @@ import useSWR from 'swr'
 import StarRatingFilter from '../components/ui/FilterStar'
 import { BACKEND_URL } from '../config/api'
 import { MapSelect } from '../components/ui/MapSelect'
+import DestinationSearch from '../components/ui/DestinationSearch'
 
 const fetcher = (url: string) => fetch(url).then(response => response.json())
 
@@ -118,7 +119,9 @@ export const ResultsPage = () => {
   return (
     <>
       <NavBar pageTitle={pageTitle} />
-
+      <div className="py-2">
+        <DestinationSearch />
+      </div>
       <BookingDetails
         searchParams={searchParams}
         destinationId={destinationId}
