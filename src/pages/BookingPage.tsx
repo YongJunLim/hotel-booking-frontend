@@ -8,8 +8,11 @@ import {
   useStripe,
   useElements,
 } from '@stripe/react-stripe-js'
+import { NavBar } from '../components/layout/NavBar'
 
-const stripePromise = loadStripe('pk_test_51RkOjuPSc0OCzrEzBwXXxxQaYDDeAQf66TRqSPK8zi8AuZDKUPyQrG3MRjTDPNXXHph6vbnzG8GOwkqZllAx7GcJ00KEWTx5jG') // Replace with Stripe publishable key
+const stripePromise = loadStripe(
+  'pk_test_51RkOjuPSc0OCzrEzBwXXxxQaYDDeAQf66TRqSPK8zi8AuZDKUPyQrG3MRjTDPNXXHph6vbnzG8GOwkqZllAx7GcJ00KEWTx5jG',
+) // Replace with Stripe publishable key
 
 const CheckoutForm = () => {
   const stripe = useStripe()
@@ -23,7 +26,9 @@ const CheckoutForm = () => {
     billingAddress: '',
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
@@ -131,31 +136,36 @@ export const BookingPage = () => {
     console.log('Booking for hotel:', params.hotel_id)
   }, [searchParams])
 
-  return (
-    <Elements stripe={stripePromise}>
-      <div className="p-6">
-        <h1 className="text-3xl font-bold mb-4">Complete Your Booking</h1>
-        <p className="mb-6">
-          Hotel ID:
-          {' '}
-          <strong>{params.hotel_id}</strong>
-          <br />
-          Destination ID:
-          {' '}
-          <strong>{searchParams.destination_id}</strong>
-          <br />
-          Check-in:
-          {' '}
-          <strong>{searchParams.checkin}</strong>
-          <br />
-          Check-out:
-          {' '}
-          <strong>{searchParams.checkout}</strong>
-          <br />
-        </p>
+  const pageTitle = `Complete Your Booking`
 
-        <CheckoutForm />
-      </div>
-    </Elements>
+  return (
+    <>
+      <NavBar pageTitle={pageTitle} />
+      <Elements stripe={stripePromise}>
+        <div className="p-6">
+          {/* <h1 className="text-3xl font-bold mb-4">Complete Your Booking</h1> */}
+          <p className="mb-6">
+            Hotel ID:
+            {' '}
+            <strong>{params.hotel_id}</strong>
+            <br />
+            Destination ID:
+            {' '}
+            <strong>{searchParams.destination_id}</strong>
+            <br />
+            Check-in:
+            {' '}
+            <strong>{searchParams.checkin}</strong>
+            <br />
+            Check-out:
+            {' '}
+            <strong>{searchParams.checkout}</strong>
+            <br />
+          </p>
+
+          <CheckoutForm />
+        </div>
+      </Elements>
+    </>
   )
 }

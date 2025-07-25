@@ -227,6 +227,7 @@ export const ResultsPage = () => {
                             checkin={checkin}
                             checkout={checkout}
                             guests={guests}
+                            destinationId={destinationId}
                           />
                         ))}
                       </>

@@ -34,6 +34,7 @@ export interface Hotel {
   description: string
   amenities: HotelAmenities
   image_details: ImageDetails
+  checkin_time: string
 }
 export interface Room {
   key: string // Booking key for unique identification
