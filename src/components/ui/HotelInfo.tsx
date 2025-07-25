@@ -47,10 +47,10 @@ export const HotelInfo = ({ hotelId }: HotelInfoProps) => {
   }
 
   return (
-    <div className="mb-6 flex flex-col gap-4">
-      <h2 className="card-title text-2xl mb-4">{data.name}</h2>
+    <div className="mb-6 flex flex-col gap-6">
+      <h2 className="card-title text-3xl">{data.name}</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col items-start gap-2">
           <p className="font-semibold text-base-content/70">Location</p>
           <p>{data.address}</p>
@@ -62,6 +62,10 @@ export const HotelInfo = ({ hotelId }: HotelInfoProps) => {
           />
           <p className="font-semibold text-base-content/70">Check-in Time</p>
           <p>{data.checkin_time}</p>
+          <ImageCarousel
+            imageDetails={data.image_details}
+            hotelName={data.name}
+          />
         </div>
         <MapView lat={data.latitude} lng={data.longitude} />
       </div>
@@ -78,11 +82,6 @@ export const HotelInfo = ({ hotelId }: HotelInfoProps) => {
           dangerouslySetInnerHTML={{ __html: data.description }}
         />
       </div>
-      <ImageCarousel
-        imageDetails={data.image_details}
-        hotelName={data.name}
-        hires_image_index={data.hires_image_index}
-      />
     </div>
   )
 }
