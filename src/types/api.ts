@@ -1,4 +1,4 @@
-import { DestinationSearchResult } from './destination'
+import type { DestinationSearchResult } from './destination'
 
 export interface PriceBaseResponse {
   searchCompleted: boolean | null

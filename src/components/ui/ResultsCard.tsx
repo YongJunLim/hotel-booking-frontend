@@ -1,6 +1,6 @@
 import type { Hotel } from '../../types/params'
-import { Link } from 'wouter'
 import StarUI from './StarRating'
+import { useLocation } from 'wouter'
 
 interface Results {
   hotel: Hotel
@@ -8,9 +8,19 @@ interface Results {
   checkin?: string
   checkout?: string
   guests?: string
+  destinationId?: string
 }
 
-export const HotelCard = ({ hotel, hotelprice }: Results) => {
+export const HotelCard = ({
+  hotel,
+  hotelprice,
+  checkin,
+  checkout,
+  guests,
+  destinationId,
+}: Results) => {
+  const [, navigate] = useLocation()
+
   return (
     <div className="card card-side bg-base-100 shadow-sm w-200 ">
       <figure className="p-4">
@@ -37,12 +47,16 @@ export const HotelCard = ({ hotel, hotelprice }: Results) => {
           </p>
         </div>
         <div className="flex justify-end">
-          <Link
-            href="/hotels/detail/atH8?destination_id=WD0M&checkin=2025-10-01&checkout=2025-10-07&lang=en_US&currency=SGD&country_code=SG&guests=2|2"
-            className="btn btn-primary "
+          <button
+            className="btn btn-primary mt-2"
+            onClick={() => {
+              navigate(
+                `/hotels/detail/${hotel.id}?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&lang=en_US&currency=SGD&country_code=SG&guests=${guests}`,
+              )
+            }}
           >
             View Hotel Details
-          </Link>
+          </button>
         </div>
       </div>
     </div>
