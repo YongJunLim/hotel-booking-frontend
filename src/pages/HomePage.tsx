@@ -82,14 +82,14 @@ export const HomePage = () => {
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data.country_)
     if (data.start_ == undefined || data.end_ == undefined) {
-      setError("root", {
-        type: "manual",
-        message: "Please select a start date and an end date.",
-      });
-      return;
+      setError('root', {
+        type: 'manual',
+        message: 'Please select a start date and an end date.',
+      })
+      return
     }
     else {
-      clearErrors("root");
+      clearErrors('root')
     }
 
     if (data.sum_ == 0) {

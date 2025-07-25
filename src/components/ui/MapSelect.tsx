@@ -27,7 +27,7 @@ export const MapSelect = ({ hotels, destinationId, checkin, checkout, guests }: 
         `/hotels/detail/${selectedFeature.id}?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&lang=en_US&currency=SGD&country_code=SG&guests=${guests}`,
       )
     }
-  }, [selectedFeature]);
+  }, [selectedFeature])
   const handleMapClick = (e: MapLayerMouseEvent) => {
     const feature = e.features?.[0]
     if (feature) {
@@ -35,17 +35,17 @@ export const MapSelect = ({ hotels, destinationId, checkin, checkout, guests }: 
     }
   }
 
-  const mapRef = useRef<MapRef | null>(null);
+  const mapRef = useRef<MapRef | null>(null)
 
   useEffect(() => {
-    if(hotels[0]) {
+    if (hotels[0]) {
       mapRef.current?.flyTo({
         center: [hotels[0].longitude, hotels[0].latitude],
         zoom: 14,
         speed: 1.0,
-      });
+      })
     }
-  }, [hotels]);
+  }, [hotels])
 
   return (
     <div className="w-full h-75 rounded-lg overflow-hidden">
@@ -76,7 +76,7 @@ export const MapSelect = ({ hotels, destinationId, checkin, checkout, guests }: 
         {hotels.map(hotel => (
           <Marker longitude={hotel.longitude} latitude={hotel.latitude} anchor="bottom"></Marker>
         ))}
-          
+
         <Source
           id="my-geojson"
           type="geojson"
@@ -116,15 +116,18 @@ export const MapSelect = ({ hotels, destinationId, checkin, checkout, guests }: 
             <div>
               <strong>{hoverInfo.properties.name}</strong>
               <br />
-              <strong>Address</strong>:
+              <strong>Address</strong>
+              :
               {' '}
               {hoverInfo.properties.address}
               <br />
-              <strong>Price</strong>:
+              <strong>Price</strong>
+              :
               {' '}
               {hoverInfo.properties.price}
               <br />
-              <strong>Rating</strong>:
+              <strong>Rating</strong>
+              :
               {' '}
               {hoverInfo.properties.rating}
             </div>
