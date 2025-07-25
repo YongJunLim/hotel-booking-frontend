@@ -15,6 +15,7 @@ import Sortdropdown from '../components/ui/SortDropDown'
 import useSWR from 'swr'
 import { BACKEND_URL } from '../config/api'
 import { MapSelect } from '../components/ui/MapSelect'
+import DestinationSearch from '../components/ui/DestinationSearch'
 
 const fetcher = (url: string) => fetch(url).then(response => response.json())
 
@@ -107,7 +108,9 @@ export const ResultsPage = () => {
   return (
     <>
       <NavBar pageTitle={pageTitle} />
-
+      <div className="py-2">
+        <DestinationSearch />
+      </div>
       <BookingDetails
         searchParams={searchParams}
         destinationId={destinationId}
@@ -115,7 +118,7 @@ export const ResultsPage = () => {
 
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">Hotel Search Results</h2>
-        <div className='pt-8'>
+        <div className="pt-8">
           <MapSelect hotels={sortedlist} checkin={checkin} checkout={checkout} guests={guests} destinationId={destinationId} />
         </div>
         {isloading && (
@@ -198,7 +201,7 @@ export const ResultsPage = () => {
                     </>
                   )
                   : (
-                    <p className="content-center text-yellow-700 bg-gray-700">
+                    <p className="content-center text-red-800 bg-yellow-400">
                       No matching hotels found. Please try a different criteria!
                     </p>
                   )}
