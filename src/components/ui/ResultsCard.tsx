@@ -1,4 +1,5 @@
 import type { Hotel } from '../../types/params'
+import StarUI from './StarRating'
 import { useLocation } from 'wouter'
 
 interface Results {
@@ -21,7 +22,7 @@ export const HotelCard = ({
   const [, navigate] = useLocation()
 
   return (
-    <div className="card card-side bg-base-100 shadow-sm">
+    <div className="card card-side bg-base-100 shadow-sm w-200 ">
       <figure className="p-4">
         <img
           src={`${hotel.image_details.prefix}0${hotel.image_details.suffix}`}
@@ -32,11 +33,13 @@ export const HotelCard = ({
       <div className="card-body">
         <h2 className="text-xl font-semibold">{hotel.name}</h2>
         <p>{hotel.address}</p>
-        <p>
-          {hotel.rating}
-          {' '}
-          stars
-        </p>
+        <div>
+          <StarUI
+            rating={hotel.rating}
+            name={`rating-${hotel.id}`}
+            readonly={true}
+          />
+        </div>
         <div>
           <p className="text-green-600 font-semibold text-xl flex justify-end">
             $
@@ -52,7 +55,7 @@ export const HotelCard = ({
               )
             }}
           >
-            View Rooms
+            View Hotel Details
           </button>
         </div>
       </div>
