@@ -2,6 +2,7 @@ import { useParams, Link } from 'wouter'
 import { useSearchParams } from '../hooks/useSearchParams'
 import { BookingDetails } from '../components/ui/BookingDetails'
 import { HotelCard } from '../components/ui/ResultsCard'
+import { NavBar } from '../components/layout/NavBar'
 import { useMemo, useState } from 'react'
 import type {
   StitchedHotel,
@@ -12,9 +13,8 @@ import type {
 import Sortdropdown from '../components/ui/SortDropDown'
 import useSWR from 'swr'
 import StarRatingFilter from '../components/ui/FilterStar'
-// import { BACKEND_URL } from "../config/api";
-
-const baseURL = import.meta.env.VITE_BACKEND_URL
+import { BACKEND_URL } from '../config/api'
+import { MapSelect } from '../components/ui/MapSelect'
 
 const fetcher = (url: string) => fetch(url).then(response => response.json())
 
@@ -26,8 +26,8 @@ export const ResultsPage = () => {
   const checkout = searchParams.checkout ?? undefined
   const guests = searchParams.guests ?? undefined
 
-  const priceAPI = `${baseURL}/hotels/prices?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`
-  const hotelAPI = `${baseURL}/hotels?destination_id=${destinationId}`
+  const priceAPI = `${BACKEND_URL}/hotels/prices?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`
+  const hotelAPI = `${BACKEND_URL}/hotels?destination_id=${destinationId}`
 
   const {
     data: pricedata,
@@ -114,13 +114,10 @@ export const ResultsPage = () => {
     return datacopy
   }, [starfilterlist, sortby])
 
+  const pageTitle = `Search Results for ${destinationId}`
   return (
     <>
-      <h1 className="text-4xl font-bold mb-8">
-        Search Results for
-        {' '}
-        {destinationId}
-      </h1>
+      <NavBar pageTitle={pageTitle} />
 
       <BookingDetails
         searchParams={searchParams}
@@ -129,6 +126,15 @@ export const ResultsPage = () => {
 
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">Hotel Search Results</h2>
+        <div className="pt-8">
+          <MapSelect
+            hotels={sortedlist}
+            checkin={checkin}
+            checkout={checkout}
+            guests={guests}
+            destinationId={destinationId}
+          />
+        </div>
         {isloading && (
           <span>
             Please wait a moment as we fetch the best prices for you...
@@ -226,7 +232,7 @@ export const ResultsPage = () => {
                       </>
                     )
                     : (
-                      <p className="content-center text-yellow-700 bg-gray-700">
+                      <p className="content-center text-yellow-700">
                         No matching hotels found. Please try a different criteria!
                       </p>
                     )}
