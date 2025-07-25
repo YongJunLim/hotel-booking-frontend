@@ -9,6 +9,7 @@ import {
   useElements,
 } from '@stripe/react-stripe-js'
 import { NavBar } from '../components/layout/NavBar'
+import useRoomBookingStore from '../stores/RoomBookingStore'
 
 const stripePromise = loadStripe(
   'pk_test_51RkOjuPSc0OCzrEzBwXXxxQaYDDeAQf66TRqSPK8zi8AuZDKUPyQrG3MRjTDPNXXHph6vbnzG8GOwkqZllAx7GcJ00KEWTx5jG',
@@ -131,6 +132,15 @@ const CheckoutForm = () => {
 export const BookingPage = () => {
   const params = useParams()
   const searchParams = useSearchParams()
+
+  const roomBookingStore = useRoomBookingStore()
+  console.log('Selected Rooms:', roomBookingStore.selectedRooms)
+  console.log('Total Price:', roomBookingStore.getTotalPrice())
+  console.log('Max Selected Rooms:', roomBookingStore.maxSelectedRooms)
+  console.log('Hotel ID:', roomBookingStore.hotelId)
+  console.log('Check-in:', roomBookingStore.checkin)
+  console.log('Check-out:', roomBookingStore.checkout)
+  console.log('Guests:', roomBookingStore.guests)
 
   useEffect(() => {
     console.log('Booking for hotel:', params.hotel_id)

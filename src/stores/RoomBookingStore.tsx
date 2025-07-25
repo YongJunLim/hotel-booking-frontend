@@ -9,37 +9,81 @@ interface RoomDetails {
 
 interface RoomBookingStore {
   hotelId: string | null
-  roomDetails: RoomDetails | null
+  selectedRooms: RoomDetails[]
   checkin: string | null
   checkout: string | null
   guests: string | null
+  maxSelectedRooms: number
   setRoomBookingData: (data: {
     hotelId: string
-    roomDetails: RoomDetails
     checkin: string
     checkout: string
     guests: string
   }) => void
+  setMaxSelectedRooms: (max: number) => void
+  addRoom: (room: RoomDetails) => void
+  removeRoom: (roomKey: string) => void
   clearRoomBookingData: () => void
+  canAddMoreRooms: () => boolean
+  getTotalPrice: () => number
 }
 
 const useRoomBookingStore = create<RoomBookingStore>()(
   devtools(
-    set => ({
+    (set, get) => ({
       hotelId: null,
-      roomDetails: null,
+      selectedRooms: [],
       checkin: null,
       checkout: null,
       guests: null,
-      setRoomBookingData: data => set(data),
+      maxSelectedRooms: 1,
+
+      setRoomBookingData: data =>
+        set({
+          hotelId: data.hotelId,
+          checkin: data.checkin,
+          checkout: data.checkout,
+          guests: data.guests,
+        }),
+
+      setMaxSelectedRooms: max => set({ maxSelectedRooms: max }),
+
+      addRoom: room =>
+        set(state => ({
+          selectedRooms: [...state.selectedRooms, room],
+        })),
+
+      removeRoom: roomKey =>
+        set(state => ({
+          selectedRooms: state.selectedRooms.filter(
+            room => room.key !== roomKey,
+          ),
+        })),
+
       clearRoomBookingData: () =>
         set({
           hotelId: null,
-          roomDetails: null,
+          selectedRooms: [],
           checkin: null,
           checkout: null,
           guests: null,
+          maxSelectedRooms: 1,
         }),
+
+      canAddMoreRooms: () => {
+        const state = get()
+        return state.selectedRooms.length < state.maxSelectedRooms
+      },
+
+      getTotalPrice: () => {
+        const state = get()
+        // 2 decimal places
+        return parseFloat(
+          state.selectedRooms
+            .reduce((total, room) => total + room.price, 0)
+            .toFixed(2),
+        )
+      },
     }),
     {
       name: 'RoomBookingStore',
