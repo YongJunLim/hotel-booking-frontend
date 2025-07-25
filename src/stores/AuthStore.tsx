@@ -6,6 +6,7 @@ interface AuthStore {
   isLoggedIn: boolean
   userDetails: UserDetails
   toast: string
+  toastType: 'success' | 'error' | 'info'
   accessToken: string | null
   redirectUrl: string
   login: (userDetails: UserDetails, token: string) => void
@@ -35,6 +36,7 @@ const useAuthStore = create<AuthStore>()(
         },
         toast: '',
         accessToken: null,
+        redirectUrl: '/',
 
         login: (userDetails: UserDetails, token: string) => {
           // sessionStorage.setItem("accessToken", token);
@@ -59,7 +61,8 @@ const useAuthStore = create<AuthStore>()(
             toast: 'You have been signed out.',
           })
 
-          get().clearRedirectUrl()
+          // no longer needed as always tracking redirectUrl regardless of login status
+          // get().clearRedirectUrl()
 
           // Auto-clear logout toast
           setTimeout(() => get().clearToast(), 3000)
@@ -76,11 +79,14 @@ const useAuthStore = create<AuthStore>()(
         },
 
         clearToast: () => {
-          set({ toast: '' })
+          set({ toast: '', toastType: 'info' })
         },
 
-        setToast: (toastMsg: string) => {
-          set({ toast: toastMsg })
+        setToast: (
+          toastMsg: string,
+          type: 'success' | 'error' | 'info' = 'info',
+        ) => {
+          set({ toast: toastMsg, toastType: type })
           setTimeout(() => get().clearToast(), 3000)
         },
 

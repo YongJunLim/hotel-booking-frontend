@@ -146,7 +146,7 @@ export const Login = () => {
         },
         msg.data.token,
       )
-      setToast(msg.message)
+      setToast(msg.message, 'success')
       // Redirect to stored URL or home
       if (redirectUrl) {
         clearRedirectUrl()

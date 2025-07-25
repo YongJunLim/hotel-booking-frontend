@@ -8,20 +8,32 @@ interface NavBarProps {
   pageTitle: string
 }
 
+const getToastStyles = (type: string) => {
+  switch (type) {
+    case 'error':
+      return 'alert-error'
+    case 'success':
+      return 'alert-success'
+    case 'info':
+    default:
+      return 'alert-info'
+  }
+}
+
 export const NavBar = ({ pageTitle }: NavBarProps) => {
   const toastMsg = useAuthStore(state => state.toast)
-  const isLoggedIn = useAuthStore(state => state.isLoggedIn)
+  const toastType = useAuthStore(state => state.toastType)
   const setRedirectUrl = useAuthStore(state => state.setRedirectUrl)
   const [location] = useLocation()
   const search = useSearch()
 
-  // Save current URL whenever user navigates while not logged in
+  // Save current URL whenever user navigates
   useEffect(() => {
-    if (!isLoggedIn && location !== '/login' && location !== '/signup') {
+    if (location !== '/login' && location !== '/signup') {
       const currentUrl = location + (search ? `?${search}` : '')
       setRedirectUrl(currentUrl)
     }
-  }, [location, search, isLoggedIn, setRedirectUrl])
+  }, [location, search, setRedirectUrl])
 
   return (
     <div className="navbar p-0 bg-base-100">
@@ -31,7 +43,9 @@ export const NavBar = ({ pageTitle }: NavBarProps) => {
       <div className="flex-none">
         {toastMsg != ''
           ? (
-            <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
+            <div
+              className={`fixed top-4 right-4 alert ${getToastStyles(toastType)} text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300`}
+            >
               {toastMsg}
             </div>
           )
