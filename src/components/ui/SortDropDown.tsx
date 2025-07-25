@@ -13,7 +13,7 @@ export default function Sortdropdown({
 
   return (
     <div>
-      <label htmlFor="sortdropdown">Sort list by:</label>
+      <label htmlFor="sortdropdown">Sort list by: </label>
       <select id="sortdropdown" value={selectedvalue} onChange={handleChange}>
         <option value="Price (Ascending)">Price (Ascending)</option>
         <option value="Price (Descending)">Price (Descending)</option>

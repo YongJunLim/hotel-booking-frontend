@@ -1,4 +1,11 @@
-import { Map, type MapRef, Source, Layer, Popup, type MapLayerMouseEvent } from 'react-map-gl/maplibre'
+import {
+  Map,
+  type MapRef,
+  Source,
+  Layer,
+  Popup,
+  type MapLayerMouseEvent,
+} from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { MAPTILER_TOKEN } from '../../config/api'
 import type { StitchedHotel } from '../../types/params'
@@ -14,7 +21,13 @@ interface MapSelectProps {
   destinationId?: string
 }
 
-export const MapSelect = ({ hotels, destinationId, checkin, checkout, guests }: MapSelectProps) => {
+export const MapSelect = ({
+  hotels,
+  destinationId,
+  checkin,
+  checkout,
+  guests,
+}: MapSelectProps) => {
   const [, navigate] = useLocation()
   const [hoverInfo, setHoverInfo] = useState<{
     longitude: number
@@ -135,17 +148,14 @@ export const MapSelect = ({ hotels, destinationId, checkin, checkout, guests }: 
               <br />
               <strong>Address</strong>
               :
-              {' '}
               {hoverInfo.properties.address}
               <br />
               <strong>Price</strong>
               :
-              {' '}
               {hoverInfo.properties.price}
               <br />
               <strong>Rating</strong>
               :
-              {' '}
               {hoverInfo.properties.rating}
             </div>
           </Popup>

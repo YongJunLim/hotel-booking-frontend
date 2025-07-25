@@ -2,6 +2,8 @@ import useSWR from 'swr'
 import { BACKEND_URL } from '../../config/api'
 import type { Hotel } from '../../types/hotel'
 import { MapView } from './MapView'
+import StarUI from './StarRating'
+import { ImageCarousel } from './ImageCarousel'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
@@ -45,25 +47,27 @@ export const HotelInfo = ({ hotelId }: HotelInfoProps) => {
   }
 
   return (
-    <div className="mb-6">
-      <h2 className="card-title text-2xl mb-4">{data.name}</h2>
+    <div className="mb-6 flex flex-col gap-6">
+      <h2 className="card-title text-3xl">{data.name}</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <div>
-          <p className="text-sm font-semibold text-base-content/70 mb-2">
-            Location
-          </p>
-          <MapView lat={data.latitude} lng={data.longitude} />
-          <p className="mt-2">{data.address}</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col items-start gap-2">
+          <p className="font-semibold text-base-content/70">Location</p>
+          <p>{data.address}</p>
+          <p className="font-semibold text-base-content/70">Rating</p>
+          <StarUI
+            rating={data.rating}
+            name={`rating-${data.id}`}
+            readonly={true}
+          />
+          <p className="font-semibold text-base-content/70">Check-in Time</p>
+          <p>{data.checkin_time}</p>
+          <ImageCarousel
+            imageDetails={data.image_details}
+            hotelName={data.name}
+          />
         </div>
-
-        <div>
-          <p className="text-sm font-semibold text-base-content/70">Rating</p>
-          <div className="flex items-center gap-2">
-            <span className="text-lg font-semibold">{data.rating}</span>
-            <span className="text-base-content/70">stars</span>
-          </div>
-        </div>
+        <MapView lat={data.latitude} lng={data.longitude} />
       </div>
 
       <div

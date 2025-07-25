@@ -9,7 +9,7 @@ interface MapViewProps {
 
 export const MapView = ({ lat, lng }: MapViewProps) => {
   return (
-    <div className="w-full h-64 rounded-lg overflow-hidden">
+    <div className="w-full h-full rounded-lg overflow-hidden">
       <Map
         initialViewState={{
           longitude: lng,
