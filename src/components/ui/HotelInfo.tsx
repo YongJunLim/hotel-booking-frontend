@@ -3,6 +3,7 @@ import { BACKEND_URL } from '../../config/api'
 import type { Hotel } from '../../types/hotel'
 import { MapView } from './MapView'
 import StarUI from './StarRating'
+import { ImageCarousel } from './ImageCarousel'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
@@ -46,7 +47,7 @@ export const HotelInfo = ({ hotelId }: HotelInfoProps) => {
   }
 
   return (
-    <div className="mb-6">
+    <div className="mb-6 flex flex-col gap-4">
       <h2 className="card-title text-2xl mb-4">{data.name}</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -77,6 +78,11 @@ export const HotelInfo = ({ hotelId }: HotelInfoProps) => {
           dangerouslySetInnerHTML={{ __html: data.description }}
         />
       </div>
+      <ImageCarousel
+        imageDetails={data.image_details}
+        hotelName={data.name}
+        hires_image_index={data.hires_image_index}
+      />
     </div>
   )
 }

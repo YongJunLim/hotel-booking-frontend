@@ -1,7 +1,6 @@
 import { useParams, Link } from 'wouter'
 import useSWR from 'swr'
 import { useSearchParams } from '../hooks/useSearchParams'
-import { BookingDetails } from '../components/ui/BookingDetails'
 import { RoomCard } from '../components/ui/RoomCard'
 import type { PriceBaseResponse } from '../types/api'
 import type { Room } from '../types/hotel'
@@ -57,13 +56,7 @@ export const HotelDetailPage = () => {
   return (
     <>
       <NavBar pageTitle={pageTitle} />
-
       {hotelId && <HotelInfo hotelId={hotelId} />}
-      <BookingDetails
-        searchParams={searchParams}
-        destinationId={destinationId || undefined}
-        hotelId={hotelId}
-      />
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">Room Options</h2>
 

@@ -34,6 +34,7 @@ export interface Hotel {
   description: string
   amenities: HotelAmenities
   image_details: ImageDetails
+  hires_image_index: string
   checkin_time: string
 }
 export interface Room {

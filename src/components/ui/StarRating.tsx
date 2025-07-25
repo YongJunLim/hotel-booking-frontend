@@ -40,7 +40,7 @@ export default function StarUI({
       className="rating rating-sm rating-half "
       style={{ pointerEvents: readonly ? 'none' : 'auto' }}
     >
-      <input type="radio" name={name} className="rating-hidden" />
+      {/* <input type="radio" name={name} className="rating-hidden" /> */}
       {stars}
     </div>
   )
