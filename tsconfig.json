@@ -5,7 +5,9 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
+    "composite": true,
     "strict": true,
+    "jsx": "react-jsx",
     // https://github.com/testing-library/jest-dom?tab=readme-ov-file#with-vitest
     "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
