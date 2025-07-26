@@ -16,6 +16,7 @@ import useSWR from 'swr'
 import { BACKEND_URL } from '../config/api'
 import { MapSelect } from '../components/ui/MapSelect'
 import StarRatingFilter from '../components/ui/FilterStar'
+import RangeSlider from '../components/ui/FilterPrice'
 
 const fetcher = (url: string) => fetch(url).then(response => response.json())
 
@@ -72,30 +73,50 @@ export const ResultsPage = () => {
     return []
   }, [hoteldata, pricedata])
 
-  const [show, setshow] = useState(1)
+  // filter price range
+  function getpricerange(data: StitchedHotel[]): [number, number] {
+    const hotelprice = data.map(hotel => hotel.price ?? 0)
+    const minprice = Math.min(...hotelprice)
+    const maxprice = Math.max(...hotelprice)
+    return [minprice, maxprice]
+  }
+  const [fullpricerange, setfullpricerange] = useState<[number, number]>([
+    0, 1000,
+  ])
+  const [pricerange, setpricerange] = useState<[number, number]>([0, 1000])
+
+  useEffect(() => {
+    if (stichedata.length > 0) {
+      const [minprice, maxprice] = getpricerange(stichedata)
+      setfullpricerange([minprice, maxprice])
+      setpricerange([minprice, maxprice])
+    }
+    else {
+      setfullpricerange([0, 0])
+      setpricerange([0, 0])
+    }
+  }, [stichedata])
 
   // filter stars range
   const [minstar, setminstar] = useState(0.5)
   const [maxstar, setmaxstar] = useState(5)
-  const starfilterlist: StitchedHotel[] = useMemo(() => {
-    if (maxstar >= minstar) {
-      return stichedata.filter(
-        hotel => hotel.rating >= minstar && hotel.rating <= maxstar,
-      )
-    }
-    else {
-      return []
-    }
-  }, [stichedata, minstar, maxstar])
 
-  useEffect(() => {
-    setshow(1)
-  }, [stichedata, minstar, maxstar])
+  // filter star and price
+  const filteredlist: StitchedHotel[] = useMemo(() => {
+    return stichedata.filter((hotel) => {
+      const starRange = hotel.rating >= minstar && hotel.rating <= maxstar
+      const priceRange
+        = hotel.price !== undefined
+          && hotel.price >= pricerange[0]
+          && hotel.price <= pricerange[1]
+      return starRange && priceRange
+    })
+  }, [stichedata, minstar, maxstar, pricerange])
 
   // sort for dropdown
   const [sortby, setsortby] = useState('Price (Ascending)')
   const sortedlist: StitchedHotel[] = useMemo(() => {
-    const datacopy = [...starfilterlist]
+    const datacopy = [...filteredlist]
     if (sortby === 'Price (Ascending)') {
       datacopy.sort(
         (a: StitchedHotel, b: StitchedHotel) => a.price! - b.price!,
@@ -117,8 +138,13 @@ export const ResultsPage = () => {
       )
     }
     return datacopy
-  }, [starfilterlist, sortby])
+  }, [filteredlist, sortby])
 
+  // pagination
+  const [show, setshow] = useState(1)
+  useEffect(() => {
+    setshow(1)
+  }, [stichedata, minstar, maxstar, pricerange])
   const shownlist = useMemo(
     () => sortedlist.slice(0, show * 10),
     [sortedlist, show],
@@ -234,6 +260,15 @@ export const ResultsPage = () => {
                       setmaxstar={setmaxstar}
                     >
                     </StarRatingFilter>
+                    <div className="pt-6 pl-2">
+                      <RangeSlider
+                        minprice={fullpricerange[0]}
+                        maxprice={fullpricerange[1]}
+                        value={pricerange}
+                        onChange={setpricerange}
+                      >
+                      </RangeSlider>
+                    </div>
                   </div>
                 </aside>
 
