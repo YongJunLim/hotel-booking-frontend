@@ -1,9 +1,8 @@
-import { useState } from 'react'
 import { useFormStore } from '../../store'
 
-const incrementBy = (setFn: (val: number | ((prev: number) => number)) => void, amount: number) => {
+export const incrementBy = (setFn: (val: number | ((prev: number) => number)) => void, amount: number) => {
   setFn((prev) => {
-    if (prev < 5) {
+    if (prev+amount <= 5) {
       return prev + amount
     }
     else {
@@ -12,9 +11,9 @@ const incrementBy = (setFn: (val: number | ((prev: number) => number)) => void, 
   })
 }
 
-const decrementBy = (setFn: (val: number | ((prev: number) => number)) => void, amount: number) => {
+export const decrementBy = (setFn: (val: number | ((prev: number) => number)) => void, amount: number) => {
   setFn((prev) => {
-    if (prev > 0) {
+    if (prev-amount >= 0) {
       return prev - amount
     }
     else {
@@ -23,9 +22,29 @@ const decrementBy = (setFn: (val: number | ((prev: number) => number)) => void, 
   })
 }
 
-export default function DropdownWithButtons() {
-  const [isOpen, setIsOpen] = useState(false)
+export function CheckAdultAndChildren(sum: number) {
+  let str: string
+  if (sum > 1) {
+    str = 'Guests'
+  }
+  else {
+    str = 'Guest'
+  }
+  return str
+};
 
+export function CheckRoom(Room: number) {
+  let str: string
+  if (Room > 1) {
+    str = 'Rooms'
+  }
+  else {
+    str = 'Room'
+  }
+  return str
+};
+
+export default function DropdownWithButtons() {
   const Adult = useFormStore(s => s.Adult)
   const Child = useFormStore(s => s.Children)
   const Room = useFormStore(s => s.Room)
@@ -34,136 +53,114 @@ export default function DropdownWithButtons() {
   const setRoom = useFormStore(s => s.setRoom)
 
   const sum = Adult + Child
-
-  function CheckAdultAndChildren() {
-    let str: string
-    if (sum > 1) {
-      str = 'Guests'
-    }
-    else {
-      str = 'Guest'
-    }
-    return str
-  };
-
-  function CheckRoom() {
-    let str: string
-    if (Room > 1) {
-      str = 'Rooms'
-    }
-    else {
-      str = 'Room'
-    }
-    return str
-  };
+  const adultAndChildren = CheckAdultAndChildren(sum)
+  const room = CheckRoom(Room)
 
   return (
-    <div className="relative border rounded-lg border-gray-300 flex p-2 w-fit h-fit">
-      <button onClick={() => setIsOpen(!isOpen)}>
+    <div>
+      <button popoverTarget="popover-1" style={{ anchorName: '--anchor-1' } as React.CSSProperties} className="relative border rounded-lg border-gray-300 flex w-45 h-fit items-center justify-center p-2 font-bold">
         {sum}
         {' '}
-        <CheckAdultAndChildren></CheckAdultAndChildren>
+        {adultAndChildren}
         {' '}
         |
         {' '}
         {Room}
         {' '}
-        <CheckRoom></CheckRoom>
+        {room}
         {' '}
         ▼
       </button>
 
-      {isOpen && (
-        <div className="absolute top-full left-0 mt-2 bg-white border border-gray-300 shadow-md z-[1000] w-full">
-          <div className="flex gap-5 items-center justify-between">
-            <div className="flex gap-2 items-center">
-              <p>Adults</p>
-            </div>
-            <div className="flex gap-2 items-center">
-              <button
-                className="block w-full p-2"
-                onClick={() => {
-                  decrementBy(setAdult, 1)
-                }}
-              >
-                -
-              </button>
-              <p>
-                {' '}
-                {Adult}
-              </p>
-              {' '}
-              {}
-              <button
-                className="block w-full p-2"
-                onClick={() => {
-                  incrementBy(setAdult, 1)
-                }}
-              >
-                +
-              </button>
-            </div>
+      <div popover="auto" id="popover-1" className="dropdown mt-2 z-50 bg-white border w-45" style={{ positionAnchor: '--anchor-1' } as React.CSSProperties}>
+        <div className="flex gap-5 items-center justify-between px-2">
+          <div className="flex gap-2 items-center">
+            <strong>Adults</strong>
           </div>
-          <div className="flex gap-5 items-center justify-between">
-            <div className="flex gap-2 items-center">
-              <p>Children</p>
-            </div>
-            <div className="flex items-center justify-end gap-2">
-              <button
-                className="block w-full p-2"
-                onClick={() => {
-                  decrementBy(setChild, 1)
-                }}
-              >
-                -
-              </button>
-              <p>
-                {' '}
-                {Child}
-              </p>
+          <div className="flex gap-2 items-center">
+            <button
+              className="block w-full p-2"
+              onClick={() => {
+                decrementBy(setAdult, 1)
+              }}
+            >
+              -
+            </button>
+            <p>
               {' '}
-              {}
-              <button
-                className="block w-full p-2"
-                onClick={() => {
-                  incrementBy(setChild, 1)
-                }}
-              >
-                +
-              </button>
-            </div>
-          </div>
-          <div className="flex gap-5 items-center justify-between">
-            <div className="flex gap-2 items-center">
-              <p>Rooms</p>
-            </div>
-            <div className="flex items-center justify-end gap-2">
-              <button
-                className="block w-full p-2"
-                onClick={() => {
-                  decrementBy(setRoom, 1)
-                }}
-              >
-                -
-              </button>
-              <p>
-                {' '}
-                {Room}
-              </p>
-              {' '}
-              {}
-              <button
-                className="block w-full p-2"
-                onClick={() => {
-                  incrementBy(setRoom, 1)
-                }}
-              >
-                +
-              </button>
-            </div>
+              {Adult}
+            </p>
+            {' '}
+            {}
+            <button
+              className="block w-full p-2"
+              onClick={() => {
+                incrementBy(setAdult, 1)
+              }}
+            >
+              +
+            </button>
           </div>
         </div>
-      )}
+        <div className="flex gap-5 items-center justify-between px-2">
+          <div className="flex gap-2 items-center">
+            <strong>Children</strong>
+          </div>
+          <div className="flex items-center justify-end gap-2">
+            <button
+              className="block w-full p-2"
+              onClick={() => {
+                decrementBy(setChild, 1)
+              }}
+            >
+              -
+            </button>
+            <p>
+              {' '}
+              {Child}
+            </p>
+            {' '}
+            {}
+            <button
+              className="block w-full p-2"
+              onClick={() => {
+                incrementBy(setChild, 1)
+              }}
+            >
+              +
+            </button>
+          </div>
+        </div>
+        <div className="flex gap-5 items-center justify-between px-2">
+          <div className="flex gap-2 items-center">
+            <strong>Rooms</strong>
+          </div>
+          <div className="flex items-center justify-end gap-2">
+            <button
+              className="block w-full p-2"
+              onClick={() => {
+                decrementBy(setRoom, 1)
+              }}
+            >
+              -
+            </button>
+            <p>
+              {' '}
+              {Room}
+            </p>
+            {' '}
+            {}
+            <button
+              className="block w-full p-2"
+              onClick={() => {
+                incrementBy(setRoom, 1)
+              }}
+            >
+              +
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
