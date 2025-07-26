@@ -15,20 +15,20 @@ interface MapSelectProps {
 }
 
 export const MapSelect = ({ hotels, destinationId, checkin, checkout, guests }: MapSelectProps) => {
-  const [, navigate] = useLocation()
+  const [, navigate]: [unknown, (to: string) => void] = useLocation()
   const [hoverInfo, setHoverInfo] = useState<{
     longitude: number
     latitude: number
     properties: Record<string, any>
   } | null>(null)
-  const [selectedFeature, setSelectedFeature] = useState<any>(null)
+  const [selectedFeature, setSelectedFeature] = useState<Record<string, unknown> | null>(null)
   useEffect(() => {
     if (selectedFeature) {
       navigate(
-        `/hotels/detail/${selectedFeature.id}?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&lang=en_US&currency=SGD&country_code=SG&guests=${guests}`,
+        `/hotels/detail/${selectedFeature?.id}?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&lang=en_US&currency=SGD&country_code=SG&guests=${guests}`,
       )
     }
-  }, [selectedFeature])
+  }, [selectedFeature, destinationId, checkin, checkout, guests, navigate])
   const handleMapClick = (e: MapLayerMouseEvent) => {
     const feature = e.features?.[0]
     if (feature) {
