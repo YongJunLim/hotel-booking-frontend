@@ -152,7 +152,6 @@ export const ResultsPage = () => {
 
   const isloading
     = priceloading || hotelloading || pricedata?.completed !== true
-  const noresults = !isloading && shownlist.length === 0
 
   const pageTitle = `Search Results for ${destinationId}`
   return (
@@ -214,66 +213,66 @@ export const ResultsPage = () => {
             </div>
           </div>
         )
-        : noresults
-          ? (
-            <div>
-              <p className="content-center text-yellow-700 bg-gray-700">
-                No matching hotels found. Please try a different criteria!
-              </p>
-            </div>
-          )
-          : (
-            <>
-              <div className="flex items-center justify-between mb-5">
-                <span className="text-lg text-base-content/70">
-                  Last updated:
-                  {' '}
-                  {new Date().toLocaleString()}
-                </span>
-                <div className="flex justify-end">
-                  <Sortdropdown selectedvalue={sortby} setvalue={setsortby} />
-                </div>
+        : (
+          <>
+            <div className="flex items-center justify-between mb-5">
+              <span className="text-lg text-base-content/70">
+                Last updated:
+                {' '}
+                {new Date().toLocaleString()}
+              </span>
+              <div className="flex justify-end">
+                <Sortdropdown selectedvalue={sortby} setvalue={setsortby} />
               </div>
+            </div>
 
-              <div className="flex gap-10 pt-5">
-                <aside className="w-70 shrink-0">
-                  <div className="pb-5 ">
-                    <MapSelect
-                      hotels={shownlist}
-                      checkin={checkin}
-                      checkout={checkout}
-                      guests={guests}
-                      destinationId={destinationId}
-                    />
-                  </div>
+            <div className="flex gap-10 pt-5">
+              <aside className="w-70 shrink-0">
+                <div className="pb-5 ">
+                  <MapSelect
+                    hotels={shownlist}
+                    checkin={checkin}
+                    checkout={checkout}
+                    guests={guests}
+                    destinationId={destinationId}
+                  />
+                </div>
 
-                  <div className="flex flex-col items-center rounded-lg h-50 border-4 border-double pr-3 pt-3">
-                    <h2 className="text-lg font-semibold flex pb-2 ">
-                      {' '}
-                      Filter By:
-                    </h2>
-                    <hr className="border-t border-gray-300 mb-3 w-50" />
-                    <StarRatingFilter
-                      minstar={minstar}
-                      maxstar={maxstar}
-                      setminstar={setminstar}
-                      setmaxstar={setmaxstar}
+                <div className="flex flex-col items-center rounded-lg h-50 border-4 border-double pr-3 pt-3">
+                  <h2 className="text-lg font-semibold flex pb-2 ">
+                    {' '}
+                    Filter By:
+                  </h2>
+                  <hr className="border-t border-gray-300 mb-3 w-50" />
+                  <StarRatingFilter
+                    minstar={minstar}
+                    maxstar={maxstar}
+                    setminstar={setminstar}
+                    setmaxstar={setmaxstar}
+                  >
+                  </StarRatingFilter>
+                  <div className="pt-6 pl-2">
+                    <RangeSlider
+                      minprice={fullpricerange[0]}
+                      maxprice={fullpricerange[1]}
+                      value={pricerange}
+                      onChange={setpricerange}
                     >
-                    </StarRatingFilter>
-                    <div className="pt-6 pl-2">
-                      <RangeSlider
-                        minprice={fullpricerange[0]}
-                        maxprice={fullpricerange[1]}
-                        value={pricerange}
-                        onChange={setpricerange}
-                      >
-                      </RangeSlider>
-                    </div>
+                    </RangeSlider>
                   </div>
-                </aside>
+                </div>
+              </aside>
 
-                <div className="space-y-5">
-                  {sortedlist.length > 0 && (
+              <div className="space-y-5">
+                {sortedlist.length === 0
+                  ? (
+                    <div className="flex justify-center">
+                      <span className="text-yellow-700 bg-gray-700">
+                        No matching hotels found. Please try a different criteria!
+                      </span>
+                    </div>
+                  )
+                  : (
                     <>
                       {shownlist.map((hotel: StitchedHotel) => (
                         <HotelCard
@@ -295,10 +294,10 @@ export const ResultsPage = () => {
                       )}
                     </>
                   )}
-                </div>
               </div>
-            </>
-          )}
+            </div>
+          </>
+        )}
       <div className="pt-17">
         <Link
           href="/hotels/detail/atH8?destination_id=WD0M&checkin=2025-10-01&checkout=2025-10-07&lang=en_US&currency=SGD&country_code=SG&guests=2|2"
