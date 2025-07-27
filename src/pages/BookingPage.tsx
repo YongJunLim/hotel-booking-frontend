@@ -36,7 +36,7 @@ const CheckoutForm = () => {
   const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
 
-    setErrorMessages(prev => {
+    setErrorMessages((prev) => {
       const newErrors = { ...prev }
       delete newErrors[name]
       return newErrors
@@ -105,7 +105,8 @@ const CheckoutForm = () => {
 
     if (res.ok) {
       alert('Booking submitted successfully!')
-    } else {
+    }
+    else {
       alert('Booking failed')
     }
   }
@@ -215,38 +216,38 @@ export const BookingPage = () => {
     console.log('Booking for hotel:', params.hotel_id)
   }, [searchParams])
 
-    const pageTitle = `Complete Your Booking`
+  const pageTitle = `Complete Your Booking`
 
   return (
     <>
       <NavBar pageTitle={pageTitle} />
-    <Elements stripe={stripePromise}>
-      <div className="p-6">
-                  {/* <h1 className="text-3xl font-bold mb-4">Complete Your Booking</h1> */}
-        <p className="mb-6">
-          Hotel ID:
-          {' '}
-          <strong>{params.hotel_id}</strong>
-          <br />
-          Destination ID:
-          {' '}
-          <strong>{searchParams.destination_id}</strong>
-          <br />
-          Check-in:
-          {' '}
-          <strong>{searchParams.checkin}</strong>
-          <br />
-          Check-out:
-          {' '}
-          <strong>{searchParams.checkout}</strong>
-          <br />
-        </p>
+      <Elements stripe={stripePromise}>
+        <div className="p-6">
+          {/* <h1 className="text-3xl font-bold mb-4">Complete Your Booking</h1> */}
+          <p className="mb-6">
+            Hotel ID:
+            {' '}
+            <strong>{params.hotel_id}</strong>
+            <br />
+            Destination ID:
+            {' '}
+            <strong>{searchParams.destination_id}</strong>
+            <br />
+            Check-in:
+            {' '}
+            <strong>{searchParams.checkin}</strong>
+            <br />
+            Check-out:
+            {' '}
+            <strong>{searchParams.checkout}</strong>
+            <br />
+          </p>
 
-        <CheckoutForm />
-      </div>
-    </Elements>
-        </>
+          <CheckoutForm />
+        </div>
+      </Elements>
+    </>
   )
 }
 
-export default CheckoutForm;
+export default CheckoutForm

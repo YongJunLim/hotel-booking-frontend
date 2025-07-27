@@ -84,7 +84,7 @@ export default function DestinationSearch(): React.ReactElement {
     if (data.sum_ == 0) {
       setError('sum_', {
         type: 'manual',
-        message: 'Please enter the number of guests.',
+        message: 'Please enter the number of guests PER room.',
       })
       return
     }
@@ -115,7 +115,7 @@ export default function DestinationSearch(): React.ReactElement {
     }
 
     navigate(
-      `/results/${country.uid}?checkin=${start}&checkout=${end}&lang=en_US&currency=SGD&country_code=SG&guests=${sum}|${Room}`,
+      `/results/${country.uid}?checkin=${start}&checkout=${end}&lang=en_US&currency=SGD&country_code=SG&guests=${Array(Room).fill(sum).join('|')}`,
     )
   }
   return (
@@ -143,7 +143,7 @@ export default function DestinationSearch(): React.ReactElement {
               <input
                 type="hidden"
                 {...register('sum_', {
-                  required: 'Please select the number of guests.',
+                  required: 'Please select the number of guests PER room.',
                 })}
               />
               <input
@@ -159,16 +159,25 @@ export default function DestinationSearch(): React.ReactElement {
                 })}
               />
             </div>
-            {errors.start_ && (<p className="text-red-500">{errors.start_.message}</p>)}
-            {errors.end_ && <p className="text-red-500">{errors.end_.message}</p>}
-            {errors.root && <p className="text-red-500">{errors.root.message}</p>}
-            {errors.sum_ && <p className="text-red-500">{errors.sum_.message}</p>}
-            {errors.Room_ && <p className="text-red-500">{errors.Room_.message}</p>}
-            {errors.country_ && <p className="text-red-500">{errors.country_.message}</p>}
-            <button
-              type="submit"
-              className="btn btn-primary mt-2"
-            >
+            {errors.start_ && (
+              <p className="text-red-500">{errors.start_.message}</p>
+            )}
+            {errors.end_ && (
+              <p className="text-red-500">{errors.end_.message}</p>
+            )}
+            {errors.root && (
+              <p className="text-red-500">{errors.root.message}</p>
+            )}
+            {errors.sum_ && (
+              <p className="text-red-500">{errors.sum_.message}</p>
+            )}
+            {errors.Room_ && (
+              <p className="text-red-500">{errors.Room_.message}</p>
+            )}
+            {errors.country_ && (
+              <p className="text-red-500">{errors.country_.message}</p>
+            )}
+            <button type="submit" className="btn btn-primary mt-2">
               Search
             </button>
           </form>
