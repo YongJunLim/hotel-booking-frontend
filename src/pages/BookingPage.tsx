@@ -93,6 +93,7 @@ const CheckoutForm = () => {
 
     console.log('Submitting booking with:', formData)
 
+    // Placeholder for api, to be updated
     const res = await fetch('/api/bookings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

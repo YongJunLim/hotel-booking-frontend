@@ -80,4 +80,44 @@ describe('CheckoutForm', () => {
     expect(screen.getByText('Phone must be 8 digits')).toBeInTheDocument()
     expect(screen.getByText('Billing address is required')).toBeInTheDocument()
   })
+  
+  // Test 3
+  test('Payment failed', async () => {
+    // Mock a failed fetch response
+    global.fetch = vi.fn().mockResolvedValue({ ok: false })
+    window.alert = vi.fn()
+
+    render(
+      <Elements stripe={stripePromise}>
+        <CheckoutForm />
+      </Elements>
+    )
+
+    // Fill with valid form data
+    fireEvent.change(screen.getByPlaceholderText('First Name'), {
+      target: { value: 'John' },
+    })
+    fireEvent.change(screen.getByPlaceholderText('Last Name'), {
+      target: { value: 'Tan' },
+    })
+    fireEvent.change(screen.getByPlaceholderText('Email'), {
+      target: { value: 'john@email.com' },
+    })
+    fireEvent.change(screen.getByPlaceholderText('Phone Number'), {
+      target: { value: '91234567' },
+    })
+    fireEvent.change(screen.getByPlaceholderText('Billing Address'), {
+      target: { value: '123 Test Avenue' },
+    })
+
+    fireEvent.click(screen.getByText('Submit Booking'))
+
+    // Wait for the error alert to appear
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalledWith('/api/bookings', expect.anything())
+      expect(window.alert).toHaveBeenCalledWith('Booking failed')
+    })
+  })
+
+
 })
