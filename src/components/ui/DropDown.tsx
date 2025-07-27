@@ -1,8 +1,11 @@
 import { useFormStore } from '../../store'
 
-export const incrementBy = (setFn: (val: number | ((prev: number) => number)) => void, amount: number) => {
+export const incrementBy = (
+  setFn: (val: number | ((prev: number) => number)) => void,
+  amount: number,
+) => {
   setFn((prev) => {
-    if (prev+amount <= 5) {
+    if (prev + amount <= 5) {
       return prev + amount
     }
     else {
@@ -11,9 +14,12 @@ export const incrementBy = (setFn: (val: number | ((prev: number) => number)) =>
   })
 }
 
-export const decrementBy = (setFn: (val: number | ((prev: number) => number)) => void, amount: number) => {
+export const decrementBy = (
+  setFn: (val: number | ((prev: number) => number)) => void,
+  amount: number,
+) => {
   setFn((prev) => {
-    if (prev-amount >= 0) {
+    if (prev - amount >= 0) {
       return prev - amount
     }
     else {
@@ -31,7 +37,7 @@ export function CheckAdultAndChildren(sum: number) {
     str = 'Guest'
   }
   return str
-};
+}
 
 export function CheckRoom(Room: number) {
   let str: string
@@ -42,7 +48,7 @@ export function CheckRoom(Room: number) {
     str = 'Room'
   }
   return str
-};
+}
 
 export default function DropdownWithButtons() {
   const Adult = useFormStore(s => s.Adult)
@@ -58,7 +64,11 @@ export default function DropdownWithButtons() {
 
   return (
     <div>
-      <button popoverTarget="popover-1" style={{ anchorName: '--anchor-1' } as React.CSSProperties} className="relative border rounded-lg border-gray-300 flex w-45 h-fit items-center justify-center p-2 font-bold">
+      <button
+        popoverTarget="popover-1"
+        style={{ anchorName: '--anchor-1' } as React.CSSProperties}
+        className="relative border rounded-lg border-gray-300 flex min-w-48 h-fit items-center justify-center p-2 font-bold"
+      >
         {sum}
         {' '}
         {adultAndChildren}
@@ -72,7 +82,12 @@ export default function DropdownWithButtons() {
         ▼
       </button>
 
-      <div popover="auto" id="popover-1" className="dropdown mt-2 z-50 bg-white border w-45" style={{ positionAnchor: '--anchor-1' } as React.CSSProperties}>
+      <div
+        popover="auto"
+        id="popover-1"
+        className="dropdown mt-2 z-50 bg-base-100 border w-45"
+        style={{ positionAnchor: '--anchor-1' } as React.CSSProperties}
+      >
         <div className="flex gap-5 items-center justify-between px-2">
           <div className="flex gap-2 items-center">
             <strong>Adults</strong>
