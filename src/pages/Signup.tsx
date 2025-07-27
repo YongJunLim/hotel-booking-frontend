@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useLocation } from 'wouter'
 import { BACKEND_URL } from '../config/api'
 import useAuthStore from '../stores/AuthStore'
+import { getErrorMessage, type AuthResponse } from '../utils/ZodErrorMsg'
 
 export const Signup = () => {
   const [message, setMessage] = useState('')
@@ -12,17 +13,6 @@ export const Signup = () => {
   })
   const setToast = useAuthStore(state => state.setToast)
   const [, nav] = useLocation()
-
-  interface SignUpResponse {
-    success: boolean
-    data: {
-      firstName: string
-      email: string
-      isAdmin: boolean
-      token: string
-    }
-    message: string
-  }
 
   return (
     <>
@@ -144,13 +134,17 @@ export const Signup = () => {
           password: passwd_inp.value,
         }),
       })
-      const msg = (await res.json()) as SignUpResponse
+      const msg = (await res.json()) as AuthResponse
       setMessage(msg.message)
       setMsgClass(msg.success ? 'text-green-800' : 'text-red-800')
       // Response successful && User successfully created
       if (res.ok && msg.success) {
         setToast(msg.message)
         nav('/login')
+      }
+      else {
+        const errorMessage = getErrorMessage(msg)
+        setMessage(errorMessage)
       }
     }
   }

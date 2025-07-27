@@ -1,52 +1,30 @@
 import { Link, useLocation } from 'wouter'
-// import useAuthStore from '../store'
 import useAuthStore from '../stores/AuthStore'
 import { useState, useEffect } from 'react'
 import { BACKEND_URL } from '../config/api'
+import { getErrorMessage, type AuthResponse } from '../utils/ZodErrorMsg'
 
 export const Login = () => {
   const [message, setMessage] = useState('')
   const [msgClass, setMsgClass] = useState('')
-  // const { login } = useAuthStore();
   const login = useAuthStore(state => state.login)
   const setToast = useAuthStore(state => state.setToast)
   const toast = useAuthStore(state => state.toast)
   const clearToast = useAuthStore(state => state.clearToast)
   const [, nav] = useLocation()
-  // const tmsg = sessionStorage.getItem("toast");
-  // const { timeout } = useAuthStore();
+
 
   useEffect(() => {
-    // if (tmsg != null) {
     if (toast) {
-      // const timer = setTimeout(() => timeout(), 2000);
       const timer = setTimeout(() => clearToast(), 3000)
       return () => clearTimeout(timer)
     }
   }, [toast, clearToast])
 
-  interface LoginResponse {
-    data: {
-      firstName: string
-      email: string
-      isAdmin: boolean
-      token: string
-    }
-    message: string
-    error?: {
-      issues?: {
-        message: string
-      }[]
-    }
-  }
-
   return (
     <>
-      {/* {tmsg != null ? ( */}
-      {/* eslint-disable-next-line @stylistic/multiline-ternary */}
       {toast !== '' ? (
         <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
-          {/* {tmsg} */}
           {toast}
         </div>
       ) : null}
@@ -130,20 +108,10 @@ export const Login = () => {
         password: passwd_inp.value,
       }),
     })
-    const msg = (await response.json()) as LoginResponse
+    const msg = (await response.json()) as AuthResponse
     // Handle login
     const isSuccess = response.ok && msg.data?.token
     if (isSuccess) {
-      // sessionStorage.setItem("accessToken", msg.data.token);
-      // sessionStorage.setItem(
-      //   "details",
-      //   JSON.stringify({
-      //     email: msg.data.email,
-      //     firstName: msg.data.firstName,
-      //   }),
-      // );
-      // sessionStorage.setItem("toast", msg.message);
-      // login();
       login(
         {
           email: msg.data.email,
@@ -155,11 +123,8 @@ export const Login = () => {
       nav('/')
     }
     else {
-      const zodError = msg.error?.issues?.[0]?.message
-      const fallbackmsg = msg.message
-      console.log(msg.message)
-      console.log(zodError)
-      setMessage(zodError || fallbackmsg)
+      const zodmsg = getErrorMessage(msg)
+      setMessage(zodmsg)
       setMsgClass('text-red-800')
     }
   }
