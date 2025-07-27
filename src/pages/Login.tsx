@@ -55,23 +55,30 @@ export const Login = () => {
       </div>
 
       <p className="mb-4 text-2xl font-bold flex">Login Form</p>
-      <div className="grid gap-6 mb-6 md:grid-cols-2 w-1/2">
-        <p>Email:</p>
-        <input
-          type="email"
-          id="email"
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="john@company.com"
-          required
-        />
-        <p>Password:</p>
-        <input
-          id="passwd"
-          type="password"
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="•••••••••"
-          required
-        />
+      <div className="grid gap-4 mb-6 md:grid-cols-2 w-1/2">
+        {/* Email Input Field */}
+        <div className="col-span-2 block items-center gap-2">
+          <p>Email:</p>
+          <input
+            type="email"
+            id="email"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="john@company.com"
+            required
+          />
+        </div>
+        {/* Password Input Field */}
+        <div className="col-span-2 block items-center gap-2">
+          <p>Password:</p>
+          <input
+            id="passwd"
+            type="password"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="•••••••••"
+            required
+          />
+        </div>
+
       </div>
       <p className="mb-4 p-0.5 ">
         Dont have an Account?

@@ -1,4 +1,3 @@
-import useAuthStore from '../store'
 import { useEffect } from 'react'
 import DropdownWithButtons from '../DropDown'
 import { MyAccountDropdown } from '../components/ui/MyAccount'
@@ -9,17 +8,18 @@ import { type Country } from '../types/forms'
 import { useFormStore, useCountryStore } from '../store'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { useLocation } from 'wouter'
+import useAuthStore from '../stores/AuthStore'
 
 export const HomePage = () => {
-  const toastmsg = useAuthStore(state => state.toast)
-  const { timeout } = useAuthStore()
+  const toast = useAuthStore(state => state.toast)
+  const clearToast = useAuthStore(state => state.toast)
 
   useEffect(() => {
-    if (toastmsg != '') {
-      const timer = setTimeout(() => timeout(), 3000)
+    if (toast) {
+      const timer = setTimeout(() => clearToast, 3000)
       return () => clearTimeout(timer)
     }
-  }, [toastmsg, timeout])
+  }, [toast, clearToast])
   const range = useFormStore(s => s.range)
   const Adult = useFormStore(s => s.Adult)
   const Child = useFormStore(s => s.Children)
@@ -151,10 +151,10 @@ export const HomePage = () => {
         </div>
         {/* <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}> */}
         <div className="flex items-center gap-2">
-          {toastmsg != ''
+          {toast != ''
             ? (
               <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
-                {toastmsg}
+                {toast}
               </div>
             )
             : null}
