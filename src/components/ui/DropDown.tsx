@@ -31,10 +31,10 @@ export const decrementBy = (
 export function CheckAdultAndChildren(sum: number) {
   let str: string
   if (sum > 1) {
-    str = 'Guests'
+    str = 'Guests per room'
   }
   else {
-    str = 'Guest'
+    str = 'Guest per room'
   }
   return str
 }

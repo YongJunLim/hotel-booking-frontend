@@ -47,10 +47,14 @@ export const HotelDetailPage = () => {
     if (!guestsParam) return { people: 2, rooms: 1 }
 
     const parts = guestsParam.split('|')
-    const people = parseInt(parts[0]) || 2
-    const rooms = parts.length > 1 ? parseInt(parts[1]) || 1 : 1
+    const rooms = parts.length
+    // guests PER room
+    const totalPeople = parts.reduce(
+      (sum, guests) => sum + parseInt(guests),
+      0,
+    )
 
-    return { people, rooms }
+    return { people: totalPeople, rooms }
   }
 
   const { rooms: maxRooms } = parseGuestsParam(guests)
