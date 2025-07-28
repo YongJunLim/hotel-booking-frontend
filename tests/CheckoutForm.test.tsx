@@ -36,7 +36,7 @@ describe('CheckoutForm', () => {
     render(
       <Elements stripe={stripePromise}>
         <CheckoutForm />
-      </Elements>
+      </Elements>,
     )
 
     fireEvent.change(screen.getByPlaceholderText('First Name'), {
@@ -69,7 +69,7 @@ describe('CheckoutForm', () => {
     render(
       <Elements stripe={stripePromise}>
         <CheckoutForm />
-      </Elements>
+      </Elements>,
     )
 
     fireEvent.click(screen.getByText('Submit Booking'))
@@ -80,7 +80,7 @@ describe('CheckoutForm', () => {
     expect(screen.getByText('Phone must be 8 digits')).toBeInTheDocument()
     expect(screen.getByText('Billing address is required')).toBeInTheDocument()
   })
-  
+
   // Test 3
   test('Payment failed', async () => {
     // Mock a failed fetch response
@@ -90,7 +90,7 @@ describe('CheckoutForm', () => {
     render(
       <Elements stripe={stripePromise}>
         <CheckoutForm />
-      </Elements>
+      </Elements>,
     )
 
     // Fill with valid form data
@@ -118,6 +118,4 @@ describe('CheckoutForm', () => {
       expect(window.alert).toHaveBeenCalledWith('Booking failed')
     })
   })
-
-
 })
