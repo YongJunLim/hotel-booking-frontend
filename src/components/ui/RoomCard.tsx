@@ -51,7 +51,7 @@ export const RoomCard = ({ room }: RoomCardProps) => {
 
   return (
     <div
-      className={`card card-side shadow-sm ${
+      className={`card card-side shadow-sm dark:shadow-xl ${
         isRoomSelected ? 'bg-primary/10 border-2 border-primary' : 'bg-base-100'
       }`}
     >
