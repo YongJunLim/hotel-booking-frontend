@@ -1,24 +1,29 @@
 import { useState, useEffect } from 'react'
-import useAuthStore from '../store'
+// import useAuthStore from '../store'
+import useAuthStore from '../stores/AuthStore'
 import { useLocation } from 'wouter'
 import { BACKEND_URL } from '../config/api'
 
-interface deleteAccountProp {
+interface DeleteAccountProps {
   open: boolean
   onClose: () => void
 }
 
-interface deleteResponse {
+interface DeleteResponse {
   success: boolean
   message: string
 }
 
-function DeleteToast({ open, onClose }: deleteAccountProp) {
+function DeleteToast({ open, onClose }: DeleteAccountProps) {
   const [isActive, setIsActive] = useState(false)
   const isLoggedIn = useAuthStore(state => state.isLoggedIn)
-  const { logout } = useAuthStore()
-  const curEmail = useAuthStore(state => state.userdetails.email)
-  const [msg, setmsg] = useState('')
+  // const { logout } = useAuthStore();
+  const logout = useAuthStore(state => state.logout)
+  const accessToken = useAuthStore(state => state.accessToken)
+  // const curEmail = useAuthStore((state) => state.userdetails.email);
+  const curEmail = useAuthStore(state => state.userDetails.email)
+  const setToast = useAuthStore(state => state.setToast)
+  const [msg, setMsg] = useState('')
   const [, nav] = useLocation()
 
   function closeClick() {
@@ -32,19 +37,20 @@ function DeleteToast({ open, onClose }: deleteAccountProp) {
 
   async function DeleteUser(): Promise<void> {
     const pwd_del = document.getElementById('passwd_del') as HTMLInputElement
-    let token: string | null
+    // let token: string | null;
     if (isLoggedIn) {
       console.log('isloggedin', isLoggedIn)
       console.log('password: ', pwd_del.value)
       console.log('email: ', curEmail)
-      token = sessionStorage.getItem('accessToken')
-      if (token == null) {
-        token = ''
-      }
+      // token = sessionStorage.getItem("accessToken");
+      // if (token == null) {
+      //   token = "";
+      // }
       const res = await fetch(`${BACKEND_URL}/users/delete`, {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer ' + token,
+          // Authorization: "Bearer " + token,
+          'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -53,18 +59,19 @@ function DeleteToast({ open, onClose }: deleteAccountProp) {
         }),
       })
 
-      const msg = (await res.json()) as deleteResponse
+      const msg = (await res.json()) as DeleteResponse
       if (res.ok) {
         logout()
-        sessionStorage.setItem('toast', msg.message)
+        // sessionStorage.setItem("toast", msg.message);
+        setToast(msg.message)
         nav('/')
       }
       else {
-        setmsg(msg.message || 'Account deletion failed.')
+        setMsg(msg.message || 'Account deletion failed.')
       }
     }
     else {
-      setmsg('Please sign in first')
+      setMsg('Please sign in first')
     }
   }
 

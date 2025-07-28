@@ -5,9 +5,19 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
+    "composite": true,
     "strict": true,
+    "jsx": "react-jsx",
     // https://github.com/testing-library/jest-dom?tab=readme-ov-file#with-vitest
-    "types": ["vitest/globals", "@testing-library/jest-dom"]
+    "types": ["vitest/globals", "@testing-library/jest-dom"],
+    "declaration": true,
+
+    "emitDeclarationOnly": false,
+    "outDir": "./dist",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "target": "ESNext"
   },
-  "include": ["vitest.config.ts", "tests/**/*.ts", "tests/**/*.tsx"]
+  "include": ["vitest.config.ts", "tests/**/*.ts", "tests/**/*.tsx", "src"]
 }
