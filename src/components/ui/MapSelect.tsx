@@ -58,7 +58,7 @@ export const MapSelect = ({
   const handleMapClick = (e: MapLayerMouseEvent) => {
     const feature = e.features?.[0]
     if (feature) {
-      setSelectedFeature(feature.properties)
+      setSelectedFeature(feature.properties as HotelProperties)
     }
   }
 
@@ -129,7 +129,7 @@ export const MapSelect = ({
               properties: {
                 name: hotel.name,
                 address: hotel.address,
-                price: hotel.price,
+                price: hotel.price ?? 0,
                 rating: hotel.rating,
                 id: hotel.id,
                 icon: 'marker',
