@@ -17,7 +17,7 @@ export const HomePage = () => {
   return (
     <>
       <div>
-        <img className="h-96 w-full object-cover" src="/travel.jpg" />
+        <img className="h-76 w-full object-cover" src="/travel.jpg" />
       </div>
       {/* <div className="flex py-4 items-center justify-between gap-8">
         <div className="flex items-center gap-2">

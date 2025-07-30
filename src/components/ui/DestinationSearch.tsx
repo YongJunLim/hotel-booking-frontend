@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import DropdownWithButtons from './DropDown'
+import DropDownWithButtons from './DropDown'
 // import { MyAccountDropdown } from "../components/ui/MyAccount";
 import { type Destination } from '../../types/destination'
 import DayPicker from './DayPicker'
@@ -69,8 +69,8 @@ export default function DestinationSearch(): React.ReactElement {
   }, [start, end, sum, Room, country, setValue])
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data.country_)
     if (data.start_ == undefined || data.end_ == undefined) {
+      clearErrors(['start_', 'end_', 'country_']);
       setError('root', {
         type: 'manual',
         message: 'Please select a start date and an end date.',
@@ -81,29 +81,42 @@ export default function DestinationSearch(): React.ReactElement {
       clearErrors('root')
     }
 
-    if (data.sum_ == 0) {
-      setError('sum_', {
+    const today: Date = new Date();
+    const minStartDate: Date = new Date();
+    minStartDate.setDate(today.getDate() + 3);
+    const minEndDate = from
+      ? new Date(from.getTime() + 24 * 60 * 60 * 1000)
+      : new Date(today.getTime() + 4 * 24 * 60 * 60 * 1000);
+    if (data.start_ < minStartDate.toLocaleDateString('sv-SE')) {
+      clearErrors('root');
+      clearErrors(['end_', 'country_']);
+      setError('start_', {
         type: 'manual',
-        message: 'Please enter the number of guests.',
+        message: 'Start date must be at least 3 days from today.',
       })
       return
     }
     else {
-      clearErrors('sum_')
+      clearErrors('start_')
     }
 
-    if (data.Room_ == 0) {
-      setError('Room_', {
+    if (data.end_ < minEndDate.toLocaleDateString('sv-SE')) {
+      clearErrors('root');
+      clearErrors(['start_', 'country_']);
+      setError('end_', {
         type: 'manual',
-        message: 'Please enter the number of rooms you require.',
+        message: 'End date must be at least 1 day after the start date.',
       })
+      console.log('End date:', data.end_)
       return
     }
     else {
-      clearErrors('Room_')
+      clearErrors('end_')
     }
 
     if (data.country_?.uid == '') {
+      clearErrors('root');
+      clearErrors(['start_', 'end_']);
       setError('country_', {
         type: 'manual',
         message: 'Please enter a destination.',
@@ -121,7 +134,7 @@ export default function DestinationSearch(): React.ReactElement {
   return (
     <>
       <div className="w-full border border-gray-400 rounded-lg p-4 shadow-md">
-        <DropdownWithButtons></DropdownWithButtons>
+        <DropDownWithButtons></DropDownWithButtons>
         <div className="flex flex-col sm:flex-row flex-wrap gap-8 py-4 w-full">
           <TypeaheadSearch
             onSelect={handleDestinationSelect}
@@ -142,28 +155,22 @@ export default function DestinationSearch(): React.ReactElement {
             <div>
               <input
                 type="hidden"
-                {...register('sum_', {
-                  required: 'Please select the number of guests.',
-                })}
-              />
-              <input
-                type="hidden"
-                {...register('Room_', {
-                  required: 'Please select the number of rooms you require.',
-                })}
-              />
-              <input
-                type="hidden"
                 {...register('country_', {
                   required: 'Please enter a destination.',
                 })}
               />
+              <input
+                type="hidden"
+                {...register('start_')}
+              />
+              <input
+                type="hidden"
+                {...register('end_')}
+              />
             </div>
-            {errors.start_ && (<p className="text-red-500">{errors.start_.message}</p>)}
-            {errors.end_ && <p className="text-red-500">{errors.end_.message}</p>}
             {errors.root && <p className="text-red-500">{errors.root.message}</p>}
-            {errors.sum_ && <p className="text-red-500">{errors.sum_.message}</p>}
-            {errors.Room_ && <p className="text-red-500">{errors.Room_.message}</p>}
+            {errors.start_ && <p className="text-red-500">{errors.start_.message}</p>}
+            {errors.end_ && <p className="text-red-500">{errors.end_.message}</p>}
             {errors.country_ && <p className="text-red-500">{errors.country_.message}</p>}
             <button
               type="submit"

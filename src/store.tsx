@@ -72,7 +72,7 @@ export const useFormStore = create<CombinedStore>()(set => ({
   range: { from: undefined },
   setRange: range => set({ range }),
 
-  Adult: 0,
+  Adult: 1,
   setAdult: val =>
     set(state => ({
       Adult: typeof val === 'function' ? val(state.Adult) : val,
@@ -84,7 +84,7 @@ export const useFormStore = create<CombinedStore>()(set => ({
       Children: typeof val === 'function' ? val(state.Children) : val,
     })),
 
-  Room: 0,
+  Room: 1,
   setRoom: val =>
     set(state => ({
       Room: typeof val === 'function' ? val(state.Room) : val,
