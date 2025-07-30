@@ -21,14 +21,33 @@ interface MapSelectProps {
   destinationId?: string
 }
 
-export const MapSelect = ({ hotels, destinationId, checkin, checkout, guests }: MapSelectProps) => {
+interface HotelProperties {
+  name: string
+  address: string
+  price: number
+  rating: number
+  id: string
+  icon: string
+}
+
+interface HoverInfo {
+  longitude: number
+  latitude: number
+  properties: HotelProperties
+}
+
+export const MapSelect = ({
+  hotels,
+  destinationId,
+  checkin,
+  checkout,
+  guests,
+}: MapSelectProps) => {
   const [, navigate]: [unknown, (to: string) => void] = useLocation()
-  const [hoverInfo, setHoverInfo] = useState<{
-    longitude: number
-    latitude: number
-    properties: Record<string, any>
-  } | null>(null)
-  const [selectedFeature, setSelectedFeature] = useState<Record<string, unknown> | null>(null)
+  const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null)
+  const [selectedFeature, setSelectedFeature]
+    = useState<HotelProperties | null>(null)
+
   useEffect(() => {
     if (selectedFeature) {
       navigate(
@@ -55,6 +74,18 @@ export const MapSelect = ({ hotels, destinationId, checkin, checkout, guests }: 
 
   const mapRef = useRef<MapRef | null>(null)
 
+  const loadMarkerImage = async (map: maplibregl.Map) => {
+    try {
+      const image = await map.loadImage(marker)
+      if (image && !map.hasImage('marker')) {
+        map.addImage('marker', image.data)
+      }
+    }
+    catch (error) {
+      console.error('Error loading marker image:', error)
+    }
+  }
+
   return (
     <div className="w-full h-75 rounded-lg overflow-hidden shadow-md">
       <Map
@@ -72,24 +103,15 @@ export const MapSelect = ({ hotels, destinationId, checkin, checkout, guests }: 
             setHoverInfo({
               longitude: e.lngLat.lng,
               latitude: e.lngLat.lat,
-              properties: feature.properties,
+              properties: feature.properties as HotelProperties,
             })
           }
           else {
             setHoverInfo(null)
           }
         }}
-        onLoad={async (e) => {
-          const map = e.target
-          try {
-            const image = await map.loadImage(marker)
-            if (image && !map.hasImage('marker')) {
-              map.addImage('marker', image.data)
-            }
-          }
-          catch (error) {
-            console.error('Error loading marker image:', error)
-          }
+        onLoad={(e) => {
+          void loadMarkerImage(e.target)
         }}
         interactiveLayerIds={['point-layer']}
       >
@@ -111,7 +133,7 @@ export const MapSelect = ({ hotels, destinationId, checkin, checkout, guests }: 
                 rating: hotel.rating,
                 id: hotel.id,
                 icon: 'marker',
-              },
+              } satisfies HotelProperties,
             })),
           }}
         >
@@ -146,7 +168,7 @@ export const MapSelect = ({ hotels, destinationId, checkin, checkout, guests }: 
               <br />
               <strong>Price</strong>
               :
-              {hoverInfo.properties.price}
+              {hoverInfo.properties.price || 'NA'}
               <br />
               <strong>Rating</strong>
               :

@@ -36,7 +36,7 @@ export const NavBar = ({ pageTitle }: NavBarProps) => {
   }, [location, search, setRedirectUrl])
 
   return (
-    <div className="navbar p-0 bg-base-100 bg-white-500 p-2 rounded shadow-md">
+    <div className="navbar p-0 bg-base-100">
       <div className="flex-1">
         <h1 className="text-4xl font-bold">{pageTitle}</h1>
       </div>

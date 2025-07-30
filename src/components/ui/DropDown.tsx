@@ -52,7 +52,7 @@ export function CheckAdultAndChildren(sum: number) {
     str = 'Guest per room'
   }
   return str
-};
+}
 
 export function CheckRoom(Room: number) {
   if (typeof Room !== 'number' || Room < 0) {
@@ -66,7 +66,7 @@ export function CheckRoom(Room: number) {
     str = 'Room'
   }
   return str
-};
+}
 
 export default function DropDownWithButtons() {
   const Adult = useFormStore(s => s.Adult)
@@ -82,7 +82,11 @@ export default function DropDownWithButtons() {
 
   return (
     <div>
-      <button popoverTarget="popover-1" style={{ anchorName: '--anchor-1' } as React.CSSProperties} className="relative border rounded-lg border-gray-300 flex w-65 h-fit items-center justify-center p-2 font-bold" data-testid="main-dropdown-button">
+      <button
+        popoverTarget="popover-1"
+        style={{ anchorName: '--anchor-1' } as React.CSSProperties}
+        className="relative border rounded-lg border-gray-300 flex min-w-48 h-fit items-center justify-center p-2 font-bold"
+      >
         {sum}
         {' '}
         {adultAndChildren}
@@ -96,7 +100,12 @@ export default function DropDownWithButtons() {
         ▼
       </button>
 
-      <div popover="auto" id="popover-1" className="dropdown mt-2 z-50 bg-white border w-65" style={{ positionAnchor: '--anchor-1' } as React.CSSProperties} role="dropdown">
+      <div
+        popover="auto"
+        id="popover-1"
+        className="dropdown mt-2 z-50 bg-base-100 border w-45"
+        style={{ positionAnchor: '--anchor-1' } as React.CSSProperties}
+      >
         <div className="flex gap-5 items-center justify-between px-2">
           <div className="flex gap-2 items-center">
             <strong>Adults</strong>
