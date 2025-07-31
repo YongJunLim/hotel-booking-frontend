@@ -41,8 +41,8 @@ export const decrementBy = (setFn: (val: number | ((prev: number) => number)) =>
 }
 
 export function CheckAdultAndChildren(sum: number) {
-  if (typeof sum !== 'number' || sum < 0) {
-    throw new Error('Input must be a non-negative number');
+  if (typeof sum !== 'number' || sum <= 0) {
+    throw new Error('Input must be a positive number');
   }
   let str: string
   if (sum > 1) {
@@ -55,8 +55,8 @@ export function CheckAdultAndChildren(sum: number) {
 }
 
 export function CheckRoom(Room: number) {
-  if (typeof Room !== 'number' || Room < 0) {
-    throw new Error('Input must be a non-negative number');
+  if (typeof Room !== 'number' || Room <= 0) {
+    throw new Error('Input must be a positive number');
   }
   let str: string
   if (Room > 1) {
@@ -85,7 +85,8 @@ export default function DropDownWithButtons() {
       <button
         popoverTarget="popover-1"
         style={{ anchorName: '--anchor-1' } as React.CSSProperties}
-        className="relative border rounded-lg border-gray-300 flex min-w-48 h-fit items-center justify-center p-2 font-bold"
+        className="relative border rounded-lg border-gray-300 flex w-65 h-fit items-center justify-center p-2 font-bold"
+        data-testid="main-dropdown-button"
       >
         {sum}
         {' '}
@@ -103,8 +104,9 @@ export default function DropDownWithButtons() {
       <div
         popover="auto"
         id="popover-1"
-        className="dropdown mt-2 z-50 bg-base-100 border w-45"
+        className="dropdown mt-2 z-50 bg-base-100 border w-65 shadow-lg"
         style={{ positionAnchor: '--anchor-1' } as React.CSSProperties}
+        role = "dropdown"
       >
         <div className="flex gap-5 items-center justify-between px-2">
           <div className="flex gap-2 items-center">

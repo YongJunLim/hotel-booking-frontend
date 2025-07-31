@@ -69,13 +69,13 @@ export default function DestinationSearch(): React.ReactElement {
   }, [start, end, sum, Room, country, setValue])
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
+    let hasError = false
     if (data.start_ == undefined || data.end_ == undefined) {
-      clearErrors(['start_', 'end_', 'country_']);
       setError('root', {
         type: 'manual',
         message: 'Please select a start date and an end date.',
       })
-      return
+      hasError = true;
     }
     else {
       clearErrors('root')
@@ -87,45 +87,41 @@ export default function DestinationSearch(): React.ReactElement {
     const minEndDate = from
       ? new Date(from.getTime() + 24 * 60 * 60 * 1000)
       : new Date(today.getTime() + 4 * 24 * 60 * 60 * 1000);
-    if (data.start_ < minStartDate.toLocaleDateString('sv-SE')) {
-      clearErrors('root');
-      clearErrors(['end_', 'country_']);
+    if (data.start_ && data.start_ < minStartDate.toLocaleDateString('sv-SE')) {
       setError('start_', {
         type: 'manual',
         message: 'Start date must be at least 3 days from today.',
       })
-      return
+      hasError = true;
     }
     else {
       clearErrors('start_')
     }
 
-    if (data.end_ < minEndDate.toLocaleDateString('sv-SE')) {
-      clearErrors('root');
-      clearErrors(['start_', 'country_']);
+    if (data.end_ && data.end_ < minEndDate.toLocaleDateString('sv-SE')) {
       setError('end_', {
         type: 'manual',
         message: 'End date must be at least 1 day after the start date.',
       })
       console.log('End date:', data.end_)
-      return
+      hasError = true;
     }
     else {
       clearErrors('end_')
     }
 
     if (data.country_?.uid == '') {
-      clearErrors('root');
-      clearErrors(['start_', 'end_']);
       setError('country_', {
         type: 'manual',
         message: 'Please enter a destination.',
       })
-      return
+      hasError = true;
     }
     else {
       clearErrors('country_')
     }
+
+    if (hasError) return;
 
     navigate(
       `/results/${country.uid}?checkin=${start}&checkout=${end}&lang=en_US&currency=SGD&country_code=SG&guests=${sum}|${Room}`,
@@ -175,6 +171,7 @@ export default function DestinationSearch(): React.ReactElement {
             <button
               type="submit"
               className="btn btn-primary mt-2"
+              data-testid="search-button"
             >
               Search
             </button>

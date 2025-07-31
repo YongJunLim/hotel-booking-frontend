@@ -20,19 +20,19 @@ function createMockState<T>(initialValue: T) {
 }
 
 describe('incrementBy Unit Test', () => {
-  it('incrementBy should increase the value by the given amount', () => {
+  it('incrementBy should increase the value by the given amount if the result is less than or equal to 4', () => {
     const { setter, getValue } = createMockState(1);
-    const incrementAmount = 2;
+    const incrementAmount = 3;
     const result = incrementBy(setter, incrementAmount);
     expect(setter).toHaveBeenCalled();
-    expect(getValue()).toBe(3)
+    expect(getValue()).toBe(4)
   });
 });
 
 describe('incrementBy Unit Test', () => {
-  it('incrementBy should not increase the value by the given amount if the result is more than 5', () => {
+  it('incrementBy should not increase the value by the given amount if the result is more than 4', () => {
     const { setter, getValue } = createMockState(4);
-    const incrementAmount = 2;
+    const incrementAmount = 1;
     const result = incrementBy(setter, incrementAmount);
     expect(setter).toHaveBeenCalled();
     expect(getValue()).toBe(4)
@@ -40,20 +40,44 @@ describe('incrementBy Unit Test', () => {
 });
 
 describe('decrementBy Unit Test', () => {
-  it('decrementBy should decrease the value by the given amount', () => {
-    const { setter, getValue } = createMockState(5);
+  it('decrementBy should decrease the value by the given amount if the result is greater than or equal to 1 and sum is less than or equal to 1', () => {
+    const { setter, getValue } = createMockState(4);
     const decrementAmount = 2;
-    const result = decrementBy(setter, decrementAmount);
+    const sum = 1;
+    const result = decrementBy(setter, decrementAmount, sum);
     expect(setter).toHaveBeenCalled();
-    expect(getValue()).toBe(3)
+    expect(getValue()).toBe(2)
   });
 });
 
 describe('decrementBy Unit Test', () => {
-  it('decrementBy should not decrease the value by the given amount if the result is less than 0', () => {
+  it('decrementBy should not decrease the value by the given amount if the result is less than 1 and the sum is less than or equal to 1', () => {
+    const { setter, getValue } = createMockState(1);
+    const decrementAmount = 1;
+    const sum = 1;
+    const result = decrementBy(setter, decrementAmount,sum);
+    expect(setter).toHaveBeenCalled();
+    expect(getValue()).toBe(1)
+  });
+});
+
+describe('decrementBy Unit Test', () => {
+  it('decrementBy should decrease the value by the given amount if the result is greater than or equal to 0 and sum is more than 1', () => {
+    const { setter, getValue } = createMockState(4);
+    const decrementAmount = 4;
+    const sum = 6;
+    const result = decrementBy(setter, decrementAmount, sum);
+    expect(setter).toHaveBeenCalled();
+    expect(getValue()).toBe(0)
+  });
+});
+
+describe('decrementBy Unit Test', () => {
+  it('decrementBy should not decrease the value by the given amount if the result is less than 0 and the sum is more than 1', () => {
     const { setter, getValue } = createMockState(5);
     const decrementAmount = 6;
-    const result = decrementBy(setter, decrementAmount);
+    const sum = 2;
+    const result = decrementBy(setter, decrementAmount,sum);
     expect(setter).toHaveBeenCalled();
     expect(getValue()).toBe(5)
   });
@@ -66,11 +90,15 @@ test('CheckAdultAndChildren should return Guests per room if input is more than 
   expect(result).toBe('Guests per room');
 });
 
-test('CheckAdultAndChildren should return Guest per room if input is less than equals to 1', () => {
+test('CheckAdultAndChildren should return Guest per room if input is equal to 1', () => {
   const adults = 0;
   const children = 1;
   const result = CheckAdultAndChildren(adults + children);
   expect(result).toBe('Guest per room');
+});
+
+test('CheckAdultAndChildren should throw an error if input is not a positive number', () => {
+  expect(() => CheckAdultAndChildren(0)).toThrow('Input must be a positive number');
 });
 
 test('CheckRoom should return Rooms if input is more than 1', () => {
@@ -79,10 +107,14 @@ test('CheckRoom should return Rooms if input is more than 1', () => {
   expect(result).toBe('Rooms');
 });
 
-test('CheckRoom should return Room if input is less than equals to 1', () => {
-  const rooms = 0;
+test('CheckRoom should return Room if input is equal to 1', () => {
+  const rooms = 1;
   const result = CheckRoom(rooms);
   expect(result).toBe('Room');
+});
+
+test('CheckRoom should throw an error if input is not positive', () => {
+  expect(() => CheckRoom(0)).toThrow('Input must be a positive number');
 });
 
 vi.mock('../src/store', async (importOriginal) => {
@@ -97,19 +129,17 @@ describe("Integration Test for DropDownWithButtons", () => {
     Adult: 1,
     Children: 0,
     Room: 1,
-    setAdult: vi.fn(), // Vitest's mock function
+    setAdult: vi.fn(),
     setChildren: vi.fn(),
     setRoom: vi.fn(),
   };
   beforeEach(() => {
     (useFormStore as any).mockImplementation((selector: any) => selector(mockStoreState));
 
-    // Reset mock calls for the setters
     mockStoreState.setAdult.mockClear();
     mockStoreState.setChildren.mockClear();
     mockStoreState.setRoom.mockClear();
 
-    // Reset mockStoreState to its initial values for each test
     mockStoreState = {
       Adult: 1,
       Children: 0,
@@ -133,11 +163,8 @@ describe("Integration Test for DropDownWithButtons", () => {
     render(<DropDownWithButtons />);
 
     const mainButton = screen.getByTestId('main-dropdown-button');
-    await fireEvent.click(mainButton); // Use await for user interactions if the DOM updates asynchronously
+    fireEvent.click(mainButton);
 
-    // The popover HTML uses `popover="auto"` which automatically sets `role="dialog"` in some browsers.
-    // If not, you might need to query by ID or another attribute.
-    // `expect(popover).toBeVisible()` ensures it's shown.
     const popover = screen.getByRole('dropdown', { hidden: false });
     expect(popover).toBeVisible();
   });
@@ -146,116 +173,233 @@ describe("Integration Test for DropDownWithButtons", () => {
     render(<DropDownWithButtons />);
 
     // Open the popover first
-    await fireEvent.click(screen.getByTestId('main-dropdown-button'));
+    fireEvent.click(screen.getByTestId('main-dropdown-button'));
 
     const incrementAdultsButton = screen.getByTestId('adult-increment-button');
-    await fireEvent.click(incrementAdultsButton);
-
-    // Verify that the setA function was called
-    expect(mockStoreState.setAdult).toHaveBeenCalledTimes(1);
-    // You can inspect the argument if setA takes a specific value:
-    // For a setter that receives a function (like `set((prev) => prev + 1)`):
-    const setterFn = mockStoreState.setAdult.mock.calls[0][0]; // Get the first argument of the first call
-    // Manually call the setter function with the current state to simulate the update
-    const newValue = setterFn(mockStoreState.Adult);
-    expect(newValue).toBe(2); // Initial 'a' was 1, so 1 + 1 = 2
-  });
-
-  it('decrements adult count when "-" button is clicked (and does not go below zero)', async () => {
-    // Set initial adult count to something that can be decremented
-    mockStoreState.Adult = 1;
-    render(<DropDownWithButtons />);
-
-    await fireEvent.click(screen.getByTestId('main-dropdown-button'));
-
-    const decrementAdultsButton = screen.getByTestId('adult-decrement-button');
-    await fireEvent.click(decrementAdultsButton);
+    fireEvent.click(incrementAdultsButton);
 
     expect(mockStoreState.setAdult).toHaveBeenCalledTimes(1);
     const setterFn = mockStoreState.setAdult.mock.calls[0][0];
     const newValue = setterFn(mockStoreState.Adult);
-    expect(newValue).toBe(0); // 1 - 1 = 0
-
-    // Test going below zero
-    mockStoreState.Adult = 0; // Set a to 0 for the next click
-    mockStoreState.setAdult.mockClear(); // Clear previous call
-    await fireEvent.click(decrementAdultsButton);
-    expect(mockStoreState.setAdult).toHaveBeenCalledTimes(1);
-    const setterFn2 = mockStoreState.setAdult.mock.calls[0][0];
-    const newValue2 = setterFn2(mockStoreState.Adult);
-    expect(newValue2).toBe(0); // Should stay at 0 due to Math.max(0, ...)
+    expect(newValue).toBe(2);
   });
 
-  // Add similar tests for Children and Rooms buttons
-  it('increments children count when "+" button is clicked', async () => {
+  it('does not increment adult count when "+" button is clicked if adult count is 4', async () => {
+    mockStoreState.Adult = 4;
     render(<DropDownWithButtons />);
-    await fireEvent.click(screen.getByTestId('main-dropdown-button')); // Open popover
-    const incrementChildrenButton = screen.getByTestId('child-increment-button');
-    await fireEvent.click(incrementChildrenButton);
-    expect(mockStoreState.setChildren).toHaveBeenCalledTimes(1);
-    const setterFn = mockStoreState.setChildren.mock.calls[0][0];
-    const newValue = setterFn(mockStoreState.Children);
-    expect(newValue).toBe(1); // Initial 'c' was 0, so 0 + 1 = 1
+
+    fireEvent.click(screen.getByTestId('main-dropdown-button'));
+
+    const incrementAdultsButton = screen.getByTestId('adult-increment-button');
+    fireEvent.click(incrementAdultsButton);
+
+    expect(mockStoreState.setAdult).toHaveBeenCalledTimes(1);
+
+    const setterFn = mockStoreState.setAdult.mock.calls[0][0];
+    const newValue = setterFn(mockStoreState.Adult);
+    expect(newValue).toBe(4);
   });
 
-  it('decrements children count when "-" button is clicked (and does not go below zero)', async () => {
-    // Set initial adult count to something that can be decremented
+  it('decrements adult count when "-" button is clicked (and does not go below one)', async () => {
+    mockStoreState.Adult = 2;
+    render(<DropDownWithButtons />);
+
+    fireEvent.click(screen.getByTestId('main-dropdown-button'));
+
+    const decrementAdultsButton = screen.getByTestId('adult-decrement-button');
+    fireEvent.click(decrementAdultsButton);
+
+    expect(mockStoreState.setAdult).toHaveBeenCalledTimes(1);
+    const setterFn = mockStoreState.setAdult.mock.calls[0][0];
+    const newValue = setterFn(mockStoreState.Adult);
+    expect(newValue).toBe(1);
+  });
+
+  it('does not decrement adult count when "-" button is clicked if adult count is 1 and sum is less than equals to 1', async () => {
+    mockStoreState.Adult = 1;
+    mockStoreState.Children = 0;
+    render(<DropDownWithButtons />);
+
+    fireEvent.click(screen.getByTestId('main-dropdown-button'));
+
+    const decrementAdultsButton = screen.getByTestId('adult-decrement-button');
+    fireEvent.click(decrementAdultsButton);
+
+    expect(mockStoreState.setAdult).toHaveBeenCalledTimes(1);
+    const setterFn = mockStoreState.setAdult.mock.calls[0][0];
+    const newValue = setterFn(mockStoreState.Adult);
+    expect(newValue).toBe(1); 
+  });
+
+  it('decrements adult count when "-" button is clicked if adult count is 1 and sum is more than 1', async () => {
+    mockStoreState.Adult = 1;
     mockStoreState.Children = 1;
     render(<DropDownWithButtons />);
 
-    await fireEvent.click(screen.getByTestId('main-dropdown-button'));
+    fireEvent.click(screen.getByTestId('main-dropdown-button'));
+
+    const decrementAdultsButton = screen.getByTestId('adult-decrement-button');
+    fireEvent.click(decrementAdultsButton);
+
+    expect(mockStoreState.setAdult).toHaveBeenCalledTimes(1);
+    const setterFn = mockStoreState.setAdult.mock.calls[0][0];
+    const newValue = setterFn(mockStoreState.Adult);
+    expect(newValue).toBe(0);
+  });
+
+  it('does not decrement adult count when "-" button is clicked if adult count is 0 and sum is more than 1', async () => {
+    mockStoreState.Adult = 0;
+    mockStoreState.Children = 2;
+    render(<DropDownWithButtons />);
+
+    fireEvent.click(screen.getByTestId('main-dropdown-button'));
+
+    const decrementAdultsButton = screen.getByTestId('adult-decrement-button');
+    fireEvent.click(decrementAdultsButton);
+
+    expect(mockStoreState.setAdult).toHaveBeenCalledTimes(1);
+    const setterFn = mockStoreState.setAdult.mock.calls[0][0];
+    const newValue = setterFn(mockStoreState.Adult);
+    expect(newValue).toBe(0);
+  });
+
+  it('increments children count when "+" button is clicked', async () => {
+    render(<DropDownWithButtons />);
+    fireEvent.click(screen.getByTestId('main-dropdown-button'));
+    const incrementChildrenButton = screen.getByTestId('child-increment-button');
+    fireEvent.click(incrementChildrenButton);
+    expect(mockStoreState.setChildren).toHaveBeenCalledTimes(1);
+    const setterFn = mockStoreState.setChildren.mock.calls[0][0];
+    const newValue = setterFn(mockStoreState.Children);
+    expect(newValue).toBe(1);
+  });
+
+  it('does not increment children count when "+" button is clicked if children count is 4', async () => {
+    mockStoreState.Children = 4;
+    render(<DropDownWithButtons />);
+    fireEvent.click(screen.getByTestId('main-dropdown-button'));
+    const incrementChildrenButton = screen.getByTestId('child-increment-button');
+    fireEvent.click(incrementChildrenButton);
+    expect(mockStoreState.setChildren).toHaveBeenCalledTimes(1);
+    const setterFn = mockStoreState.setChildren.mock.calls[0][0];
+    const newValue = setterFn(mockStoreState.Children);
+    expect(newValue).toBe(4);
+  });
+
+  it('decrements children count when "-" button is clicked (and does not go below zero)', async () => {
+    mockStoreState.Children = 1;
+    render(<DropDownWithButtons />);
+
+    fireEvent.click(screen.getByTestId('main-dropdown-button'));
 
     const decrementChildrenButton = screen.getByTestId('child-decrement-button');
-    await fireEvent.click(decrementChildrenButton);
+    fireEvent.click(decrementChildrenButton);
 
     expect(mockStoreState.setChildren).toHaveBeenCalledTimes(1);
     const setterFn = mockStoreState.setChildren.mock.calls[0][0];
     const newValue = setterFn(mockStoreState.Children);
-    expect(newValue).toBe(0); // 1 - 1 = 0
+    expect(newValue).toBe(0);
+  });
 
-    // Test going below zero
-    mockStoreState.Children = 0; // Set a to 0 for the next click
-    mockStoreState.setChildren.mockClear(); // Clear previous call
-    await fireEvent.click(decrementChildrenButton);
+  it('does not decrement children count when "-" button is clicked if children count is 1 and sum is less than equals to one', async () => {
+    mockStoreState.Children = 1;
+    mockStoreState.Adult = 0;
+    render(<DropDownWithButtons />);
+
+    fireEvent.click(screen.getByTestId('main-dropdown-button'));
+
+    const decrementChildrenButton = screen.getByTestId('child-decrement-button');
+    fireEvent.click(decrementChildrenButton);
+
     expect(mockStoreState.setChildren).toHaveBeenCalledTimes(1);
-    const setterFn2 = mockStoreState.setChildren.mock.calls[0][0];
-    const newValue2 = setterFn2(mockStoreState.Children);
-    expect(newValue2).toBe(0); // Should stay at 0 due to Math.max(0, ...)
+    const setterFn = mockStoreState.setChildren.mock.calls[0][0];
+    const newValue = setterFn(mockStoreState.Children);
+    expect(newValue).toBe(1);
+  });
+
+  it('decrements children count when "-" button is clicked if children count is 1 and sum is more than 1', async () => {
+    mockStoreState.Children = 1;
+    mockStoreState.Adult = 1;
+    render(<DropDownWithButtons />);
+    fireEvent.click(screen.getByTestId('main-dropdown-button'));
+    const decrementChildrenButton = screen.getByTestId('child-decrement-button');
+    fireEvent.click(decrementChildrenButton);
+
+    expect(mockStoreState.setChildren).toHaveBeenCalledTimes(1);
+    const setterFn = mockStoreState.setChildren.mock.calls[0][0];
+    const newValue = setterFn(mockStoreState.Children);
+    expect(newValue).toBe(0);
+  });
+
+  it('does not decrement children count when "-" button is clicked if children count is 0 and sum is more than 1', async () => {
+    mockStoreState.Children = 0;
+    mockStoreState.Adult = 2;
+    render(<DropDownWithButtons />);
+
+    fireEvent.click(screen.getByTestId('main-dropdown-button'));
+
+    const decrementChildrenButton = screen.getByTestId('child-decrement-button');
+    fireEvent.click(decrementChildrenButton);
+
+    expect(mockStoreState.setChildren).toHaveBeenCalledTimes(1);
+    const setterFn = mockStoreState.setChildren.mock.calls[0][0];
+    const newValue = setterFn(mockStoreState.Children);
+    expect(newValue).toBe(0);
   });
 
   it('increments rooms count when "+" button is clicked', async () => {
     render(<DropDownWithButtons />);
-    await fireEvent.click(screen.getByTestId('main-dropdown-button'))
+    fireEvent.click(screen.getByTestId('main-dropdown-button'))
     const incrementRoomsButton = screen.getByTestId('room-increment-button');
-    await fireEvent.click(incrementRoomsButton);
+    fireEvent.click(incrementRoomsButton);
     expect(mockStoreState.setRoom).toHaveBeenCalledTimes(1);
     const setterFn = mockStoreState.setRoom.mock.calls[0][0];
     const newValue = setterFn(mockStoreState.Room);
     expect(newValue).toBe(2)
   });
 
-  it('decrements room count when "-" button is clicked (and does not go below zero)', async () => {
-    // Set initial room count to something that can be decremented
-    mockStoreState.Room = 1;
+  it('does not increment rooms count when "+" button is clicked if room count is 4', async () => {
+    mockStoreState.Room = 4;
     render(<DropDownWithButtons />);
 
-    await fireEvent.click(screen.getByTestId('main-dropdown-button'));
+    fireEvent.click(screen.getByTestId('main-dropdown-button'));
 
-    const decrementRoomsButton = screen.getByTestId('room-decrement-button');
-    await fireEvent.click(decrementRoomsButton);
+    const incrementRoomsButton = screen.getByTestId('room-increment-button');
+    fireEvent.click(incrementRoomsButton);
 
     expect(mockStoreState.setRoom).toHaveBeenCalledTimes(1);
     const setterFn = mockStoreState.setRoom.mock.calls[0][0];
     const newValue = setterFn(mockStoreState.Room);
-    expect(newValue).toBe(0); // 1 - 1 = 0
+    expect(newValue).toBe(4);
+  });
 
-    // Test going below zero
-    mockStoreState.Room = 0; // Set a to 0 for the next click
-    mockStoreState.setRoom.mockClear(); // Clear previous call
-    await fireEvent.click(decrementRoomsButton);
+  it('decrements room count when "-" button is clicked if room count is more than 1)', async () => {
+    mockStoreState.Room = 2;
+    render(<DropDownWithButtons />);
+
+    fireEvent.click(screen.getByTestId('main-dropdown-button'));
+
+    const decrementRoomsButton = screen.getByTestId('room-decrement-button');
+    fireEvent.click(decrementRoomsButton);
+
     expect(mockStoreState.setRoom).toHaveBeenCalledTimes(1);
-    const setterFn2 = mockStoreState.setRoom.mock.calls[0][0];
-    const newValue2 = setterFn2(mockStoreState.Room);
-    expect(newValue2).toBe(0); // Should stay at 0 due to Math.max(0, ...)
+    const setterFn = mockStoreState.setRoom.mock.calls[0][0];
+    const newValue = setterFn(mockStoreState.Room);
+    expect(newValue).toBe(1);
+  });
+
+  it('does not decrement room count when "-" button is clicked if room count is 1', async () => {
+    mockStoreState.Room = 1;
+    render(<DropDownWithButtons />);
+
+    fireEvent.click(screen.getByTestId('main-dropdown-button'));
+
+    const decrementRoomsButton = screen.getByTestId('room-decrement-button');
+    fireEvent.click(decrementRoomsButton);
+
+    expect(mockStoreState.setRoom).toHaveBeenCalledTimes(1);
+    const setterFn = mockStoreState.setRoom.mock.calls[0][0];
+    const newValue = setterFn(mockStoreState.Room);
+    expect(newValue).toBe(1);
   });
 });

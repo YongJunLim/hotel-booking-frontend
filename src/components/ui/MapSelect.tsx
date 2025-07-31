@@ -36,6 +36,28 @@ interface HoverInfo {
   properties: HotelProperties
 }
 
+export const handleMapClick = (
+  e: MapLayerMouseEvent, 
+  setSelectedFeature: React.Dispatch<React.SetStateAction<HotelProperties | null>>
+) => {
+  const feature = e.features?.[0]
+  if (feature) {
+    setSelectedFeature(feature.properties as HotelProperties)
+  }
+}
+
+export const loadMarkerImage = async (map: maplibregl.Map) => {
+    try {
+      const image = await map.loadImage(marker)
+      if (image && !map.hasImage('marker')) {
+        map.addImage('marker', image.data)
+      }
+    }
+    catch (error) {
+      console.error('Error loading marker image:', error)
+    }
+  }
+
 export const MapSelect = ({
   hotels,
   destinationId,
@@ -55,12 +77,6 @@ export const MapSelect = ({
       )
     }
   }, [selectedFeature, destinationId, checkin, checkout, guests, navigate])
-  const handleMapClick = (e: MapLayerMouseEvent) => {
-    const feature = e.features?.[0]
-    if (feature) {
-      setSelectedFeature(feature.properties as HotelProperties)
-    }
-  }
 
   useEffect(() => {
     if (hotels[0]) {
@@ -70,21 +86,10 @@ export const MapSelect = ({
         speed: 1.0,
       })
     }
+    console.log(mapRef.current)
   }, [hotels])
 
   const mapRef = useRef<MapRef | null>(null)
-
-  const loadMarkerImage = async (map: maplibregl.Map) => {
-    try {
-      const image = await map.loadImage(marker)
-      if (image && !map.hasImage('marker')) {
-        map.addImage('marker', image.data)
-      }
-    }
-    catch (error) {
-      console.error('Error loading marker image:', error)
-    }
-  }
 
   return (
     <div className="w-full h-75 rounded-lg overflow-hidden shadow-md">
@@ -96,7 +101,7 @@ export const MapSelect = ({
           zoom: 1,
         }}
         mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=${MAPTILER_TOKEN}`}
-        onClick={handleMapClick}
+        onClick={(e) => handleMapClick(e, setSelectedFeature)}
         onMouseMove={(e: MapLayerMouseEvent) => {
           const feature = e.features?.[0]
           if (feature) {
