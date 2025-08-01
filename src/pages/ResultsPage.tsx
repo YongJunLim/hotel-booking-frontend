@@ -266,7 +266,7 @@ export const ResultsPage = () => {
                 </div>
               </aside>
 
-              <div className="space-y-5">
+              <div className="space-y-5 flex-1">
                 {sortedlist.length === 0
                   ? (
                     <div className="flex justify-center">
