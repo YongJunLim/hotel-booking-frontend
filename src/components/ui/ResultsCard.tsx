@@ -22,7 +22,7 @@ export const HotelCard = ({
   const [, navigate] = useLocation()
 
   return (
-    <div className="card card-side bg-base-100 shadow-sm dark:shadow-xl w-200">
+    <div className="card card-side bg-base-100 shadow-sm w-full dark:shadow-xl">
       <figure className="p-4">
         <img
           src={`${hotel.image_details.prefix}0${hotel.image_details.suffix}`}
