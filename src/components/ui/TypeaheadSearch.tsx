@@ -153,9 +153,8 @@ export const TypeaheadSearch = ({
             startIndex,
             setStartIndex,
             maxVisibleItems,
-            handleSelect
-          )
-        }
+            handleSelect,
+          )}
       />
 
       {isOpen && query.length >= 2 && (

@@ -37,8 +37,8 @@ interface HoverInfo {
 }
 
 export const handleMapClick = (
-  e: MapLayerMouseEvent, 
-  setSelectedFeature: React.Dispatch<React.SetStateAction<HotelProperties | null>>
+  e: MapLayerMouseEvent,
+  setSelectedFeature: React.Dispatch<React.SetStateAction<HotelProperties | null>>,
 ) => {
   const feature = e.features?.[0]
   if (feature) {
@@ -47,16 +47,16 @@ export const handleMapClick = (
 }
 
 export const loadMarkerImage = async (map: maplibregl.Map) => {
-    try {
-      const image = await map.loadImage(marker)
-      if (image && !map.hasImage('marker')) {
-        map.addImage('marker', image.data)
-      }
-    }
-    catch (error) {
-      console.error('Error loading marker image:', error)
+  try {
+    const image = await map.loadImage(marker)
+    if (image && !map.hasImage('marker')) {
+      map.addImage('marker', image.data)
     }
   }
+  catch (error) {
+    console.error('Error loading marker image:', error)
+  }
+}
 
 export const MapSelect = ({
   hotels,
@@ -101,7 +101,7 @@ export const MapSelect = ({
           zoom: 1,
         }}
         mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=${MAPTILER_TOKEN}`}
-        onClick={(e) => handleMapClick(e, setSelectedFeature)}
+        onClick={e => handleMapClick(e, setSelectedFeature)}
         onMouseMove={(e: MapLayerMouseEvent) => {
           const feature = e.features?.[0]
           if (feature) {

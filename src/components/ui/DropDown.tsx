@@ -1,11 +1,11 @@
 import { useFormStore } from '../../store'
 
 export const incrementBy = (setFn: (val: number | ((prev: number) => number)) => void, amount: number) => {
-  if (typeof setFn !== "function") {
-    throw new Error("Input must be a function");
+  if (typeof setFn !== 'function') {
+    throw new Error('Input must be a function')
   }
   setFn((prev) => {
-    if (prev+amount <= 4) {
+    if (prev + amount <= 4) {
       return prev + amount
     }
     else {
@@ -15,12 +15,12 @@ export const incrementBy = (setFn: (val: number | ((prev: number) => number)) =>
 }
 
 export const decrementBy = (setFn: (val: number | ((prev: number) => number)) => void, amount: number, sum: number) => {
-  if (typeof setFn !== "function") {
-    throw new Error("Input must be a function");
+  if (typeof setFn !== 'function') {
+    throw new Error('Input must be a function')
   }
-  if(sum <= 1) {
+  if (sum <= 1) {
     setFn((prev) => {
-      if (prev-amount >= 1) {
+      if (prev - amount >= 1) {
         return prev - amount
       }
       else {
@@ -30,7 +30,7 @@ export const decrementBy = (setFn: (val: number | ((prev: number) => number)) =>
   }
   else {
     setFn((prev) => {
-      if (prev-amount >= 0) {
+      if (prev - amount >= 0) {
         return prev - amount
       }
       else {
@@ -42,7 +42,7 @@ export const decrementBy = (setFn: (val: number | ((prev: number) => number)) =>
 
 export function CheckAdultAndChildren(sum: number) {
   if (typeof sum !== 'number' || sum <= 0) {
-    throw new Error('Input must be a positive number');
+    throw new Error('Input must be a positive number')
   }
   let str: string
   if (sum > 1) {
@@ -56,7 +56,7 @@ export function CheckAdultAndChildren(sum: number) {
 
 export function CheckRoom(Room: number) {
   if (typeof Room !== 'number' || Room <= 0) {
-    throw new Error('Input must be a positive number');
+    throw new Error('Input must be a positive number')
   }
   let str: string
   if (Room > 1) {
@@ -106,14 +106,15 @@ export default function DropDownWithButtons() {
         id="popover-1"
         className="dropdown mt-2 z-50 bg-base-100 border w-65 shadow-lg"
         style={{ positionAnchor: '--anchor-1' } as React.CSSProperties}
-        role = "dropdown"
+        role="dropdown"
       >
         <div className="flex gap-5 items-center justify-between px-2">
           <div className="flex gap-2 items-center">
             <strong>Adults</strong>
           </div>
           <div className="flex gap-2 items-center">
-            <button data-testid="adult-decrement-button"
+            <button
+              data-testid="adult-decrement-button"
               className="block w-full p-2"
               onClick={() => {
                 decrementBy(setAdult, 1, sum)
@@ -127,7 +128,8 @@ export default function DropDownWithButtons() {
             </p>
             {' '}
             {}
-            <button data-testid="adult-increment-button"
+            <button
+              data-testid="adult-increment-button"
               className="block w-full p-2"
               onClick={() => {
                 incrementBy(setAdult, 1)
@@ -142,7 +144,8 @@ export default function DropDownWithButtons() {
             <strong>Children</strong>
           </div>
           <div className="flex items-center justify-end gap-2">
-            <button data-testid="child-decrement-button"
+            <button
+              data-testid="child-decrement-button"
               className="block w-full p-2"
               onClick={() => {
                 decrementBy(setChild, 1, sum)
@@ -156,7 +159,8 @@ export default function DropDownWithButtons() {
             </p>
             {' '}
             {}
-            <button data-testid="child-increment-button"
+            <button
+              data-testid="child-increment-button"
               className="block w-full p-2"
               onClick={() => {
                 incrementBy(setChild, 1)
@@ -171,7 +175,8 @@ export default function DropDownWithButtons() {
             <strong>Rooms</strong>
           </div>
           <div className="flex items-center justify-end gap-2">
-            <button data-testid="room-decrement-button"
+            <button
+              data-testid="room-decrement-button"
               className="block w-full p-2"
               onClick={() => {
                 decrementBy(setRoom, 1, Room)
@@ -185,7 +190,8 @@ export default function DropDownWithButtons() {
             </p>
             {' '}
             {}
-            <button data-testid="room-increment-button"
+            <button
+              data-testid="room-increment-button"
               className="block w-full p-2"
               onClick={() => {
                 incrementBy(setRoom, 1)

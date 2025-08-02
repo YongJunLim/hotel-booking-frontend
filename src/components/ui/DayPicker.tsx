@@ -2,7 +2,7 @@ import { DayPicker } from 'react-day-picker'
 import { useFormStore } from '../../store'
 
 export function dateToLocal(date: Date) {
-  return date.toLocaleDateString();
+  return date.toLocaleDateString()
 }
 
 export default function App() {
@@ -26,7 +26,7 @@ export default function App() {
             {range?.to ? dateToLocal(range.to) : 'End Date'}
           </button>
         </div>
-        <div popover="auto" id="rdp-popover" className="dropdown mt-2 z-50" style={{ positionAnchor: '--rdp' } as React.CSSProperties} role='calendar'>
+        <div popover="auto" id="rdp-popover" className="dropdown mt-2 z-50" style={{ positionAnchor: '--rdp' } as React.CSSProperties} role="calendar">
           <DayPicker className="react-day-picker" mode="range" required selected={range} onSelect={setRange} />
         </div>
       </div>

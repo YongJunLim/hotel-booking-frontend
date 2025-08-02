@@ -47,10 +47,14 @@ export const HotelDetailPage = () => {
     if (!guestsParam) return { people: 2, rooms: 1 }
 
     const parts = guestsParam.split('|')
-    const people = parseInt(parts[0]) || 2
-    const rooms = parts.length > 1 ? parseInt(parts[1]) || 1 : 1
+    const rooms = parts.length
+    // guests PER room
+    const totalPeople = parts.reduce(
+      (sum, guests) => sum + parseInt(guests),
+      0,
+    )
 
-    return { people, rooms }
+    return { people: totalPeople, rooms }
   }
 
   const { rooms: maxRooms } = parseGuestsParam(guests)
@@ -247,7 +251,7 @@ export const HotelDetailPage = () => {
           )
           : (
             <div className={isLoading ? 'mt-16' : 'mt-8'}>
-              <div className="card card-side bg-base-100 shadow-sm">
+              <div className="card card-side bg-base-100 shadow-sm dark:shadow-xl">
                 <figure className="p-10">
                   <div className="skeleton h-48 w-48 shrink-0 rounded-xl"></div>
                 </figure>

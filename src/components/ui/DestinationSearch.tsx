@@ -75,24 +75,24 @@ export default function DestinationSearch(): React.ReactElement {
         type: 'manual',
         message: 'Please select a start date and an end date.',
       })
-      hasError = true;
+      hasError = true
     }
     else {
       clearErrors('root')
     }
 
-    const today: Date = new Date();
-    const minStartDate: Date = new Date();
-    minStartDate.setDate(today.getDate() + 3);
+    const today: Date = new Date()
+    const minStartDate: Date = new Date()
+    minStartDate.setDate(today.getDate() + 3)
     const minEndDate = from
       ? new Date(from.getTime() + 24 * 60 * 60 * 1000)
-      : new Date(today.getTime() + 4 * 24 * 60 * 60 * 1000);
+      : new Date(today.getTime() + 4 * 24 * 60 * 60 * 1000)
     if (data.start_ && data.start_ < minStartDate.toLocaleDateString('sv-SE')) {
       setError('start_', {
         type: 'manual',
         message: 'Start date must be at least 3 days from today.',
       })
-      hasError = true;
+      hasError = true
     }
     else {
       clearErrors('start_')
@@ -104,7 +104,7 @@ export default function DestinationSearch(): React.ReactElement {
         message: 'End date must be at least 1 day after the start date.',
       })
       console.log('End date:', data.end_)
-      hasError = true;
+      hasError = true
     }
     else {
       clearErrors('end_')
@@ -115,16 +115,16 @@ export default function DestinationSearch(): React.ReactElement {
         type: 'manual',
         message: 'Please enter a destination.',
       })
-      hasError = true;
+      hasError = true
     }
     else {
       clearErrors('country_')
     }
 
-    if (hasError) return;
+    if (hasError) return
 
     navigate(
-      `/results/${country.uid}?checkin=${start}&checkout=${end}&lang=en_US&currency=SGD&country_code=SG&guests=${sum}|${Room}`,
+      `/results/${country.uid}?checkin=${start}&checkout=${end}&lang=en_US&currency=SGD&country_code=SG&guests=${Array(Room).fill(sum).join('|')}`,
     )
   }
   return (
@@ -155,19 +155,21 @@ export default function DestinationSearch(): React.ReactElement {
                   required: 'Please enter a destination.',
                 })}
               />
-              <input
-                type="hidden"
-                {...register('start_')}
-              />
-              <input
-                type="hidden"
-                {...register('end_')}
-              />
+              <input type="hidden" {...register('start_')} />
+              <input type="hidden" {...register('end_')} />
             </div>
-            {errors.root && <p className="text-red-500">{errors.root.message}</p>}
-            {errors.start_ && <p className="text-red-500">{errors.start_.message}</p>}
-            {errors.end_ && <p className="text-red-500">{errors.end_.message}</p>}
-            {errors.country_ && <p className="text-red-500">{errors.country_.message}</p>}
+            {errors.root && (
+              <p className="text-red-500">{errors.root.message}</p>
+            )}
+            {errors.start_ && (
+              <p className="text-red-500">{errors.start_.message}</p>
+            )}
+            {errors.end_ && (
+              <p className="text-red-500">{errors.end_.message}</p>
+            )}
+            {errors.country_ && (
+              <p className="text-red-500">{errors.country_.message}</p>
+            )}
             <button
               type="submit"
               className="btn btn-primary mt-2"
