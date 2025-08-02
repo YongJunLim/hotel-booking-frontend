@@ -16,7 +16,8 @@
     "outDir": "./dist",
     "moduleResolution": "bundler",
     "module": "ESNext",
-    "target": "ESNext"
+    "target": "ESNext",
+    "esModuleInterop": true,
   },
   "include": ["vitest.config.ts", "tests/**/*.ts", "tests/**/*.tsx", "src"]
 }
