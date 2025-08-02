@@ -15,7 +15,6 @@
     "emitDeclarationOnly": false,
     "outDir": "./dist",
     "moduleResolution": "bundler",
-    "jsx": "react-jsx",
     "module": "ESNext",
     "target": "ESNext"
   },
