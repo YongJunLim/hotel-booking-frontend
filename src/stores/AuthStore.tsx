@@ -6,13 +6,18 @@ interface AuthStore {
   isLoggedIn: boolean
   userDetails: UserDetails
   toast: string
+  toastType: 'success' | 'error' | 'info'
   accessToken: string | null
+  redirectUrl: string
   login: (userDetails: UserDetails, token: string) => void
   logout: () => void
+  silentLogout: () => void
   clearToast: () => void
   setToast: (toastMsg: string) => void
   checkAuthStatus: () => void
   isTokenValid: () => boolean
+  setRedirectUrl: (url: string) => void
+  clearRedirectUrl: () => void
 }
 
 interface JWTPayload {
@@ -31,6 +36,7 @@ const useAuthStore = create<AuthStore>()(
         },
         toast: '',
         accessToken: null,
+        redirectUrl: '/',
 
         login: (userDetails: UserDetails, token: string) => {
           // sessionStorage.setItem("accessToken", token);
@@ -55,18 +61,41 @@ const useAuthStore = create<AuthStore>()(
             toast: 'You have been signed out.',
           })
 
+          // no longer needed as always tracking redirectUrl regardless of login status
+          // get().clearRedirectUrl()
+
           // Auto-clear logout toast
           setTimeout(() => get().clearToast(), 3000)
         },
 
-        clearToast: () => {
-          set({ toast: '' })
+        silentLogout: () => {
+          // Clear auth data without showing toast
+          set({
+            isLoggedIn: false,
+            userDetails: { email: '', firstName: '' },
+            accessToken: null,
+            toast: '', // Don't set a toast message
+          })
         },
 
-        setToast: (toastMsg: string) => {
-          set({ toast: toastMsg })
+        clearToast: () => {
+          set({ toast: '', toastType: 'info' })
+        },
 
+        setToast: (
+          toastMsg: string,
+          type: 'success' | 'error' | 'info' = 'info',
+        ) => {
+          set({ toast: toastMsg, toastType: type })
           setTimeout(() => get().clearToast(), 3000)
+        },
+
+        setRedirectUrl: (url: string) => {
+          set({ redirectUrl: url })
+        },
+
+        clearRedirectUrl: () => {
+          set({ redirectUrl: null })
         },
 
         checkAuthStatus: () => {
@@ -84,11 +113,11 @@ const useAuthStore = create<AuthStore>()(
             }
             catch (error) {
               console.error('Failed to parse user details:', error)
-              get().logout()
+              get().silentLogout()
             }
           }
           else {
-            get().logout()
+            get().silentLogout()
           }
         },
 
@@ -130,6 +159,7 @@ const useAuthStore = create<AuthStore>()(
           isLoggedIn: state.isLoggedIn,
           userDetails: state.userDetails,
           accessToken: state.accessToken,
+          redirectUrl: state.redirectUrl,
         }),
       },
     ),

@@ -11,8 +11,9 @@ export const Login = () => {
   const setToast = useAuthStore(state => state.setToast)
   const toast = useAuthStore(state => state.toast)
   const clearToast = useAuthStore(state => state.clearToast)
+  const redirectUrl = useAuthStore(state => state.redirectUrl)
+  const clearRedirectUrl = useAuthStore(state => state.clearRedirectUrl)
   const [, nav] = useLocation()
-
 
   useEffect(() => {
     if (toast) {
@@ -23,11 +24,13 @@ export const Login = () => {
 
   return (
     <>
-      {toast !== '' ? (
-        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
-          {toast}
-        </div>
-      ) : null}
+      {toast !== ''
+        ? (
+          <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
+            {toast}
+          </div>
+        )
+        : null}
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
         <h1 className="text-4xl font-bold mb-8 flex">Hotel Booking</h1>
       </div>
@@ -119,8 +122,15 @@ export const Login = () => {
         },
         msg.data.token,
       )
-      setToast(msg.message)
-      nav('/')
+      setToast(msg.message, 'success')
+      // Redirect to stored URL or home
+      if (redirectUrl) {
+        clearRedirectUrl()
+        nav(redirectUrl)
+      }
+      else {
+        nav('/')
+      }
     }
     else {
       const zodmsg = getErrorMessage(msg)
