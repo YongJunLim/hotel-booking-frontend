@@ -251,7 +251,7 @@ export const HotelDetailPage = () => {
           )
           : (
             <div className={isLoading ? 'mt-16' : 'mt-8'}>
-              <div className="card card-side bg-base-100 shadow-sm">
+              <div className="card card-side bg-base-100 shadow-sm dark:shadow-xl">
                 <figure className="p-10">
                   <div className="skeleton h-48 w-48 shrink-0 rounded-xl"></div>
                 </figure>

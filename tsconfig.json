@@ -15,9 +15,9 @@
     "emitDeclarationOnly": false,
     "outDir": "./dist",
     "moduleResolution": "bundler",
-    "jsx": "react-jsx",
     "module": "ESNext",
-    "target": "ESNext"
+    "target": "ESNext",
+    "esModuleInterop": true,
   },
   "include": ["vitest.config.ts", "tests/**/*.ts", "tests/**/*.tsx", "src"]
 }
