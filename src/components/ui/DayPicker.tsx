@@ -1,9 +1,6 @@
 import { DayPicker } from 'react-day-picker'
 import { useFormStore } from '../../store'
-
-export function dateToLocal(date: Date) {
-  return date.toLocaleDateString()
-}
+import { dateToLocal } from '../../utils/dateUtils'
 
 export default function App() {
   const range = useFormStore(s => s.range)
