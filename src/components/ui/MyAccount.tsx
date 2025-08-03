@@ -1,18 +1,21 @@
 import { useState } from 'react'
 import { Link } from 'wouter'
-// import useAuthStore from '../../store'
 import useAuthStore from '../../stores/AuthStore'
+import useToastStore from '../../stores/ToastStore'
 
 export const MyAccountDropdown = () => {
-  // const { logout } = useAuthStore();
   const logout = useAuthStore(state => state.logout)
   const isLoggedIn = useAuthStore(state => state.isLoggedIn)
+  const setToast = useToastStore(state => state.setToast)
   const [isOpen, setIsOpen] = useState(false)
   const toggleDropdown = () => setIsOpen(!isOpen)
-  const handleLogout = () => logout()
+  const handleLogout = () => {
+    logout()
+    setToast('You have been signed out.', 'success')
+  }
   if (!isLoggedIn) {
     return (
-      <Link href="/login" className="btn btn-primary">
+      <Link href="/Login" className="btn btn-primary">
         Login
       </Link>
     )
