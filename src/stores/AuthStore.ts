@@ -5,15 +5,10 @@ import { type UserDetails } from '../types/user'
 interface AuthStore {
   isLoggedIn: boolean
   userDetails: UserDetails
-  toast: string
-  toastType: 'success' | 'error' | 'info'
   accessToken: string | null
-  redirectUrl: string
+  redirectUrl: string | null
   login: (userDetails: UserDetails, token: string) => void
   logout: () => void
-  silentLogout: () => void
-  clearToast: () => void
-  setToast: (toastMsg: string) => void
   checkAuthStatus: () => void
   isTokenValid: () => boolean
   setRedirectUrl: (url: string) => void
@@ -34,13 +29,10 @@ const useAuthStore = create<AuthStore>()(
           email: '',
           firstName: '',
         },
-        toast: '',
         accessToken: null,
         redirectUrl: '/',
 
         login: (userDetails: UserDetails, token: string) => {
-          // sessionStorage.setItem("accessToken", token);
-          // sessionStorage.setItem("userDetails", JSON.stringify(userDetails));
           set({
             isLoggedIn: true,
             userDetails,
@@ -49,45 +41,13 @@ const useAuthStore = create<AuthStore>()(
         },
 
         logout: () => {
-          // Clear all auth data
-          // sessionStorage.removeItem("accessToken");
-          // sessionStorage.removeItem("userDetails");
-          // sessionStorage.removeItem("toast");
-
           set({
             isLoggedIn: false,
             userDetails: { email: '', firstName: '' },
             accessToken: null,
-            toast: 'You have been signed out.',
           })
-
           // no longer needed as always tracking redirectUrl regardless of login status
           // get().clearRedirectUrl()
-
-          // Auto-clear logout toast
-          setTimeout(() => get().clearToast(), 3000)
-        },
-
-        silentLogout: () => {
-          // Clear auth data without showing toast
-          set({
-            isLoggedIn: false,
-            userDetails: { email: '', firstName: '' },
-            accessToken: null,
-            toast: '', // Don't set a toast message
-          })
-        },
-
-        clearToast: () => {
-          set({ toast: '', toastType: 'info' })
-        },
-
-        setToast: (
-          toastMsg: string,
-          type: 'success' | 'error' | 'info' = 'info',
-        ) => {
-          set({ toast: toastMsg, toastType: type })
-          setTimeout(() => get().clearToast(), 3000)
         },
 
         setRedirectUrl: (url: string) => {
@@ -99,25 +59,11 @@ const useAuthStore = create<AuthStore>()(
         },
 
         checkAuthStatus: () => {
-          const token = get().accessToken
-          const userDetails = get().userDetails
+          const { accessToken, userDetails, isTokenValid, logout } = get()
 
-          if (token && userDetails && get().isTokenValid()) {
-            try {
-              // const userDetails = JSON.parse(userDetailsStr) as UserDetails;
-              set({
-                isLoggedIn: true,
-                userDetails,
-                accessToken: token,
-              })
-            }
-            catch (error) {
-              console.error('Failed to parse user details:', error)
-              get().silentLogout()
-            }
-          }
-          else {
-            get().silentLogout()
+          if (!accessToken || !userDetails.email || !isTokenValid()) {
+            logout()
+            return
           }
         },
 
@@ -147,10 +93,7 @@ const useAuthStore = create<AuthStore>()(
           }
         },
       }),
-      // {
-      //   name: "userLoginStatus",
-      //   storage: createJSONStorage(() => sessionStorage),
-      // },
+
       {
         name: 'auth-storage',
         storage: createJSONStorage(() => localStorage),

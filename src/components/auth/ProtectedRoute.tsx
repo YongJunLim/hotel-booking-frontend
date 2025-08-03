@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useLocation } from 'wouter'
 import useAuthStore from '../../stores/AuthStore'
+import useToastStore from '../../stores/ToastStore'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
@@ -12,7 +13,7 @@ export const ProtectedRoute = ({
   redirectTo = '/',
 }: ProtectedRouteProps) => {
   const isLoggedIn = useAuthStore(state => state.isLoggedIn)
-  const setToast = useAuthStore(state => state.setToast)
+  const setToast = useToastStore(state => state.setToast)
   const [, navigate] = useLocation()
 
   useEffect(() => {
