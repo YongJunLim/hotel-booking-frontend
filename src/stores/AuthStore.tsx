@@ -4,16 +4,18 @@ import { type UserDetails } from '../types/user'
 
 interface AuthStore {
   isLoggedIn: boolean
+  //userDetails: UserDetailswithAdmin
   userDetails: UserDetails
   toast: string
   toastType: 'success' | 'error' | 'info'
   accessToken: string | null
-  redirectUrl: string
+  redirectUrl: string | null
+  //login: (userDetails: UserDetailswithAdmin, token: string) => void
   login: (userDetails: UserDetails, token: string) => void
   logout: () => void
   silentLogout: () => void
   clearToast: () => void
-  setToast: (toastMsg: string) => void
+  setToast: (toastMsg: string, toasttype: 'success' | 'error' | 'info') => void
   checkAuthStatus: () => void
   isTokenValid: () => boolean
   setRedirectUrl: (url: string) => void
@@ -34,6 +36,7 @@ const useAuthStore = create<AuthStore>()(
           email: '',
           firstName: '',
         },
+        toastType: 'info',
         toast: '',
         accessToken: null,
         redirectUrl: '/',
@@ -84,7 +87,7 @@ const useAuthStore = create<AuthStore>()(
 
         setToast: (
           toastMsg: string,
-          type: 'success' | 'error' | 'info' = 'info',
+          type: 'success' | 'error' | 'info' = 'info'
         ) => {
           set({ toast: toastMsg, toastType: type })
           setTimeout(() => get().clearToast(), 3000)

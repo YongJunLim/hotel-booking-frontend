@@ -139,7 +139,7 @@ export const Signup = () => {
       setMsgClass(msg.success ? 'text-green-800' : 'text-red-800')
       // Response successful && User successfully created
       if (res.ok && msg.success) {
-        setToast(msg.message)
+        setToast(msg.message,'success')
         nav('/login')
       }
       else {
