@@ -1,4 +1,4 @@
-import StarUI from './StarRating.tsx'
+import StarUI from './StarRating'
 
 type FilterStarprops = {
   minstar: number
