@@ -1,15 +1,17 @@
 import { type bookingResponse } from "../types/booking"
+//import { BACKEND_URL } from "../config/api"
 
-export async function getBooking(token: string) {
-  console.log(token)
-  if (token) {
-    // const res = await fetch(`${BACKEND_URL}/bookings`, {
+
+export async function getBooking(token: string | null) {
+  if(token){
+    //const res = await fetch(`${BACKEND_URL}/bookings`, {
     const res = await fetch('http://localhost:9000/api/v1/bookings', {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`,
-      } })
+      Authorization: `Bearer ${token}`,
+    } })
     const msg: bookingResponse = await res.json() as bookingResponse
+    console.log(msg)
     if (msg.success) {
       console.log(msg.bookings)
       return {
@@ -25,4 +27,9 @@ export async function getBooking(token: string) {
       }
     }
   }
+  return {
+        success: false,
+        message: "Invalid token",
+      }
+  
 }

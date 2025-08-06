@@ -2,7 +2,6 @@ import { Link } from 'wouter'
 import { useState, useEffect } from 'react'
 import DeleteToast from './DeleteAccount'
 import useAuthStore from '../stores/AuthStore'
-import { type Booking } from '../types/booking'
 import { RedirectToast } from '../components/ui/Redirect'
 import useBookingStore from '../stores/BookingStore'
 
@@ -10,12 +9,14 @@ export const UserPage = () => {
   const [firstname, setFirstName] = useState('')
   const [email, setEmail] = useState('')
   const [isClick, setIsClick] = useState(false)
-  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
   const isLoggedIn = useAuthStore(state => state.isLoggedIn)
   const userDetails = useAuthStore(state => state.userDetails)
   const accessToken = useAuthStore(state => state.accessToken)
   const fetchBooking = useBookingStore(state => state.fetchBooking)
   const bookings = useBookingStore(state => state.bookings)
+  const selectedBooking = useBookingStore(state => state.selectedBooking)
+  const setSelectedBooking = useBookingStore(state => state.setSelectedBooking)
+  const bookingStatus = useBookingStore(state => state.bookingstatus)
   const [showRedirectToast, setShowRedirectToast] = useState(false)
 
   useEffect(() => {
@@ -26,9 +27,7 @@ export const UserPage = () => {
       setEmail(userDetails.email)
       setFirstName(userDetails.firstName)
       const loadBookings = async () => {
-        if (accessToken) {
-          await fetchBooking(accessToken)
-        }
+          await fetchBooking()
       }
       void loadBookings()
     }
@@ -94,7 +93,7 @@ export const UserPage = () => {
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white mr-4">
                     Booking list
                   </h2>
-                  <button onClick={() => { if (accessToken) fetchBooking(accessToken) }}>Refresh</button>
+                  <button onClick={() => { void fetchBooking() }}>Refresh</button>
                 </div>
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                   <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -140,9 +139,14 @@ export const UserPage = () => {
                           </td>
                         </tr>
                       ))}
-
                     </tbody>
                   </table>
+                  {!bookingStatus && bookings.length === 0 && (
+                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                    <p>No bookings found or failed to load bookings.</p>
+                    <p>Try again</p>
+                  </div>
+                )}
                 </div>
               </div>
               {selectedBooking && (
