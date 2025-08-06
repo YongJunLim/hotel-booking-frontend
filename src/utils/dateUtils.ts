@@ -1,3 +1,3 @@
 export function dateToLocal(date: Date) {
-  return date.toLocaleDateString()
+  return date.toLocaleDateString('en-GB')
 }
