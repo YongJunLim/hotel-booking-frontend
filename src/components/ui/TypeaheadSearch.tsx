@@ -39,7 +39,7 @@ export const TypeaheadSearch = ({
     if (country && country.term && !justSelectedRef.current) {
       setQuery(country.term)
     }
-  }, [country?.term])
+  }, [country])
 
   const apiUrl
     = query.length >= 2

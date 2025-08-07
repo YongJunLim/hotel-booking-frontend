@@ -417,9 +417,6 @@ describe('Integration with TypeaheadSearch calling API', () => {
     // Test keyboard navigation integration with real API data
     vi.doUnmock('../../../src/utils/typeaheadsearchUtils')
 
-    // Re-import to get the real implementation
-    const { handleKeyDown: realHandleKeyDown } = await import('../../../src/utils/typeaheadsearchUtils')
-
     const mockOnSelect = vi.fn()
 
     mockUseSWR.mockReturnValue({
@@ -447,7 +444,7 @@ describe('Integration with TypeaheadSearch calling API', () => {
   })
 
   // API retry behavior
-  it('should handle API retries on failure', async () => {
+  it('should handle API retries on failure', () => {
     mockUseSWR.mockReturnValue({
       data: undefined,
       error: new Error('Network error'),

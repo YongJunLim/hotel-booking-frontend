@@ -4,7 +4,7 @@ import DropDownWithButtons from './DropDown'
 import { type Destination } from '../../types/destination'
 import DayPicker from './DayPicker'
 import { type Country } from '../../types/forms'
-import { useFormStore, useCountryStore, useCountryNameStore } from '../../stores/HotelSearch'
+import { useFormStore, useCountryStore } from '../../stores/HotelSearch'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { useLocation } from 'wouter'
 import { TypeaheadSearch } from './TypeaheadSearch'
@@ -15,7 +15,6 @@ export default function DestinationSearch(): React.ReactElement {
   const Child = useFormStore(s => s.Children)
   const Room = useFormStore(s => s.Room)
   const { country, setCountry } = useCountryStore()
-  const { setCountryName } = useCountryNameStore()
 
   const from = range?.from
   const to = range?.to
@@ -127,17 +126,16 @@ export default function DestinationSearch(): React.ReactElement {
     navigate(
       `/results/${country.uid}?checkin=${start}&checkout=${end}&lang=en_US&currency=SGD&country_code=SG&guests=${Array(Room).fill(sum).join('|')}`,
     )
-    setCountryName(country.uid, country.term, country.lat, country.lng)
   }
   return (
     <>
       <div className="w-full border border-gray-400 rounded-lg p-4 shadow-md">
         <DropDownWithButtons></DropDownWithButtons>
-        <div className="flex flex-col sm:flex-row flex-wrap gap-8 py-4 w-full">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-6 py-4 w-full">
           <TypeaheadSearch
             onSelect={handleDestinationSelect}
             placeholder="Search destinations..."
-            className="w-full md:w-[70%] min-w-[300px]"
+            className="w-full md:w-[78%] min-w-[300px]"
             limit={5}
             threshold={0.3}
           />

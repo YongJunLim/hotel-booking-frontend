@@ -20,6 +20,7 @@ const mockUseCountryStore = vi.mocked(useCountryStore)
 type Range = { from: Date | undefined, to?: Date | undefined }
 type SetRangeFunction = (range: Range) => void
 type SetNumberFunction = (value: number | ((prev: number) => number)) => void
+
 let mockStoreState: {
   range: Range
   Adult: number
@@ -42,13 +43,6 @@ let mockStoreState: {
   setChildren: vi.fn(),
   setRoom: vi.fn(),
 }
-
-mockUseFormStore.mockImplementation((selector) => {
-  if (typeof selector === 'function') {
-    return selector(mockStoreState)
-  }
-  return mockStoreState
-})
 
 let mockCountryStoreState = {
   country: { uid: 'A6Dz', term: 'Rome, Italy', lat: 41.895466, lng: 12.482324 },

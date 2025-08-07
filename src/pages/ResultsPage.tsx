@@ -1,6 +1,5 @@
 import { useParams, Link } from 'wouter'
 import { useSearchParams } from '../hooks/useSearchParams'
-import { BookingDetails } from '../components/ui/BookingDetails'
 import { HotelCard } from '../components/ui/ResultsCard'
 import { NavBar } from '../components/layout/NavBar'
 import useRoomBookingStore from '../stores/RoomBookingStore'
@@ -19,7 +18,7 @@ import { MapSelect } from '../components/ui/MapSelect'
 import StarRatingFilter from '../components/ui/FilterStar'
 import RangeSlider from '../components/ui/FilterPrice'
 import DestinationSearch from '../components/ui/DestinationSearch'
-import { useCountryNameStore } from '../stores/HotelSearch'
+import { useCountryStore } from '../stores/HotelSearch'
 
 const fetcher = (url: string) => fetch(url).then(response => response.json())
 
@@ -31,19 +30,19 @@ export const ResultsPage = () => {
   const checkout = searchParams.checkout ?? undefined
   const guests = searchParams.guests ?? undefined
 
-  const clearRoomBookingData = useRoomBookingStore(
-    state => state.clearRoomBookingData,
-  )
   // Clear booking data when starting a new search
   useEffect(() => {
-    clearRoomBookingData()
-  }, [clearRoomBookingData])
+    useRoomBookingStore.getState().clearRoomBookingData()
+  }, [])
 
   const priceAPI = `${BACKEND_URL}/hotels/prices?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`
   const hotelAPI = `${BACKEND_URL}/hotels?destination_id=${destinationId}`
 
-  const { countryName } = useCountryNameStore()
-  const term = countryName?.term ?? 'No Destination'
+  const { country } = useCountryStore()
+  const pagetitle = useMemo(() => {
+    const term = country?.term ?? 'No Destination'
+    return `Hotel Search Results for ${term}`
+  }, [country])
 
   const {
     data: pricedata,
@@ -166,11 +165,9 @@ export const ResultsPage = () => {
 
   const isloading
     = priceloading || hotelloading || pricedata?.completed !== true
-
-  const pageTitle = `Hotel Search Results for ${term}`
   return (
     <>
-      <NavBar pageTitle={pageTitle} />
+      <NavBar pageTitle={pagetitle} />
       <div className="py-2">
         <DestinationSearch />
       </div>

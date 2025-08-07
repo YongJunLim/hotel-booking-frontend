@@ -74,28 +74,3 @@ export const useCountryStore = create<CountryStore>()(
     },
   ),
 )
-
-interface CountryNameStore {
-  countryName: Country
-  setCountryName: (uid: string, term: string, lat: number, lng: number) => void
-}
-
-export const useCountryNameStore = create<CountryNameStore>()(
-  devtools(
-    persist(
-      set => ({
-        countryName: { uid: '', term: '', lat: 0, lng: 0 },
-        setCountryName: (uid: string, term: string, lat: number, lng: number) =>
-          set({ countryName: { uid, term, lat, lng } }),
-      }),
-      {
-        name: 'country-name-storage',
-        storage: createJSONStorage(() => sessionStorage),
-      },
-    ),
-    {
-      name: 'CountryNameStore',
-      enabled: process.env.NODE_ENV === 'development',
-    },
-  ),
-)
