@@ -62,7 +62,7 @@ export const HotelDetailPage = () => {
   // Set up room booking data when component mounts
   useEffect(() => {
     if (hotelId && searchParams.checkin && searchParams.checkout && guests) {
-      clearRoomBookingData()
+      // clearRoomBookingData()
       setRoomBookingData({
         hotelId,
         checkin: searchParams.checkin,
