@@ -6,6 +6,7 @@ import type { Destination } from '../../types/destination'
 import type { DestinationResponse } from '../../types/api'
 import { BACKEND_URL } from '../../config/api'
 import { handleKeyDown } from '../../utils/typeaheadsearchUtils'
+import { useCountryStore } from '../../stores/HotelSearch'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
@@ -32,7 +33,14 @@ export const TypeaheadSearch = ({
   const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null)
   const [startIndex, setStartIndex] = useState(0)
   const justSelectedRef = useRef(false)
-  // Build API URL with limit and threshold parameters
+ 
+  const country = useCountryStore(state => state.country)
+  useEffect(() => {
+    if (country && country.term && !justSelectedRef.current) {
+      setQuery(country.term)
+    }
+  }, [country?.term])
+
   const apiUrl
     = query.length >= 2
       ? (() => {

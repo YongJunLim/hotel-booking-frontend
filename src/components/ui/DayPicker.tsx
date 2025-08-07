@@ -1,5 +1,5 @@
 import { DayPicker } from 'react-day-picker'
-import { useFormStore } from '../../store'
+import { useFormStore } from '../../stores/HotelSearch'
 import { dateToLocal } from '../../utils/dateUtils'
 
 export default function App() {

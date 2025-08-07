@@ -19,5 +19,5 @@
     "target": "ESNext",
     "esModuleInterop": true,
   },
-  "include": ["vitest.config.ts", "tests/**/*.ts", "tests/**/*.tsx", "src"]
+  "include": ["vitest.config.ts", "tests/**/*.ts", "tests/**/*.tsx", "src", "__mocks__/**/*"]
 }

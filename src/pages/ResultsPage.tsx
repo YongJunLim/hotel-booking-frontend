@@ -18,6 +18,7 @@ import { MapSelect } from '../components/ui/MapSelect'
 import StarRatingFilter from '../components/ui/FilterStar'
 import RangeSlider from '../components/ui/FilterPrice'
 import DestinationSearch from '../components/ui/DestinationSearch'
+import { useCountryNameStore } from '../stores/HotelSearch'
 
 const fetcher = (url: string) => fetch(url).then(response => response.json())
 
@@ -31,6 +32,9 @@ export const ResultsPage = () => {
 
   const priceAPI = `${BACKEND_URL}/hotels/prices?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`
   const hotelAPI = `${BACKEND_URL}/hotels?destination_id=${destinationId}`
+  
+  const { countryName } = useCountryNameStore()
+  const term = countryName?.term ?? 'No Destination'
 
   const {
     data: pricedata,
@@ -154,20 +158,15 @@ export const ResultsPage = () => {
   const isloading
     = priceloading || hotelloading || pricedata?.completed !== true
 
-  const pageTitle = `Search Results for ${destinationId}`
+  const pageTitle = `Hotel Search Results for ${term}`
   return (
     <>
       <NavBar pageTitle={pageTitle} />
       <div className="py-2">
         <DestinationSearch />
       </div>
-      <BookingDetails
-        searchParams={searchParams}
-        destinationId={destinationId}
-      />
 
       <div className="mb-3">
-        <h2 className="text-2xl font-semibold mb-2">Hotel Search Results</h2>
         <div className="pt-8"></div>
 
         {hotelerror && (
