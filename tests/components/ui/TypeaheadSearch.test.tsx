@@ -416,12 +416,12 @@ describe('Integration with TypeaheadSearch calling API', () => {
   it('should navigate through API results with arrow keys', async () => {
     // Test keyboard navigation integration with real API data
     vi.doUnmock('../../../src/utils/typeaheadsearchUtils')
-  
+
     // Re-import to get the real implementation
     const { handleKeyDown: realHandleKeyDown } = await import('../../../src/utils/typeaheadsearchUtils')
-  
+
     const mockOnSelect = vi.fn()
-  
+
     mockUseSWR.mockReturnValue({
       data: mockDestinations,
       error: undefined,
@@ -429,11 +429,11 @@ describe('Integration with TypeaheadSearch calling API', () => {
       isValidating: false,
       mutate: vi.fn(),
     })
-  
+
     render(<TypeaheadSearch onSelect={mockOnSelect} />)
     const input = screen.getByRole('combobox')
     fireEvent.change(input, { target: { value: 'Rome' } })
-  
+
     await waitFor(() => {
       expect(screen.getByText('Rome, Italy')).toBeInTheDocument()
     })
@@ -441,11 +441,10 @@ describe('Integration with TypeaheadSearch calling API', () => {
     // Navigate with arrow keys
     fireEvent.keyDown(input, { key: 'ArrowDown' })
     fireEvent.keyDown(input, { key: 'Enter' })
-  
+
     expect(mockOnSelect).toHaveBeenCalledWith(mockDestinations.results[0])
     expect(input.getAttribute('aria-expanded')).toBe('false')
   })
-    
 
   // API retry behavior
   it('should handle API retries on failure', async () => {
@@ -468,7 +467,7 @@ describe('Integration with TypeaheadSearch calling API', () => {
     mockUseSWR.mockReturnValue({
       data: mockDestinations,
       error: undefined,
-      isLoading: false, 
+      isLoading: false,
       isValidating: false,
       mutate: vi.fn(),
     })

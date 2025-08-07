@@ -62,6 +62,7 @@ export const HotelDetailPage = () => {
   // Set up room booking data when component mounts
   useEffect(() => {
     if (hotelId && searchParams.checkin && searchParams.checkout && guests) {
+      // clearRoomBookingData()
       setRoomBookingData({
         hotelId,
         checkin: searchParams.checkin,
@@ -69,11 +70,6 @@ export const HotelDetailPage = () => {
         guests,
       })
       setMaxSelectedRooms(maxRooms)
-    }
-
-    // Clear booking data when component unmounts
-    return () => {
-      clearRoomBookingData()
     }
   }, [
     hotelId,
@@ -132,40 +128,6 @@ export const HotelDetailPage = () => {
     <>
       <NavBar pageTitle={pageTitle} />
       {hotelId && <HotelInfo hotelId={hotelId} />}
-
-      {/* Room Selection Summary */}
-      {selectedRooms.length > 0 && (
-        <div className="mb-6 p-4 bg-base-200 rounded-lg">
-          <h3 className="text-lg font-semibold mb-2">
-            Selected Rooms (
-            {selectedRooms.length}
-            /
-            {maxRooms}
-            )
-          </h3>
-          <div className="space-y-2">
-            {selectedRooms.map((room, index) => (
-              <div
-                key={`${room.key}-${index}`}
-                className="flex justify-between items-center"
-              >
-                <span>{room.roomNormalizedDescription}</span>
-                <span className="font-semibold">
-                  $
-                  {room.price}
-                </span>
-              </div>
-            ))}
-            <div className="border-t pt-2 flex justify-between items-center font-bold">
-              <span>Total:</span>
-              <span className="text-green-600">
-                $
-                {getTotalPrice()}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">
@@ -271,6 +233,40 @@ export const HotelDetailPage = () => {
             </div>
           )}
       </div>
+
+      {/* Room Selection Summary */}
+      {selectedRooms.length > 0 && (
+        <div className="mb-6 p-4 bg-base-200 rounded-lg">
+          <h3 className="text-lg font-semibold mb-2">
+            Selected Rooms (
+            {selectedRooms.length}
+            /
+            {maxRooms}
+            )
+          </h3>
+          <div className="space-y-2">
+            {selectedRooms.map((room, index) => (
+              <div
+                key={`${room.key}-${index}`}
+                className="flex justify-between items-center"
+              >
+                <span>{room.roomNormalizedDescription}</span>
+                <span className="font-semibold">
+                  $
+                  {room.price}
+                </span>
+              </div>
+            ))}
+            <div className="border-t pt-2 flex justify-between items-center font-bold">
+              <span>Total:</span>
+              <span className="text-green-600">
+                $
+                {getTotalPrice()}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Action Buttons */}
       <div className="flex gap-4 mb-6">
