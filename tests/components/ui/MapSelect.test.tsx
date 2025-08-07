@@ -10,12 +10,12 @@ vi.mock('react', async () => {
 })
 
 import * as React from 'react'
-import { handleMapClick, loadMarkerImage } from '../src/utils/mapselectUtils'
-import { MapSelect } from '../src/components/ui/MapSelect'
+import { handleMapClick, loadMarkerImage } from '../../../src/utils/mapselectUtils'
+import { MapSelect } from '../../../src/components/ui/MapSelect'
 import { render, screen, waitFor, act } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import type { StitchedHotel, HotelCategories, HotelAmenities, ImageDetails } from '../src/types/params'
-import marker from '../src/assets/marker.png'
+import type { StitchedHotel, HotelCategories, HotelAmenities, ImageDetails } from '../../../src/types/params'
+import marker from '../../../src/assets/marker.png'
 import { LngLat, MapGeoJSONFeature, MapLayerMouseEvent, Point } from 'maplibre-gl'
 
 let lastOnMouseMove: ((event: MapLayerMouseEvent) => void) | null = null

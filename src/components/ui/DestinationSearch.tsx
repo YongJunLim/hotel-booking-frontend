@@ -4,7 +4,7 @@ import DropDownWithButtons from './DropDown'
 import { type Destination } from '../../types/destination'
 import DayPicker from './DayPicker'
 import { type Country } from '../../types/forms'
-import { useFormStore, useCountryStore } from '../../store'
+import { useFormStore, useCountryStore, useCountryNameStore } from '../../stores/HotelSearch'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { useLocation } from 'wouter'
 import { TypeaheadSearch } from './TypeaheadSearch'
@@ -15,6 +15,7 @@ export default function DestinationSearch(): React.ReactElement {
   const Child = useFormStore(s => s.Children)
   const Room = useFormStore(s => s.Room)
   const { country, setCountry } = useCountryStore()
+  const { setCountryName } = useCountryNameStore()
 
   const from = range?.from
   const to = range?.to
@@ -126,6 +127,7 @@ export default function DestinationSearch(): React.ReactElement {
     navigate(
       `/results/${country.uid}?checkin=${start}&checkout=${end}&lang=en_US&currency=SGD&country_code=SG&guests=${Array(Room).fill(sum).join('|')}`,
     )
+    setCountryName(country.uid, country.term, country.lat, country.lng)
   }
   return (
     <>
