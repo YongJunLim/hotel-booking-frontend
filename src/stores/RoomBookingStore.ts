@@ -1,10 +1,11 @@
 import { create } from 'zustand'
-import { devtools } from 'zustand/middleware'
+import { devtools, persist, createJSONStorage } from 'zustand/middleware'
 
 interface RoomDetails {
   key: string
   roomNormalizedDescription: string
   price: number
+  free_cancellation: boolean
 }
 
 interface RoomBookingStore {
@@ -30,61 +31,68 @@ interface RoomBookingStore {
 
 const useRoomBookingStore = create<RoomBookingStore>()(
   devtools(
-    (set, get) => ({
-      hotelId: null,
-      selectedRooms: [],
-      checkin: null,
-      checkout: null,
-      guests: null,
-      maxSelectedRooms: 1,
+    persist(
+      (set, get) => ({
+        hotelId: null,
+        selectedRooms: [],
+        checkin: null,
+        checkout: null,
+        guests: null,
+        maxSelectedRooms: 1,
 
-      setRoomBookingData: data =>
-        set({
-          hotelId: data.hotelId,
-          checkin: data.checkin,
-          checkout: data.checkout,
-          guests: data.guests,
-        }),
+        setRoomBookingData: data =>
+          set({
+            hotelId: data.hotelId,
+            checkin: data.checkin,
+            checkout: data.checkout,
+            guests: data.guests,
+          }),
 
-      setMaxSelectedRooms: max => set({ maxSelectedRooms: max }),
+        setMaxSelectedRooms: max => set({ maxSelectedRooms: max }),
 
-      addRoom: room =>
-        set(state => ({
-          selectedRooms: [...state.selectedRooms, room],
-        })),
+        addRoom: room =>
+          set(state => ({
+            selectedRooms: [...state.selectedRooms, room],
+          })),
 
-      removeRoom: roomKey =>
-        set(state => ({
-          selectedRooms: state.selectedRooms.filter(
-            room => room.key !== roomKey,
-          ),
-        })),
+        removeRoom: roomKey =>
+          set(state => ({
+            selectedRooms: state.selectedRooms.filter(
+              room => room.key !== roomKey,
+            ),
+          })),
 
-      clearRoomBookingData: () =>
-        set({
-          hotelId: null,
-          selectedRooms: [],
-          checkin: null,
-          checkout: null,
-          guests: null,
-          maxSelectedRooms: 1,
-        }),
+        clearRoomBookingData: () =>
+          set({
+            hotelId: null,
+            selectedRooms: [],
+            checkin: null,
+            checkout: null,
+            guests: null,
+            maxSelectedRooms: 1,
+          }),
 
-      canAddMoreRooms: () => {
-        const state = get()
-        return state.selectedRooms.length < state.maxSelectedRooms
+        canAddMoreRooms: () => {
+          const state = get()
+          return state.selectedRooms.length < state.maxSelectedRooms
+        },
+
+        getTotalPrice: () => {
+          const state = get()
+          // 2 decimal places
+          return parseFloat(
+            state.selectedRooms
+              .reduce((total, room) => total + room.price, 0)
+              .toFixed(2),
+          )
+        },
+      }),
+
+      {
+        name: 'room-booking-storage',
+        storage: createJSONStorage(() => sessionStorage),
       },
-
-      getTotalPrice: () => {
-        const state = get()
-        // 2 decimal places
-        return parseFloat(
-          state.selectedRooms
-            .reduce((total, room) => total + room.price, 0)
-            .toFixed(2),
-        )
-      },
-    }),
+    ),
     {
       name: 'RoomBookingStore',
       enabled: process.env.NODE_ENV === 'development',

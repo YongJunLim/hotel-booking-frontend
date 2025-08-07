@@ -39,6 +39,7 @@ export const RoomCard = ({ room }: RoomCardProps) => {
         key: room.key,
         roomNormalizedDescription: room.roomNormalizedDescription,
         price: room.price,
+        free_cancellation: room.free_cancellation,
       })
     }
   }

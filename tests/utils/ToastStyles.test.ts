@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getToastStyles } from '../../src/utils/toastStyles'
+import { getToastStyles } from '../../src/utils/ToastStyles'
 
 describe('getToastStyles', () => {
   it('should return correct class for error type', () => {
