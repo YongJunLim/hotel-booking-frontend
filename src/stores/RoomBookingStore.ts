@@ -5,6 +5,7 @@ interface RoomDetails {
   key: string
   roomNormalizedDescription: string
   price: number
+  free_cancellation: boolean
 }
 
 interface RoomBookingStore {
