@@ -4,8 +4,7 @@ import type { Hotel } from '../../types/hotel'
 import { MapView } from './MapView'
 import StarUI from './StarRating'
 import { ImageCarousel } from './ImageCarousel'
-
-const fetcher = (url: string) => fetch(url).then(res => res.json())
+import { fetcher } from '../../utils/ApiUtils'
 
 interface HotelInfoProps {
   hotelId: string
@@ -35,7 +34,7 @@ export const HotelInfo = ({ hotelId }: HotelInfoProps) => {
     return (
       <div className="alert alert-error mb-6">
         <span>
-          Error loading hotel details:
+          Error loading price data:
           {error.message}
         </span>
       </div>

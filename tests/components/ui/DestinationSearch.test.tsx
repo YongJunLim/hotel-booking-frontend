@@ -1,10 +1,10 @@
-import DestinationSearch from '../src/components/ui/DestinationSearch'
+import DestinationSearch from '../../../src/components/ui/DestinationSearch'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { vi } from 'vitest'
-import { useFormStore, useCountryStore } from '../src/store'
+import { useFormStore, useCountryStore } from '../../../src/stores/HotelSearch'
 import { act } from 'react'
 
-vi.mock('../src/store', () => ({
+vi.mock('../../../src/stores/HotelSearch', () => ({
   useFormStore: vi.fn(),
   useCountryStore: vi.fn(),
 }))
@@ -20,6 +20,7 @@ const mockUseCountryStore = vi.mocked(useCountryStore)
 type Range = { from: Date | undefined, to?: Date | undefined }
 type SetRangeFunction = (range: Range) => void
 type SetNumberFunction = (value: number | ((prev: number) => number)) => void
+
 let mockStoreState: {
   range: Range
   Adult: number
@@ -42,13 +43,6 @@ let mockStoreState: {
   setChildren: vi.fn(),
   setRoom: vi.fn(),
 }
-
-mockUseFormStore.mockImplementation((selector) => {
-  if (typeof selector === 'function') {
-    return selector(mockStoreState)
-  }
-  return mockStoreState
-})
 
 let mockCountryStoreState = {
   country: { uid: 'A6Dz', term: 'Rome, Italy', lat: 41.895466, lng: 12.482324 },

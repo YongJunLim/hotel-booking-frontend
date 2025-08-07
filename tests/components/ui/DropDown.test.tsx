@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, vi, expect, test } from 'vitest'
-import { incrementBy, decrementBy, CheckAdultAndChildren, CheckRoom } from '../src/utils/dropdownUtils'
-import DropDownWithButtons from '../src/components/ui/DropDown'
-import { useFormStore } from '../src/store'
+import { incrementBy, decrementBy, CheckAdultAndChildren, CheckRoom } from '../../../src/utils/dropdownUtils'
+import DropDownWithButtons from '../../../src/components/ui/DropDown'
+import { useFormStore } from '../../../src/stores/HotelSearch'
 
 function createMockState<T>(initialValue: T) {
   let value = initialValue
@@ -117,7 +117,7 @@ test('CheckRoom should throw an error if input is not positive', () => {
   expect(() => CheckRoom(0)).toThrow('Input must be a positive number')
 })
 
-vi.mock('../src/store', () => {
+vi.mock('../../../src/stores/HotelSearch', () => {
   return {
     useFormStore: vi.fn(),
   }

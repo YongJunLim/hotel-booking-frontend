@@ -1,4 +1,4 @@
-import { useFormStore } from '../../store'
+import { useFormStore } from '../../stores/HotelSearch'
 import { incrementBy, decrementBy, CheckAdultAndChildren, CheckRoom } from '../../utils/dropdownUtils'
 
 export default function DropDownWithButtons() {

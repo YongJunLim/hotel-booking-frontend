@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, vi, expect } from 'vitest'
-import { dateToLocal } from '../src/utils/dateUtils'
-import App from '../src/components/ui/DayPicker'
-import DayPickerComponent from '../src/components/ui/DayPicker'
-import { useFormStore } from '../src/store'
+import { dateToLocal } from '../../../src/utils/dateUtils'
+import App from '../../../src/components/ui/DayPicker'
+import DayPickerComponent from '../../../src/components/ui/DayPicker'
+import { useFormStore } from '../../../src/stores/HotelSearch'
 
 describe('dateToLocal Unit Test', () => {
   it('dateToLocal should format the date correctly', () => {
@@ -14,7 +14,7 @@ describe('dateToLocal Unit Test', () => {
   })
 })
 
-vi.mock('../src/store', () => {
+vi.mock('../../../src/stores/HotelSearch', () => {
   return {
     useFormStore: vi.fn(),
   }
