@@ -1,13 +1,12 @@
 import DestinationSearch from '../../../src/components/ui/DestinationSearch'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { vi } from 'vitest'
-import { useFormStore, useCountryStore, useCountryNameStore } from '../../../src/stores/HotelSearch'
+import { useFormStore, useCountryStore } from '../../../src/stores/HotelSearch'
 import { act } from 'react'
 
 vi.mock('../../../src/stores/HotelSearch', () => ({
   useFormStore: vi.fn(),
   useCountryStore: vi.fn(),
-  useCountryNameStore: vi.fn(),
 }))
 
 const mockNavigate = vi.fn()
@@ -17,11 +16,11 @@ vi.mock('wouter', () => ({
 
 const mockUseFormStore = vi.mocked(useFormStore)
 const mockUseCountryStore = vi.mocked(useCountryStore)
-const mockUseCountryNameStore = vi.mocked(useCountryNameStore)
 
 type Range = { from: Date | undefined, to?: Date | undefined }
 type SetRangeFunction = (range: Range) => void
 type SetNumberFunction = (value: number | ((prev: number) => number)) => void
+
 let mockStoreState: {
   range: Range
   Adult: number
@@ -45,21 +44,9 @@ let mockStoreState: {
   setRoom: vi.fn(),
 }
 
-mockUseFormStore.mockImplementation((selector) => {
-  if (typeof selector === 'function') {
-    return selector(mockStoreState)
-  }
-  return mockStoreState
-})
-
 let mockCountryStoreState = {
   country: { uid: 'A6Dz', term: 'Rome, Italy', lat: 41.895466, lng: 12.482324 },
   setCountry: vi.fn(),
-}
-
-const mockCountryNameStoreState = {
-  countryName: { uid: 'A6Dz', term: 'Rome, Italy', lat: 41.895466, lng: 12.482324 },
-  setCountryName: vi.fn(),
 }
 
 mockUseFormStore.mockImplementation((selector) => {
@@ -74,13 +61,6 @@ mockUseCountryStore.mockImplementation((selector) => {
     return selector(mockCountryStoreState)
   }
   return mockCountryStoreState
-})
-
-mockUseCountryNameStore.mockImplementation((selector) => {
-  if (typeof selector === 'function') {
-    return selector(mockCountryNameStoreState)
-  }
-  return mockCountryNameStoreState
 })
 
 describe('DestinationSearch Integration Test', () => {
