@@ -1,6 +1,5 @@
 import { useParams, Link } from 'wouter'
 import { useSearchParams } from '../hooks/useSearchParams'
-import { BookingDetails } from '../components/ui/BookingDetails'
 import { HotelCard } from '../components/ui/ResultsCard'
 import { NavBar } from '../components/layout/NavBar'
 import useRoomBookingStore from '../stores/RoomBookingStore'
@@ -31,13 +30,10 @@ export const ResultsPage = () => {
   const checkout = searchParams.checkout ?? undefined
   const guests = searchParams.guests ?? undefined
 
-  const clearRoomBookingData = useRoomBookingStore(
-    state => state.clearRoomBookingData,
-  )
   // Clear booking data when starting a new search
   useEffect(() => {
-    clearRoomBookingData()
-  }, [clearRoomBookingData])
+    useRoomBookingStore.getState().clearRoomBookingData()
+  }, [])
 
   const priceAPI = `${BACKEND_URL}/hotels/prices?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`
   const hotelAPI = `${BACKEND_URL}/hotels?destination_id=${destinationId}`

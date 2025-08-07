@@ -7,6 +7,11 @@ export interface PriceBaseResponse {
   currency: string | null
 }
 
+export interface ApiErrorResponse {
+  success: false
+  message: string
+}
+
 export interface DestinationResponse {
   success: boolean
   query: string
