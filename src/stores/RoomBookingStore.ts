@@ -6,6 +6,7 @@ interface RoomDetails {
   roomNormalizedDescription: string
   price: number
   free_cancellation: boolean
+  breakfast_display: string
 }
 
 interface RoomBookingStore {

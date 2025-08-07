@@ -62,7 +62,7 @@ export const HotelDetailPage = () => {
   // Set up room booking data when component mounts
   useEffect(() => {
     if (hotelId && searchParams.checkin && searchParams.checkout && guests) {
-      // clearRoomBookingData()
+      clearRoomBookingData()
       setRoomBookingData({
         hotelId,
         checkin: searchParams.checkin,
@@ -250,7 +250,7 @@ export const HotelDetailPage = () => {
                 key={`${room.key}-${index}`}
                 className="flex justify-between items-center"
               >
-                <span>{room.roomNormalizedDescription}</span>
+                <span>{room.roomNormalizedDescription}, {room.breakfast_display}, {room.free_cancellation ? 'Free Cancellation' : 'Non-Refundable' } </span>
                 <span className="font-semibold">
                   $
                   {room.price}
