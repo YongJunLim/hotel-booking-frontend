@@ -62,6 +62,7 @@ export const HotelDetailPage = () => {
   // Set up room booking data when component mounts
   useEffect(() => {
     if (hotelId && searchParams.checkin && searchParams.checkout && guests) {
+      clearRoomBookingData()
       setRoomBookingData({
         hotelId,
         checkin: searchParams.checkin,
@@ -69,11 +70,6 @@ export const HotelDetailPage = () => {
         guests,
       })
       setMaxSelectedRooms(maxRooms)
-    }
-
-    // Clear booking data when component unmounts
-    return () => {
-      clearRoomBookingData()
     }
   }, [
     hotelId,
