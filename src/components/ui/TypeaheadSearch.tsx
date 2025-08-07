@@ -33,13 +33,13 @@ export const TypeaheadSearch = ({
   const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null)
   const [startIndex, setStartIndex] = useState(0)
   const justSelectedRef = useRef(false)
- 
+
   const country = useCountryStore(state => state.country)
   useEffect(() => {
     if (country && country.term && !justSelectedRef.current) {
       setQuery(country.term)
     }
-  }, [country?.term])
+  }, [country])
 
   const apiUrl
     = query.length >= 2
