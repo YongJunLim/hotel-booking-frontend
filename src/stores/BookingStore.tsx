@@ -1,10 +1,10 @@
 import { create } from 'zustand'
 import type { Booking } from '../types/booking'
 import { persist, devtools } from 'zustand/middleware'
-import {getBooking } from '../utils/GetBooking'
 import useAuthStore from './AuthStore'
+import { userService } from '../utils/userService'
 interface BookingStore {
-  bookingstatus: boolean
+  bookingStatus: boolean
   selectedBooking: Booking | null
   bookings: Booking[]
   fetchBooking: () => Promise<void>
@@ -18,36 +18,35 @@ const useBookingStore = create<BookingStore>()(
       set => ({
         bookings: [],
         selectedBooking: null,
-        bookingstatus: false,
+        bookingStatus: false,
         fetchBooking: async () => {
           const accesstoken = useAuthStore.getState().accessToken
-          try{
-              const bookingResponse = await getBooking(accesstoken)
-              if(bookingResponse?.success && bookingResponse.data) {
-                set({ bookings: bookingResponse.data, bookingstatus: true })
-              }
-              else {
-                set({
-                  bookingstatus: false,
-                  bookings: [],
-                })
-              }
+          try {
+            const bookingResponse = await userService.getBooking(accesstoken)
+            if (bookingResponse?.success) {
+              set({ bookings: bookingResponse.bookings, bookingStatus: true })
+            }
+            else {
+              set({
+                bookingStatus: false,
+                bookings: [],
+              })
+            }
           }
-          catch (error) {
-            set({ bookings: [], bookingstatus: false }) // Fetch failed
+          catch {
+            set({ bookings: [], bookingStatus: false }) // Fetch failed
           }
-          
         },
-        clearBooking: () => set({ bookings: [], bookingstatus: false, selectedBooking: null }),
+        clearBooking: () => set({ bookings: [], bookingStatus: false, selectedBooking: null }),
         setSelectedBooking(Booking: Booking | null) {
-            set({selectedBooking: Booking})
+          set({ selectedBooking: Booking })
         },
       }),
       {
         name: 'BookingStore',
         partialize: state => ({
           bookings: state.bookings,
-          bookingstatus: state.bookingstatus,
+          bookingstatus: state.bookingStatus,
         }),
       },
     ),

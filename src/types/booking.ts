@@ -1,6 +1,6 @@
 export interface bookingResponse {
   success: boolean
-  bookings: Booking[]
+  bookings?: Booking[]
   message: string
 }
 

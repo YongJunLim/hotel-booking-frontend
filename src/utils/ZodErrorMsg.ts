@@ -1,14 +1,4 @@
-export interface AuthResponse {
-  success: boolean
-  data: {
-    firstName: string
-    email: string
-    isAdmin: boolean
-    token: string
-  }
-  error?: { message?: string }
-  message: string
-}
+import type { AuthResponse } from '../types/user'
 
 type ZodIssue = { message: string }
 

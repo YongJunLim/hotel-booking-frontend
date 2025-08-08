@@ -63,7 +63,7 @@ function DeleteToast({ open, onClose }: DeleteAccountProps) {
       if (res.ok) {
         logout()
         // sessionStorage.setItem("toast", msg.message);
-        setToast(msg.message)
+        setToast(msg.message, 'success')
         nav('/')
       }
       else {

@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Link, useLocation } from 'wouter'
 import { BACKEND_URL } from '../config/api'
 import useAuthStore from '../stores/AuthStore'
-import { getErrorMessage, type AuthResponse } from '../utils/ZodErrorMsg'
+import { getErrorMessage } from '../utils/ZodErrorMsg'
+import type { AuthResponse, CreateUserRequestBody } from '../types/user'
 
 export const Signup = () => {
   const [message, setMessage] = useState('')
@@ -18,9 +19,37 @@ export const Signup = () => {
     <>
       <h1 className="text-4xl font-bold mb-8">Hotel Booking</h1>
       <p className="mb-4 text-2xl font-bold flex">Sign-up Form</p>
-      <div className="grid gap-4 mb-6 md:grid-cols-2 w-1/2">
+      <div className="grid gap-4 mb-6 md:grid-cols-2 w-full">
+        <div className="grid gap-6 mb-6 md:grid-cols-2">
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First name</label>
+            <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+          </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last name (Optional)</label>
+            <input type="text" id="last_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Doe" />
+          </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Salutation</label>
+            <select
+              id="salutation"
+              className="w-full p-2.5 text-sm border rounded-lg bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">Select...</option>
+              <option>Mr</option>
+              <option>Mrs</option>
+              <option>Ms</option>
+              <option>Miss</option>
+              <option>Dr</option>
+            </select>
+          </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone number (Optional)</label>
+            <input type="tel" id="phone" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="12345678" pattern="[0-9]{8}" />
+          </div>
+        </div>
         {/* Name input field */}
-        <div className="col-span-2 block items-center gap-2">
+        {/* <div className="col-span-2 block items-center gap-2">
           <p>Name:</p>
           <input
             id="name"
@@ -28,7 +57,7 @@ export const Signup = () => {
             placeholder="John"
             required
           />
-        </div>
+        </div> */}
 
         {/* Email input field */}
         <div className="col-span-2 block items-center gap-2">
@@ -116,30 +145,49 @@ export const Signup = () => {
   )
 
   async function submitNewUser(): Promise<void> {
-    const name_inp = document.getElementById('name') as HTMLInputElement
-    const email_inp = document.getElementById('email') as HTMLInputElement
-    const passwd_inp = document.getElementById('passwd') as HTMLInputElement
-    const conf_passwd_inp = document.getElementById('conf_passwd') as HTMLInputElement
+    const inputs = {
+      firstName: (document.getElementById('first_name') as HTMLInputElement).value.trim(),
+      lastName: (document.getElementById('last_name') as HTMLInputElement).value.trim(),
+      salutation: (document.getElementById('salutation') as HTMLSelectElement).value.trim(),
+      phoneNumber: (document.getElementById('phone') as HTMLInputElement).value.trim(),
+      email: (document.getElementById('email') as HTMLInputElement).value.trim(),
+      password: (document.getElementById('passwd') as HTMLInputElement).value,
+      confirmPassword: (document.getElementById('conf_passwd') as HTMLInputElement).value,
+    }
+    // const firstname_inp = document.getElementById('first_name') as HTMLInputElement
+    // const lastname_inp = document.getElementById('last_name') as HTMLInputElement
+    // const saluation_inp = document.getElementById('saluation') as HTMLInputElement
+    // const phone_inp = document.getElementById('phone') as HTMLInputElement
 
-    if (validateInput(name_inp.value, email_inp.value, passwd_inp.value, conf_passwd_inp.value)) {
+    // const email_inp = document.getElementById('email') as HTMLInputElement
+    // const passwd_inp = document.getElementById('passwd') as HTMLInputElement
+    // const conf_passwd_inp = document.getElementById('conf_passwd') as HTMLInputElement
+    console.log(inputs)
+
+    if (validateInput(inputs.firstName, inputs.email, inputs.password, inputs.confirmPassword)) {
+      const reqbody: CreateUserRequestBody = {
+        firstName: inputs.firstName,
+        email: inputs.email,
+        password: inputs.password,
+      }
+      if (inputs.lastName) reqbody.lastName = inputs.lastName
+      if (inputs.salutation) reqbody.salutation = inputs.salutation
+      if (inputs.phoneNumber) reqbody.phoneNumber = inputs.phoneNumber
       // Sign up API call
       const res = await fetch(`${BACKEND_URL}/users/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          firstName: name_inp.value,
-          email: email_inp.value,
-          password: passwd_inp.value,
-        }),
+        body: JSON.stringify(reqbody),
       })
       const msg = (await res.json()) as AuthResponse
+      console.log(msg)
       setMessage(msg.message)
       setMsgClass(msg.success ? 'text-green-800' : 'text-red-800')
       // Response successful && User successfully created
       if (res.ok && msg.success) {
-        setToast(msg.message,'success')
+        setToast(msg.message, 'success')
         nav('/login')
       }
       else {
@@ -162,9 +210,21 @@ export const Signup = () => {
     }
   }
   function validateInput(name: string, email: string, password: string, confirmPassword: string) {
-    if (!name || !email || !password || !confirmPassword) {
+    if (!name) {
+      setMessage('First name is required')
       setMsgClass('text-red-800')
-      setMessage('Missing fields.')
+      return false
+    }
+
+    if (!email) {
+      setMessage('Email is required')
+      setMsgClass('text-red-800')
+      return false
+    }
+
+    if (!password) {
+      setMessage('Password is required')
+      setMsgClass('text-red-800')
       return false
     }
     if (password !== confirmPassword) {

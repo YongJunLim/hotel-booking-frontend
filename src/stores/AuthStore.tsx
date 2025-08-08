@@ -1,22 +1,24 @@
 import { create } from 'zustand'
 import { devtools, persist, createJSONStorage } from 'zustand/middleware'
-import { type UserDetails } from '../types/user'
+import { type UserDetailswithAdmin, type EditUserRequestBody } from '../types/user'
+import { userService } from '../utils/userService'
 
 interface AuthStore {
   isLoggedIn: boolean
-  //userDetails: UserDetailswithAdmin
-  userDetails: UserDetails
+  userDetails: UserDetailswithAdmin
+  // userDetails: UserDetails
   toast: string
   toastType: 'success' | 'error' | 'info'
   accessToken: string | null
   redirectUrl: string | null
-  //login: (userDetails: UserDetailswithAdmin, token: string) => void
-  login: (userDetails: UserDetails, token: string) => void
+  login: (userDetails: UserDetailswithAdmin, token: string) => void
   logout: () => void
   silentLogout: () => void
   clearToast: () => void
   setToast: (toastMsg: string, toasttype: 'success' | 'error' | 'info') => void
   checkAuthStatus: () => void
+  getProfile: () => Promise<void>
+  editProfile: (reqbody: EditUserRequestBody) => Promise<void>
   isTokenValid: () => boolean
   setRedirectUrl: (url: string) => void
   clearRedirectUrl: () => void
@@ -35,15 +37,13 @@ const useAuthStore = create<AuthStore>()(
         userDetails: {
           email: '',
           firstName: '',
+          isAdmin: false,
         },
         toastType: 'info',
         toast: '',
         accessToken: null,
         redirectUrl: '/',
-
-        login: (userDetails: UserDetails, token: string) => {
-          // sessionStorage.setItem("accessToken", token);
-          // sessionStorage.setItem("userDetails", JSON.stringify(userDetails));
+        login: (userDetails: UserDetailswithAdmin, token: string) => {
           set({
             isLoggedIn: true,
             userDetails,
@@ -52,14 +52,16 @@ const useAuthStore = create<AuthStore>()(
         },
 
         logout: () => {
-          // Clear all auth data
-          // sessionStorage.removeItem("accessToken");
-          // sessionStorage.removeItem("userDetails");
-          // sessionStorage.removeItem("toast");
-
           set({
             isLoggedIn: false,
-            userDetails: { email: '', firstName: '' },
+            userDetails: {
+              email: '',
+              firstName: '',
+              isAdmin: false,
+              lastName: '',
+              salutation: '',
+              phoneNumber: '',
+            },
             accessToken: null,
             toast: 'You have been signed out.',
           })
@@ -75,10 +77,42 @@ const useAuthStore = create<AuthStore>()(
           // Clear auth data without showing toast
           set({
             isLoggedIn: false,
-            userDetails: { email: '', firstName: '' },
+            userDetails: {
+              email: '',
+              firstName: '',
+              isAdmin: false,
+              lastName: '',
+              salutation: '',
+              phoneNumber: '',
+            },
             accessToken: null,
             toast: '', // Don't set a toast message
           })
+        },
+
+        getProfile: async () => {
+          const { accessToken } = get()
+          const res = await userService.getProfile(accessToken)
+          if (res.success) {
+            set({ userDetails: res.data })
+            get().setToast('Profile updated', 'success')
+          }
+          else {
+            get().setToast('Session expired - please login again', 'error')
+          }
+        },
+
+        editProfile: async (reqbody: EditUserRequestBody) => {
+          const { accessToken } = get()
+          const res = await userService.editProfile(accessToken, reqbody)
+          if (res.success) {
+            console.log(res.data)
+            set({ userDetails: res.data })
+            get().setToast('Profile updated', 'success')
+          }
+          else {
+            get().setToast(res.message, 'error')
+          }
         },
 
         clearToast: () => {
@@ -87,7 +121,7 @@ const useAuthStore = create<AuthStore>()(
 
         setToast: (
           toastMsg: string,
-          type: 'success' | 'error' | 'info' = 'info'
+          type: 'success' | 'error' | 'info' = 'info',
         ) => {
           set({ toast: toastMsg, toastType: type })
           setTimeout(() => get().clearToast(), 3000)

@@ -2,7 +2,8 @@ import { Link, useLocation } from 'wouter'
 import useAuthStore from '../stores/AuthStore'
 import { useState, useEffect } from 'react'
 import { BACKEND_URL } from '../config/api'
-import { getErrorMessage, type AuthResponse } from '../utils/ZodErrorMsg'
+import { getErrorMessage } from '../utils/ZodErrorMsg'
+import type { AuthResponse } from '../types/user'
 
 export const Login = () => {
   const [message, setMessage] = useState('')
@@ -112,13 +113,14 @@ export const Login = () => {
       }),
     })
     const msg = (await response.json()) as AuthResponse
+    console.log(msg)
     // Handle login
-    const isSuccess = response.ok && msg.data?.token
-    if (isSuccess) {
+    if (response.ok && msg.data?.token) {
       login(
         {
           email: msg.data.email,
           firstName: msg.data.firstName,
+          isAdmin: msg.data.isAdmin,
         },
         msg.data.token,
       )
