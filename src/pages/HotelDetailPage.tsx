@@ -268,6 +268,51 @@ export const HotelDetailPage = () => {
                   </div>
                 </div>
               </div>
+<<<<<<< Updated upstream
+=======
+            )
+            : null}
+      </div>
+
+      {/* Room Selection Summary */}
+      {selectedRooms.length > 0 && (
+        <div className="mb-6 p-4 bg-base-200 rounded-lg">
+          <h3 className="text-lg font-semibold mb-2">
+            Selected Rooms (
+            {selectedRooms.length}
+            /
+            {maxRooms}
+            )
+          </h3>
+          <div className="space-y-2">
+            {selectedRooms.map((room, index) => (
+              <div
+                key={`${room.key}-${index}`}
+                className="flex justify-between items-center"
+              >
+                <span>
+                  {room.roomNormalizedDescription}
+                  ,
+                  {' '}
+                  {room.breakfast_display}
+                  ,
+                  {' '}
+                  {room.free_cancellation ? 'Free Cancellation' : 'Non-Refundable' }
+                  {' '}
+                </span>
+                <span className="font-semibold">
+                  $
+                  {room.price}
+                </span>
+              </div>
+            ))}
+            <div className="border-t pt-2 flex justify-between items-center font-bold">
+              <span>Total:</span>
+              <span className="text-green-600">
+                $
+                {getTotalPrice()}
+              </span>
+>>>>>>> Stashed changes
             </div>
           )}
       </div>

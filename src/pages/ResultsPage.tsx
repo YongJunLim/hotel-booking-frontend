@@ -73,6 +73,9 @@ export const ResultsPage = () => {
     }
     return []
   }, [hoteldata, pricedata])
+  console.log('hoteldata', hoteldata)
+  console.log('pricedata', pricedata)
+  console.log('stitched data', stichedata)
 
   // filter price range
   function getpricerange(data: StitchedHotel[]): [number, number] {

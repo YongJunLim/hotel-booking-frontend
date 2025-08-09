@@ -39,6 +39,11 @@ export const RoomCard = ({ room }: RoomCardProps) => {
         key: room.key,
         roomNormalizedDescription: room.roomNormalizedDescription,
         price: room.price,
+<<<<<<< Updated upstream
+=======
+        free_cancellation: room.free_cancellation,
+        breakfast_display: getBreakfastDisplay(room.roomAdditionalInfo.breakfastInfo),
+>>>>>>> Stashed changes
       })
     }
   }

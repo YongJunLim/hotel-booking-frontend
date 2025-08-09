@@ -1,8 +1,9 @@
 interface StarUIProps {
-  rating: number
-  name: string // unique name so star wont conflict
-  readonly?: boolean
-  onChange?: (value: number) => void
+  'rating': number
+  'name': string // unique name so star wont conflict
+  'readonly'?: boolean
+  'onChange'?: (value: number) => void
+  'data-testid'?: string
 }
 
 export default function StarUI({
@@ -10,6 +11,7 @@ export default function StarUI({
   name,
   readonly = false,
   onChange,
+  'data-testid': testId,
 }: StarUIProps) {
   const stars = []
 
@@ -30,6 +32,7 @@ export default function StarUI({
             onChange(i)
           }
         }}
+        data-testid={`${name}-star-${i}`}
       />,
     )
   }
@@ -39,6 +42,7 @@ export default function StarUI({
     <div
       className="rating rating-sm rating-half "
       style={{ pointerEvents: readonly ? 'none' : 'auto' }}
+      data-testid={testId}
     >
       {/* <input type="radio" name={name} className="rating-hidden" /> */}
       {stars}
