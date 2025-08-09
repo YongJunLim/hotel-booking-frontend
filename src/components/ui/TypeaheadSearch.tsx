@@ -5,6 +5,8 @@ import useSWR from 'swr'
 import type { Destination } from '../../types/destination'
 import type { DestinationResponse } from '../../types/api'
 import { BACKEND_URL } from '../../config/api'
+import { handleKeyDown } from '../../utils/typeaheadsearchUtils'
+import { useCountryStore } from '../../stores/HotelSearch'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
@@ -14,51 +16,6 @@ interface TypeaheadSearchProps {
   className?: string
   limit?: number
   threshold?: number
-}
-
-export const handleKeyDown = (
-  e: React.KeyboardEvent<HTMLInputElement>,
-  highlightedIndex: number | null,
-  setHighlightedIndex: React.Dispatch<React.SetStateAction<number | null>>,
-  suggestions: Destination[],
-  startIndex: number,
-  setStartIndex: React.Dispatch<React.SetStateAction<number>>,
-  maxVisibleItems: number,
-  handleSelect: (destination: Destination) => void,
-) => {
-  if (e.key === 'ArrowDown') {
-    e.preventDefault()
-    setHighlightedIndex((prev) => {
-      const next = Math.min((prev ?? -1) + 1, suggestions.length - 1)
-      if (next >= startIndex + maxVisibleItems) {
-        setStartIndex(s => s + 1)
-      }
-      return next
-    })
-  }
-
-  if (e.key === 'ArrowUp') {
-    e.preventDefault()
-    setHighlightedIndex((prev) => {
-      const next = Math.max((prev ?? 1) - 1, 0)
-      if (next < startIndex) {
-        setStartIndex(s => Math.max(s - 1, 0))
-      }
-      return next
-    })
-  }
-
-  if (e.key === 'Enter') {
-    e.preventDefault()
-    if (
-      highlightedIndex !== null
-      && highlightedIndex >= 0
-      && highlightedIndex < suggestions.length
-    ) {
-      const selectedItem = suggestions[highlightedIndex]
-      handleSelect(selectedItem)
-    }
-  }
 }
 
 export const TypeaheadSearch = ({
@@ -76,7 +33,14 @@ export const TypeaheadSearch = ({
   const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null)
   const [startIndex, setStartIndex] = useState(0)
   const justSelectedRef = useRef(false)
-  // Build API URL with limit and threshold parameters
+
+  const country = useCountryStore(state => state.country)
+  useEffect(() => {
+    if (country && country.term && !justSelectedRef.current) {
+      setQuery(country.term)
+    }
+  }, [country])
+
   const apiUrl
     = query.length >= 2
       ? (() => {

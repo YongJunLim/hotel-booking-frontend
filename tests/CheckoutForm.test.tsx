@@ -65,7 +65,7 @@ describe('CheckoutForm', () => {
   })
 
   // Test 2
-  test('Shows error messages for invalid inputs', async () => {
+  test('Shows error messages for invalid inputs', () => {
     render(
       <Elements stripe={stripePromise}>
         <CheckoutForm />

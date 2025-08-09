@@ -10,12 +10,12 @@ import { HotelInfo } from '../components/ui/HotelInfo'
 import { NavBar } from '../components/layout/NavBar'
 import useRoomBookingStore from '../stores/RoomBookingStore'
 import useAuthStore from '../stores/AuthStore'
+import { fetcher } from '../utils/ApiUtils'
+import { parseGuestsParam, groupRoomsByType } from '../utils/RoomUtils'
 
 interface HotelPriceResponse extends PriceBaseResponse {
   rooms: Room[]
 }
-
-const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 export const HotelDetailPage = () => {
   const params = useParams()
@@ -34,29 +34,9 @@ export const HotelDetailPage = () => {
   const setMaxSelectedRooms = useRoomBookingStore(
     state => state.setMaxSelectedRooms,
   )
-  const clearRoomBookingData = useRoomBookingStore(
-    state => state.clearRoomBookingData,
-  )
   const getTotalPrice = useRoomBookingStore(state => state.getTotalPrice)
 
   // Parse guests parameter to extract number of rooms
-  const parseGuestsParam = (
-    guestsParam: string | null,
-  ): { people: number, rooms: number } => {
-    // default on Travel with OCBC
-    if (!guestsParam) return { people: 2, rooms: 1 }
-
-    const parts = guestsParam.split('|')
-    const rooms = parts.length
-    // guests PER room
-    const totalPeople = parts.reduce(
-      (sum, guests) => sum + parseInt(guests),
-      0,
-    )
-
-    return { people: totalPeople, rooms }
-  }
-
   const { rooms: maxRooms } = parseGuestsParam(guests)
 
   // Set up room booking data when component mounts
@@ -70,11 +50,6 @@ export const HotelDetailPage = () => {
       })
       setMaxSelectedRooms(maxRooms)
     }
-
-    // Clear booking data when component unmounts
-    return () => {
-      clearRoomBookingData()
-    }
   }, [
     hotelId,
     searchParams.checkin,
@@ -83,14 +58,10 @@ export const HotelDetailPage = () => {
     maxRooms,
     setRoomBookingData,
     setMaxSelectedRooms,
-    clearRoomBookingData,
   ])
 
   // API URL for fetching hotel prices
-  const apiUrl
-    = hotelId && destinationId
-      ? `${BACKEND_URL}/hotels/${hotelId}/price?destination_id=${destinationId}&checkin=${searchParams.checkin}&checkout=${searchParams.checkout}&lang=${searchParams.lang}&currency=${searchParams.currency}&country_code=${searchParams.country_code}&guests=${searchParams.guests}`
-      : null
+  const apiUrl = `${BACKEND_URL}/hotels/${hotelId}/price?destination_id=${destinationId}&checkin=${searchParams.checkin}&checkout=${searchParams.checkout}&lang=${searchParams.lang}&currency=${searchParams.currency}&country_code=${searchParams.country_code}&guests=${searchParams.guests}`
 
   const { data, error, isLoading } = useSWR<HotelPriceResponse, Error>(
     apiUrl,
@@ -105,18 +76,7 @@ export const HotelDetailPage = () => {
   )
 
   // Group rooms by type
-  const groupedRooms
-    = data?.rooms?.reduce(
-      (groups, room) => {
-        const roomType = room.type
-        if (!groups[roomType]) {
-          groups[roomType] = []
-        }
-        groups[roomType].push(room)
-        return groups
-      },
-      {} as Record<string, Room[]>,
-    ) || {}
+  const groupedRooms = groupRoomsByType(data?.rooms)
 
   const handleBookNow = () => {
     if (isLoggedIn && selectedRooms.length > 0) {
@@ -133,40 +93,6 @@ export const HotelDetailPage = () => {
       <NavBar pageTitle={pageTitle} />
       {hotelId && <HotelInfo hotelId={hotelId} />}
 
-      {/* Room Selection Summary */}
-      {selectedRooms.length > 0 && (
-        <div className="mb-6 p-4 bg-base-200 rounded-lg">
-          <h3 className="text-lg font-semibold mb-2">
-            Selected Rooms (
-            {selectedRooms.length}
-            /
-            {maxRooms}
-            )
-          </h3>
-          <div className="space-y-2">
-            {selectedRooms.map((room, index) => (
-              <div
-                key={`${room.key}-${index}`}
-                className="flex justify-between items-center"
-              >
-                <span>{room.roomNormalizedDescription}</span>
-                <span className="font-semibold">
-                  $
-                  {room.price}
-                </span>
-              </div>
-            ))}
-            <div className="border-t pt-2 flex justify-between items-center font-bold">
-              <span>Total:</span>
-              <span className="text-green-600">
-                $
-                {getTotalPrice()}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">
           Room Options (Select up to
@@ -178,7 +104,7 @@ export const HotelDetailPage = () => {
           )
         </h2>
 
-        {!isLoading && !data?.completed && (
+        {!isLoading && !data?.completed && !error && (
           <span>
             Please wait a moment as we fetch the best prices for you...
           </span>
@@ -249,27 +175,27 @@ export const HotelDetailPage = () => {
                 )}
             </>
           )
-          : (
-            <div className={isLoading ? 'mt-16' : 'mt-8'}>
-              <div className="card card-side bg-base-100 shadow-sm dark:shadow-xl">
-                <figure className="p-10">
-                  <div className="skeleton h-48 w-48 shrink-0 rounded-xl"></div>
-                </figure>
-                <div className="card-body py-12">
-                  <div className="flex-1">
-                    <div className="skeleton h-6 w-48"></div>
-                    <div className="flex flex-wrap mt-4 gap-4">
-                      <div className="skeleton h-6 w-20 rounded-full"></div>
-                      <div className="skeleton h-6 w-20 rounded-full"></div>
+          : !error
+            ? (
+              <div className={isLoading ? 'mt-16' : 'mt-8'}>
+                <div className="card card-side bg-base-100 shadow-sm dark:shadow-xl">
+                  <figure className="p-10">
+                    <div className="skeleton h-48 w-48 shrink-0 rounded-xl"></div>
+                  </figure>
+                  <div className="card-body py-12">
+                    <div className="flex-1">
+                      <div className="skeleton h-6 w-48"></div>
+                      <div className="flex flex-wrap mt-4 gap-4">
+                        <div className="skeleton h-6 w-20 rounded-full"></div>
+                        <div className="skeleton h-6 w-20 rounded-full"></div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="card-actions justify-end">
-                    <div className="skeleton h-12 w-20 rounded-lg"></div>
+                    <div className="card-actions justify-end">
+                      <div className="skeleton h-12 w-20 rounded-lg"></div>
+                    </div>
                   </div>
                 </div>
               </div>
-<<<<<<< Updated upstream
-=======
             )
             : null}
       </div>
@@ -312,10 +238,10 @@ export const HotelDetailPage = () => {
                 $
                 {getTotalPrice()}
               </span>
->>>>>>> Stashed changes
             </div>
-          )}
-      </div>
+          </div>
+        </div>
+      )}
 
       {/* Action Buttons */}
       <div className="flex gap-4 mb-6">

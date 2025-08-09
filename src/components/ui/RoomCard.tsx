@@ -1,23 +1,11 @@
 import type { Room } from '../../types/hotel'
 import useAuthStore from '../../stores/AuthStore'
 import useRoomBookingStore from '../../stores/RoomBookingStore'
+import { getBreakfastDisplay } from '../../utils/displayUtils'
 
 interface RoomCardProps {
   room: Room
   currency?: string
-}
-
-const getBreakfastDisplay = (breakfastInfo: string) => {
-  switch (breakfastInfo) {
-    case 'hotel_detail_room_only':
-      return 'Room Only'
-    case 'hotel_detail_breakfast_included':
-      return 'Breakfast Included'
-    case 'hotel_detail_breakfast_for_2_included':
-      return 'Breakfast for 2 Included'
-    default:
-      return breakfastInfo // fallback to original value
-  }
 }
 
 export const RoomCard = ({ room }: RoomCardProps) => {
@@ -39,11 +27,8 @@ export const RoomCard = ({ room }: RoomCardProps) => {
         key: room.key,
         roomNormalizedDescription: room.roomNormalizedDescription,
         price: room.price,
-<<<<<<< Updated upstream
-=======
         free_cancellation: room.free_cancellation,
         breakfast_display: getBreakfastDisplay(room.roomAdditionalInfo.breakfastInfo),
->>>>>>> Stashed changes
       })
     }
   }

@@ -10,6 +10,7 @@ import {
 } from '@stripe/react-stripe-js'
 import { NavBar } from '../components/layout/NavBar'
 import useRoomBookingStore from '../stores/RoomBookingStore'
+import { CheckoutSummary } from '../components/ui/CheckoutSummary'
 
 const stripePromise = loadStripe(
   'pk_test_51RkOjuPSc0OCzrEzBwXXxxQaYDDeAQf66TRqSPK8zi8AuZDKUPyQrG3MRjTDPNXXHph6vbnzG8GOwkqZllAx7GcJ00KEWTx5jG',
@@ -26,6 +27,16 @@ const CheckoutForm = () => {
     specialRequests: '',
     billingAddress: '',
   })
+
+  const roomBookingStore = useRoomBookingStore()
+  console.log(typeof roomBookingStore.selectedRooms)
+  console.log('Selected Rooms:', roomBookingStore.selectedRooms)
+  console.log('Total Price:', roomBookingStore.getTotalPrice())
+  console.log('Max Selected Rooms:', roomBookingStore.maxSelectedRooms)
+  console.log('Hotel ID:', roomBookingStore.hotelId)
+  console.log('Check-in:', roomBookingStore.checkin)
+  console.log('Check-out:', roomBookingStore.checkout)
+  console.log('Guests:', roomBookingStore.guests)
 
   const [errorMessages, setErrorMessages] = useState<{ [key: string]: string }>({})
 
@@ -203,15 +214,6 @@ export const BookingPage = () => {
   const params = useParams()
   const searchParams = useSearchParams()
 
-  const roomBookingStore = useRoomBookingStore()
-  console.log('Selected Rooms:', roomBookingStore.selectedRooms)
-  console.log('Total Price:', roomBookingStore.getTotalPrice())
-  console.log('Max Selected Rooms:', roomBookingStore.maxSelectedRooms)
-  console.log('Hotel ID:', roomBookingStore.hotelId)
-  console.log('Check-in:', roomBookingStore.checkin)
-  console.log('Check-out:', roomBookingStore.checkout)
-  console.log('Guests:', roomBookingStore.guests)
-
   useEffect(() => {
     console.log('Booking for hotel:', params.hotel_id)
   }, [searchParams])
@@ -223,7 +225,6 @@ export const BookingPage = () => {
       <NavBar pageTitle={pageTitle} />
       <Elements stripe={stripePromise}>
         <div className="p-6">
-          {/* <h1 className="text-3xl font-bold mb-4">Complete Your Booking</h1> */}
           <p className="mb-6">
             Hotel ID:
             {' '}
@@ -243,7 +244,23 @@ export const BookingPage = () => {
             <br />
           </p>
 
-          <CheckoutForm />
+          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-8">
+            {/* Checkout Summary */}
+            <div className="w-full lg:w-1/3">
+              <br></br>
+              <div className="max-w-xl mx-auto">
+                <CheckoutSummary />
+              </div>
+            </div>
+
+            {/* Checkout Form */}
+            <div className="w-full lg:flex-1">
+              <br></br>
+              <div className="max-w-xl mx-auto">
+                <CheckoutForm />
+              </div>
+            </div>
+          </div>
         </div>
       </Elements>
     </>
