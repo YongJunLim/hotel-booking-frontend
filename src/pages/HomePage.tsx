@@ -1,5 +1,6 @@
 import { NavBar } from '../components/layout/NavBar'
 import DestinationSearch from '../components/ui/DestinationSearch'
+import { SustainabilityTips } from '../components/ui/SustainabilityTips'
 
 export const HomePage = () => {
   return (
@@ -12,6 +13,9 @@ export const HomePage = () => {
         <p className="mb-4">Welcome to our hotel booking platform!</p>
       </div>
       <DestinationSearch />
+      <div className='mt-4'>
+        <SustainabilityTips />
+      </div>
     </>
   )
 }

@@ -1,10 +1,10 @@
 import DestinationSearch from '../../../src/components/ui/DestinationSearch'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { vi } from 'vitest'
-import { useFormStore, useCountryStore } from '../../../src/stores/HotelSearch'
+import { useFormStore, useCountryStore } from '../../../src/stores/HotelSearchStore'
 import { act } from 'react'
 
-vi.mock('../../../src/stores/HotelSearch', () => ({
+vi.mock('../../../src/stores/HotelSearchStore', () => ({
   useFormStore: vi.fn(),
   useCountryStore: vi.fn(),
 }))

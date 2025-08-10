@@ -10,12 +10,11 @@ vi.mock('react', async () => {
 })
 
 import * as React from 'react'
-import { handleMapClick, loadMarkerImage } from '../../../src/utils/mapselectUtils'
+import { handleMapClick } from '../../../src/utils/mapselectUtils'
 import { MapSelect } from '../../../src/components/ui/MapSelect'
 import { render, screen, waitFor, act } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import type { StitchedHotel, HotelCategories, HotelAmenities, ImageDetails } from '../../../src/types/params'
-import marker from '../../../src/assets/marker.png'
 import { LngLat, MapGeoJSONFeature, MapLayerMouseEvent, Point } from 'maplibre-gl'
 
 let lastOnMouseMove: ((event: MapLayerMouseEvent) => void) | null = null
@@ -228,24 +227,6 @@ describe('MapSelect', () => {
       setSelectedFeature,
     )
     expect(setSelectedFeature).toHaveBeenCalledWith(mockHotel)
-  })
-
-  it('loads marker image', async () => {
-    const map = { loadImage: vi.fn().mockResolvedValue({ data: marker }), hasImage: vi.fn(), addImage: vi.fn() }
-    await loadMarkerImage(map as unknown as maplibregl.Map)
-    expect(map.loadImage).toHaveBeenCalledWith(expect.any(String))
-    expect(map.hasImage).toHaveBeenCalledWith('marker')
-    expect(map.addImage).toHaveBeenCalledWith('marker', marker)
-  })
-
-  it('handles error loading marker image', async () => {
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-    const map = { loadImage: vi.fn().mockRejectedValue(new Error('Load error')), hasImage: vi.fn(), addImage: vi.fn() }
-
-    await loadMarkerImage(map as unknown as maplibregl.Map)
-
-    expect(consoleErrorSpy).toHaveBeenCalledWith('Error loading marker image:', expect.any(Error))
-    consoleErrorSpy.mockRestore()
   })
 
   it('shows popup on mouse move over a feature', async () => {

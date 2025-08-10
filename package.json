@@ -28,6 +28,7 @@
     "swr": "^2.3.4",
     "tailwindcss": "^4.1.10",
     "wouter": "^3.7.1",
+    "xlsx": "^0.18.5",
     "zod": "^3.25.64",
     "zustand": "^5.0.5",
     "zustand-persist": "^0.4.0"

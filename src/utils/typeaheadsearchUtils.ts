@@ -1,4 +1,5 @@
 import type { Destination } from '../types/destination'
+import epiData from '../data/epi2024results.json'
 
 export const handleKeyDown = (
   e: React.KeyboardEvent<HTMLInputElement>,
@@ -41,6 +42,39 @@ export const handleKeyDown = (
     ) {
       const selectedItem = suggestions[highlightedIndex]
       handleSelect(selectedItem)
+    }
+  }
+}
+
+export const evaluateEpiData = (term:string) => {
+  const lowerTerm = term.toLowerCase()
+  const a = epiData.filter(item => lowerTerm.includes(item.country.toLowerCase()))
+  if (a.length === 0) {
+    return {
+      message: 'There is no environmental data available for this destination.',
+      level: 'none'
+    }
+  }
+  if (a[0]["EPI.new"] >= 67 && a[0]["EPI.new"] <= 100) {
+    return {
+      message: 'This destination is highly environmentally friendly!',
+      level: 'high'
+    }
+  } else if (a[0]["EPI.new"] >= 34 && a[0]["EPI.new"] < 67) {
+    return {
+      message: 'This destination has moderate environmental friendliness.',
+      level: 'moderate'
+    }
+  } else if (a[0]["EPI.new"] < 34 && a[0]["EPI.new"] >= 0) {
+    return {
+      message: 'This destination has low environmental friendliness.',
+      level: 'low'
+    }
+  }
+  else {
+    return {
+      message: 'This grading is impossible.',
+      level: 'impossible'
     }
   }
 }

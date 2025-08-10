@@ -4,10 +4,11 @@ import DropDownWithButtons from './DropDown'
 import { type Destination } from '../../types/destination'
 import DayPicker from './DayPicker'
 import { type Country } from '../../types/forms'
-import { useFormStore, useCountryStore } from '../../stores/HotelSearch'
+import { useFormStore, useCountryStore } from '../../stores/HotelSearchStore'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { useLocation } from 'wouter'
 import { TypeaheadSearch } from './TypeaheadSearch'
+import { evaluateEpiData } from '../../utils/typeaheadsearchUtils'
 
 export default function DestinationSearch(): React.ReactElement {
   const range = useFormStore(s => s.range)
@@ -127,18 +128,36 @@ export default function DestinationSearch(): React.ReactElement {
       `/results/${country.uid}?checkin=${start}&checkout=${end}&lang=en_US&currency=SGD&country_code=SG&guests=${Array(Room).fill(sum).join('|')}`,
     )
   }
+
+  const epiGrade = evaluateEpiData(country.term)
+
   return (
     <>
       <div className="w-full border border-gray-400 rounded-lg p-4 shadow-md">
         <DropDownWithButtons></DropDownWithButtons>
         <div className="flex flex-col sm:flex-row flex-wrap gap-6 py-4 w-full">
-          <TypeaheadSearch
-            onSelect={handleDestinationSelect}
-            placeholder="Search destinations..."
-            className="w-full md:w-[78%] min-w-[300px]"
-            limit={5}
-            threshold={0.3}
-          />
+          <div className="w-full md:w-[78%] min-w-[300px] space-y-4">
+            <TypeaheadSearch
+              onSelect={handleDestinationSelect}
+              placeholder="Search destinations..."
+              className="w-full"
+              limit={5}
+              threshold={0.3}
+            />
+            <p className={`text-xs font-bold ${
+              epiGrade.level === 'high' 
+              ? 'text-green-600' 
+              : epiGrade.level === 'moderate' 
+              ? 'text-yellow-600' 
+              : epiGrade.level === 'low' 
+              ? 'text-red-600' 
+              : epiGrade.level === 'none'
+              ? 'text-gray-500'
+              : 'text-purple-600'
+              }`}>
+              {epiGrade.message}
+            </p>
+          </div>
           <DayPicker></DayPicker>
         </div>
         <div>

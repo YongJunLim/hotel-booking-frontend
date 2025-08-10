@@ -1,8 +1,8 @@
-import './__mocks__/zustandMiddleware'
+import '../../__mocks__/zustandMiddleware'
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { useFormStore, useCountryStore } from '../../src/stores/HotelSearch'
-import { mockStorage } from './__mocks__/zustandMiddleware'
+import { useFormStore, useCountryStore } from '../../src/stores/HotelSearchStore'
+import { mockStorage } from '../../__mocks__/zustandMiddleware'
 
 interface StoredFormData {
   state: {

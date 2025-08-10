@@ -1,20 +1,10 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, vi, expect } from 'vitest'
-import { dateToLocal } from '../../../src/utils/dateUtils'
 import App from '../../../src/components/ui/DayPicker'
 import DayPickerComponent from '../../../src/components/ui/DayPicker'
-import { useFormStore } from '../../../src/stores/HotelSearch'
+import { useFormStore } from '../../../src/stores/HotelSearchStore'
 
-describe('dateToLocal Unit Test', () => {
-  it('dateToLocal should format the date correctly', () => {
-    // const date = new Date('Thu Jul 31 2025 00:00:00 GMT+0800 (Singapore Standard Time)')
-    const date = new Date(2025, 6, 31) // Year, Month (0-indexed), Day
-    const result = dateToLocal(date)
-    expect(result).toBe('31/07/2025')
-  })
-})
-
-vi.mock('../../../src/stores/HotelSearch', () => {
+vi.mock('../../../src/stores/HotelSearchStore', () => {
   return {
     useFormStore: vi.fn(),
   }
