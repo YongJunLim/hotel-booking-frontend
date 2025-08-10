@@ -88,10 +88,10 @@ describe('empty price data', () => {
     render(<ResultsPage></ResultsPage>)
   })
 
-  it('shows stitched hotels with matching id sorted by price ascending', () => {
+  it('shows stitched hotels with matching id sorted by price ascending', async () => {
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
+    await screen.findByText(/No matching hotels found/i)
   })
 })
 
@@ -121,10 +121,10 @@ describe('empty hotel data', () => {
     render(<ResultsPage></ResultsPage>)
   })
 
-  it('shows stitched hotels with matching id sorted by price ascending', () => {
+  it('shows stitched hotels with matching id sorted by price ascending', async () => {
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
+    await screen.findByText(/No matching hotels found/i)
   })
 })
 
@@ -154,9 +154,9 @@ describe('empty price & hotel data', () => {
     render(<ResultsPage></ResultsPage>)
   })
 
-  it('shows stitched hotels with matching id sorted by price ascending', () => {
+  it('shows stitched hotels with matching id sorted by price ascending', async () => {
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
+    await screen.findByText(/No matching hotels found/i)
   })
 })

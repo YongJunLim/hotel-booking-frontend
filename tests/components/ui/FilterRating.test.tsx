@@ -88,7 +88,7 @@ describe('Filter by Rating', () => {
     expect(rating).toEqual(['3.5 star'])
   })
 
-  it('Filter min 5 max 3 rating (error)', () => {
+  it('Filter min 5 max 3 rating (error)', async () => {
     const MinInput = screen.getByTestId('min-rating-star-5')
     const MaxInput = screen.getByTestId('max-rating-star-3')
 
@@ -97,7 +97,7 @@ describe('Filter by Rating', () => {
 
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
+    await screen.findByText(/No matching hotels found/i)
   })
 })
 
@@ -127,7 +127,7 @@ describe('Filter empty list', () => {
     render(<ResultsPage></ResultsPage>)
   })
 
-  it('filters no hotel cards when data is empty', () => {
+  it('filters no hotel cards when data is empty', async () => {
     const MinInput = screen.getByTestId('min-rating-star-3')
     const MaxInput = screen.getByTestId('min-rating-star-3')
 
@@ -136,6 +136,6 @@ describe('Filter empty list', () => {
 
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
+    await screen.findByText(/No matching hotels found/i)
   })
 })

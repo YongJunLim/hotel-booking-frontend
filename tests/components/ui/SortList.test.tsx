@@ -119,12 +119,12 @@ describe('Sort empty list', () => {
     render(<ResultsPage></ResultsPage>)
   })
 
-  it('renders no hotel cards when data is empty', () => {
+  it('renders no hotel cards when data is empty', async () => {
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
 
     const dropdown = screen.getByTestId('sort-dropdown')
     expect(dropdown).toBeInTheDocument()
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
+    await screen.findByText(/No matching hotels found/i)
   })
 })

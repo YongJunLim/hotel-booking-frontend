@@ -176,6 +176,19 @@ export const ResultsPage = () => {
       && (priceloading || hotelloading || pricedata?.completed !== true)
   const hasError = priceerror || hotelerror
 
+  const [showNoHotels, setShowNoHotels] = useState(false)
+  useEffect(() => {
+    if (!isloading && sortedlist.length === 0) {
+      const timer = setTimeout(() => {
+        setShowNoHotels(true)
+      }, 500)
+      return () => clearTimeout(timer)
+    }
+    else {
+      setShowNoHotels(false)
+    }
+  }, [isloading, sortedlist])
+
   return (
     <>
       <NavBar pageTitle={pageTitle} />
@@ -183,9 +196,7 @@ export const ResultsPage = () => {
         <DestinationSearch />
       </div>
 
-      <div className="mb-3">
-        <div className="pt-8"></div>
-
+      <div className="mb-3 pt-8">
         {hasError && (
           <>
             {hotelerror && (
@@ -208,13 +219,13 @@ export const ResultsPage = () => {
         )}
       </div>
 
-      {isloading
+      {!hasError && isloading
         ? (
           <div>
             <span>
               Please wait a moment as we fetch the best prices for you...
             </span>
-            <div className={isloading ? 'mt-16' : 'mt-8'}>
+            <div className="mt-16">
               <div className="card card-side bg-base-100 shadow-sm dark:shadow-xl">
                 <figure className="p-10">
                   <div className="skeleton h-48 w-48 shrink-0 rounded-xl"></div>
@@ -235,8 +246,9 @@ export const ResultsPage = () => {
             </div>
           </div>
         )
-        : !hasError
-          ? (
+        : (
+          !hasError
+          && !isloading && (
             <>
               <div className="flex items-center justify-between mb-5">
                 <span className="text-lg text-base-content/70">
@@ -248,10 +260,9 @@ export const ResultsPage = () => {
                   <Sortdropdown selectedvalue={sortby} setvalue={setsortby} />
                 </div>
               </div>
-
               <div className="flex gap-10 pt-5">
                 <aside className="w-70 shrink-0">
-                  <div className="pb-5 ">
+                  <div className="pb-5">
                     <MapSelect
                       hotels={shownlist}
                       checkin={checkin}
@@ -262,8 +273,7 @@ export const ResultsPage = () => {
                   </div>
 
                   <div className="flex flex-col items-center rounded-lg h-50 border-4 border-double pr-3 pt-3">
-                    <h2 className="text-lg font-semibold flex pb-2 ">
-                      {' '}
+                    <h2 className="text-lg font-semibold flex pb-2">
                       Filter By:
                     </h2>
                     <hr className="border-t border-gray-300 mb-3 w-50" />
@@ -272,22 +282,20 @@ export const ResultsPage = () => {
                       maxstar={maxstar}
                       setminstar={setminstar}
                       setmaxstar={setmaxstar}
-                    >
-                    </StarRatingFilter>
+                    />
                     <div className="pt-6 pl-2">
                       <RangeSlider
                         minprice={fullpricerange[0]}
                         maxprice={fullpricerange[1]}
                         value={pricerange}
                         onChange={setpricerange}
-                      >
-                      </RangeSlider>
+                      />
                     </div>
                   </div>
                 </aside>
 
                 <div className="space-y-5 flex-1">
-                  {sortedlist.length === 0
+                  {sortedlist.length === 0 && showNoHotels
                     ? (
                       <div className="alert alert-error">
                         <span>
@@ -322,7 +330,8 @@ export const ResultsPage = () => {
               </div>
             </>
           )
-          : null}
+        )}
+
       <div className="pt-17">
         <Link href="/" className="btn btn-outline">
           Back to Home
