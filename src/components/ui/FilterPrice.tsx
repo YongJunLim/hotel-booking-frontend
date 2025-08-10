@@ -39,6 +39,7 @@ export default function RangeSlider({
           getAriaValueText={valuetext}
           valueLabelFormat={value => `$${value}`}
           color="secondary"
+          data-testid="price-range-slider"
         />
       </Box>
     </div>

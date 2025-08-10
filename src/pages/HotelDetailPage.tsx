@@ -216,7 +216,17 @@ export const HotelDetailPage = () => {
                 key={`${room.key}-${index}`}
                 className="flex justify-between items-center"
               >
-                <span>{room.roomNormalizedDescription}</span>
+                <span>
+                  {room.roomNormalizedDescription}
+                  ,
+                  {room.breakfast_display}
+                  ,
+                  {' '}
+                  {room.free_cancellation
+                    ? 'Free Cancellation'
+                    : 'Non-Refundable'}
+                  {' '}
+                </span>
                 <span className="font-semibold">
                   $
                   {room.price}
@@ -249,7 +259,7 @@ export const HotelDetailPage = () => {
         </button>
 
         <Link
-          href="/results/WD0M?checkin=2025-10-01&checkout=2025-10-07&lang=en_US&currency=SGD&country_code=SG&guests=2|2"
+          href={`/results/${destinationId}?checkin=${searchParams.checkin}&checkout=${searchParams.checkout}&lang=${searchParams.lang}&currency=${searchParams.currency}&country_code=${searchParams.country_code}&guests=${searchParams.guests}`}
           className="btn btn-secondary"
         >
           Back to Results

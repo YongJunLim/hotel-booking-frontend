@@ -22,7 +22,10 @@ export const HotelCard = ({
   const [, navigate] = useLocation()
 
   return (
-    <div className="card card-side bg-base-100 shadow-sm w-full dark:shadow-xl">
+    <div
+      className="card card-side bg-base-100 shadow-sm w-full"
+      data-testid="hotel-card"
+    >
       <figure className="p-4">
         <img
           src={`${hotel.image_details.prefix}0${hotel.image_details.suffix}`}
@@ -31,17 +34,23 @@ export const HotelCard = ({
         />
       </figure>
       <div className="card-body">
-        <h2 className="text-xl font-semibold">{hotel.name}</h2>
+        <h2 className="text-xl font-semibold" data-testid="hotel-name">
+          {hotel.name}
+        </h2>
         <p>{hotel.address}</p>
         <div>
           <StarUI
             rating={hotel.rating}
             name={`rating-${hotel.id}`}
             readonly={true}
+            data-testid="hotel-rating"
           />
         </div>
         <div>
-          <p className="text-green-600 font-semibold text-xl flex justify-end">
+          <p
+            className="text-green-600 font-semibold text-xl flex justify-end"
+            data-testid="hotel-price"
+          >
             $
             {hotelprice}
           </p>

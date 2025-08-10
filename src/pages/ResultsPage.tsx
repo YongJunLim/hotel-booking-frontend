@@ -165,6 +165,20 @@ export const ResultsPage = () => {
 
   const isloading
     = priceloading || hotelloading || pricedata?.completed !== true
+
+  const [showNoHotels, setShowNoHotels] = useState(false)
+  useEffect(() => {
+    if (!isloading && sortedlist.length === 0) {
+      const timer = setTimeout(() => {
+        setShowNoHotels(true)
+      }, 500)
+      return () => clearTimeout(timer)
+    }
+    else {
+      setShowNoHotels(false)
+    }
+  }, [isloading, sortedlist])
+
   return (
     <>
       <NavBar pageTitle={pagetitle} />
@@ -176,7 +190,7 @@ export const ResultsPage = () => {
         <div className="pt-8"></div>
 
         {hotelerror && (
-          <div className="text-red-800 bg-yellow-400">
+          <div className="alert alert-error">
             <span>
               Error loading hotel data:
               {hotelerror.message}
@@ -185,7 +199,7 @@ export const ResultsPage = () => {
         )}
 
         {priceerror && (
-          <div className="text-red-800 bg-yellow-400">
+          <div className="alert alert-error">
             <span>
               Error loading price data:
               {priceerror.message}
@@ -194,7 +208,7 @@ export const ResultsPage = () => {
         )}
       </div>
 
-      {isloading
+      {isloading && !priceerror && !hotelerror
         ? (
           <div>
             <span>
@@ -272,10 +286,10 @@ export const ResultsPage = () => {
               </aside>
 
               <div className="space-y-5 flex-1">
-                {sortedlist.length === 0
+                {showNoHotels
                   ? (
-                    <div className="flex justify-center">
-                      <span className="text-yellow-700 bg-gray-700">
+                    <div className="alert alert-error">
+                      <span>
                         No matching hotels found. Please try a different criteria!
                       </span>
                     </div>
@@ -308,12 +322,6 @@ export const ResultsPage = () => {
           </>
         )}
       <div className="pt-17">
-        <Link
-          href="/hotels/detail/atH8?destination_id=WD0M&checkin=2025-10-01&checkout=2025-10-07&lang=en_US&currency=SGD&country_code=SG&guests=2|2"
-          className="btn btn-secondary mr-4"
-        >
-          View Hotel Details
-        </Link>
         <Link href="/" className="btn btn-outline">
           Back to Home
         </Link>
