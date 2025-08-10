@@ -324,12 +324,6 @@ export const ResultsPage = () => {
           )
           : null}
       <div className="pt-17">
-        <Link
-          href="/hotels/detail/atH8?destination_id=WD0M&checkin=2025-10-01&checkout=2025-10-07&lang=en_US&currency=SGD&country_code=SG&guests=2|2"
-          className="btn btn-secondary mr-4"
-        >
-          View Hotel Details
-        </Link>
         <Link href="/" className="btn btn-outline">
           Back to Home
         </Link>
