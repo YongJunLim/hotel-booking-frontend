@@ -120,7 +120,7 @@ describe('Filter empty list', () => {
     render(<ResultsPage></ResultsPage>)
   })
 
-  it('filters no hotel cards when data is empty', () => {
+  it('filters no hotel cards when data is empty', async () => {
     const slider = screen.getByTestId('price-range-slider')
     const inputs = slider.querySelectorAll('input')
 
@@ -129,6 +129,6 @@ describe('Filter empty list', () => {
 
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
+    await screen.findByText(/No matching hotels found/i)
   })
 })

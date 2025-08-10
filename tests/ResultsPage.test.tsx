@@ -234,7 +234,7 @@ describe('Results Page Integration test', () => {
     expect(names).toEqual(['Cookie A Hotel'])
   })
 
-  it('filter rating + filter price (out of range)', () => {
+  it('filter rating + filter price (out of range)', async () => {
     const minRating = screen.getByTestId('min-rating-star-4')
     fireEvent.click(minRating)
 
@@ -245,7 +245,7 @@ describe('Results Page Integration test', () => {
 
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
+    await screen.findByText(/No matching hotels found/i)
   })
 
   it('filter rating + filter price + map (out of range)', async () => {
@@ -259,7 +259,7 @@ describe('Results Page Integration test', () => {
 
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
+    await screen.findByText(/No matching hotels found/i)
     await waitFor(() => {
       expect(mockSourceProps.data?.features.length).toBe(0)
     })
@@ -328,7 +328,7 @@ describe('Filter empty list', () => {
 
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
+    await screen.findByText(/No matching hotels found/i)
     await waitFor(() => {
       expect(mockSourceProps.data?.features.length).toBe(0)
     })
