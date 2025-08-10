@@ -102,6 +102,12 @@ const createMockMapEvent = (
     divByPoint: function (_p: Point): Point {
       throw new Error('Function not implemented.')
     },
+    _multByPoint: function (_p: Point): Point {
+      throw new Error('Function not implemented.')
+    },
+    _divByPoint: function (_p: Point): Point {
+      throw new Error('Function not implemented.')
+    },
     mult: function (_k: number): Point {
       throw new Error('Function not implemented.')
     },
