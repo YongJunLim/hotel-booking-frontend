@@ -39,7 +39,7 @@ export const ResultsPage = () => {
   const hotelAPI = `${BACKEND_URL}/hotels?destination_id=${destinationId}`
 
   const { country } = useCountryStore()
-  const pageTitle = useMemo(() => {
+  const pagetitle = useMemo(() => {
     const term = country?.term ?? 'No Destination'
     return `Hotel Search Results for ${term}`
   }, [country])
@@ -163,18 +163,8 @@ export const ResultsPage = () => {
     [sortedlist, show],
   )
 
-  const [initialLoad, setInitialLoad] = useState(true)
-  useEffect(() => {
-    if (!priceloading && !hotelloading) {
-      setInitialLoad(false)
-    }
-  }, [priceloading, hotelloading])
   const isloading
-    = initialLoad
-      && !priceerror
-      && !hotelerror
-      && (priceloading || hotelloading || pricedata?.completed !== true)
-  const hasError = priceerror || hotelerror
+    = priceloading || hotelloading || pricedata?.completed !== true
 
   const [showNoHotels, setShowNoHotels] = useState(false)
   useEffect(() => {
@@ -191,41 +181,40 @@ export const ResultsPage = () => {
 
   return (
     <>
-      <NavBar pageTitle={pageTitle} />
+      <NavBar pageTitle={pagetitle} />
       <div className="py-2">
         <DestinationSearch />
       </div>
 
-      <div className="mb-3 pt-8">
-        {hasError && (
-          <>
-            {hotelerror && (
-              <div className="alert alert-error">
-                <span>
-                  Error loading hotel data:
-                  {hotelerror.message}
-                </span>
-              </div>
-            )}
-            {priceerror && (
-              <div className="alert alert-error">
-                <span>
-                  Error loading price data:
-                  {priceerror.message}
-                </span>
-              </div>
-            )}
-          </>
+      <div className="mb-3">
+        <div className="pt-8"></div>
+
+        {hotelerror && (
+          <div className="alert alert-error">
+            <span>
+              Error loading hotel data:
+              {hotelerror.message}
+            </span>
+          </div>
+        )}
+
+        {priceerror && (
+          <div className="alert alert-error">
+            <span>
+              Error loading price data:
+              {priceerror.message}
+            </span>
+          </div>
         )}
       </div>
 
-      {!hasError && isloading
+      {isloading && !priceerror && !hotelerror
         ? (
           <div>
             <span>
               Please wait a moment as we fetch the best prices for you...
             </span>
-            <div className="mt-16">
+            <div className={isloading ? 'mt-16' : 'mt-8'}>
               <div className="card card-side bg-base-100 shadow-sm dark:shadow-xl">
                 <figure className="p-10">
                   <div className="skeleton h-48 w-48 shrink-0 rounded-xl"></div>
@@ -247,91 +236,91 @@ export const ResultsPage = () => {
           </div>
         )
         : (
-          !hasError
-          && !isloading && (
-            <>
-              <div className="flex items-center justify-between mb-5">
-                <span className="text-lg text-base-content/70">
-                  Last updated:
-                  {' '}
-                  {new Date().toLocaleString()}
-                </span>
-                <div className="flex justify-end">
-                  <Sortdropdown selectedvalue={sortby} setvalue={setsortby} />
-                </div>
+          <>
+            <div className="flex items-center justify-between mb-5">
+              <span className="text-lg text-base-content/70">
+                Last updated:
+                {' '}
+                {new Date().toLocaleString()}
+              </span>
+              <div className="flex justify-end">
+                <Sortdropdown selectedvalue={sortby} setvalue={setsortby} />
               </div>
-              <div className="flex gap-10 pt-5">
-                <aside className="w-70 shrink-0">
-                  <div className="pb-5">
-                    <MapSelect
-                      hotels={shownlist}
-                      checkin={checkin}
-                      checkout={checkout}
-                      guests={guests}
-                      destinationId={destinationId}
-                    />
-                  </div>
+            </div>
 
-                  <div className="flex flex-col items-center rounded-lg h-50 border-4 border-double pr-3 pt-3">
-                    <h2 className="text-lg font-semibold flex pb-2">
-                      Filter By:
-                    </h2>
-                    <hr className="border-t border-gray-300 mb-3 w-50" />
-                    <StarRatingFilter
-                      minstar={minstar}
-                      maxstar={maxstar}
-                      setminstar={setminstar}
-                      setmaxstar={setmaxstar}
-                    />
-                    <div className="pt-6 pl-2">
-                      <RangeSlider
-                        minprice={fullpricerange[0]}
-                        maxprice={fullpricerange[1]}
-                        value={pricerange}
-                        onChange={setpricerange}
-                      />
+            <div className="flex gap-10 pt-5">
+              <aside className="w-70 shrink-0">
+                <div className="pb-5 ">
+                  <MapSelect
+                    hotels={shownlist}
+                    checkin={checkin}
+                    checkout={checkout}
+                    guests={guests}
+                    destinationId={destinationId}
+                  />
+                </div>
+
+                <div className="flex flex-col items-center rounded-lg h-50 border-4 border-double pr-3 pt-3">
+                  <h2 className="text-lg font-semibold flex pb-2 ">
+                    {' '}
+                    Filter By:
+                  </h2>
+                  <hr className="border-t border-gray-300 mb-3 w-50" />
+                  <StarRatingFilter
+                    minstar={minstar}
+                    maxstar={maxstar}
+                    setminstar={setminstar}
+                    setmaxstar={setmaxstar}
+                  >
+                  </StarRatingFilter>
+                  <div className="pt-6 pl-2">
+                    <RangeSlider
+                      minprice={fullpricerange[0]}
+                      maxprice={fullpricerange[1]}
+                      value={pricerange}
+                      onChange={setpricerange}
+                    >
+                    </RangeSlider>
+                  </div>
+                </div>
+              </aside>
+
+              <div className="space-y-5 flex-1">
+                {showNoHotels
+                  ? (
+                    <div className="alert alert-error">
+                      <span>
+                        No matching hotels found. Please try a different criteria!
+                      </span>
                     </div>
-                  </div>
-                </aside>
-
-                <div className="space-y-5 flex-1">
-                  {sortedlist.length === 0 && showNoHotels
-                    ? (
-                      <div className="alert alert-error">
-                        <span>
-                          No matching hotels found. Please try a different criteria!
-                        </span>
-                      </div>
-                    )
-                    : (
-                      <>
-                        {shownlist.map((hotel: StitchedHotel) => (
-                          <HotelCard
-                            key={hotel.id}
-                            hotel={hotel}
-                            hotelprice={hotel.price}
-                            checkin={checkin}
-                            checkout={checkout}
-                            guests={guests}
-                            destinationId={destinationId}
-                          />
-                        ))}
-                        {shownlist.length < sortedlist.length && (
-                          <button
-                            className="btn btn-primary mt-4"
-                            onClick={() => setshow(show => show + 1)}
-                          >
-                            Load More
-                          </button>
-                        )}
-                      </>
-                    )}
-                </div>
+                  )
+                  : (
+                    <>
+                      {shownlist.map((hotel: StitchedHotel) => (
+                        <HotelCard
+                          key={hotel.id}
+                          hotel={hotel}
+                          hotelprice={hotel.price}
+                          checkin={checkin}
+                          checkout={checkout}
+                          guests={guests}
+                          destinationId={destinationId}
+                        />
+                      ))}
+                      {shownlist.length < sortedlist.length && (
+                        <button
+                          className="btn btn-primary mt-4"
+                          onClick={() => setshow(show => show + 1)}
+                        >
+                          Load More
+                        </button>
+                      )}
+                    </>
+                  )}
               </div>
-            </>
-          )
+            </div>
+          </>
         )}
-
       <div className="pt-17">
         <Link href="/" className="btn btn-outline">
           Back to Home
