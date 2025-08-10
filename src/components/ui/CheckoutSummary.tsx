@@ -10,7 +10,9 @@ export const CheckoutSummary = () => {
         {selectedRooms.map((room, idx) => (
           <li key={`${room.key}-${idx}`} className="border-b pb-2">
             <div className="font-medium">{room.roomNormalizedDescription}</div>
-            <div className="text-sm text-gray-600">{room.breakfast_display}</div>
+            <div className="text-sm text-gray-600">
+              {room.breakfast_display}
+            </div>
             <div className="text-sm text-gray-600">
               {room.free_cancellation ? 'Free Cancellation' : 'Non-Refundable'}
             </div>

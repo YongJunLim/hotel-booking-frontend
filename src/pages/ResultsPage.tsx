@@ -2,6 +2,7 @@ import { useParams, Link } from 'wouter'
 import { useSearchParams } from '../hooks/useSearchParams'
 import { HotelCard } from '../components/ui/ResultsCard'
 import { NavBar } from '../components/layout/NavBar'
+import useRoomBookingStore from '../stores/RoomBookingStore'
 import { useEffect, useMemo, useState } from 'react'
 import type {
   StitchedHotel,
@@ -17,6 +18,7 @@ import { MapSelect } from '../components/ui/MapSelect'
 import StarRatingFilter from '../components/ui/FilterStar'
 import RangeSlider from '../components/ui/FilterPrice'
 import DestinationSearch from '../components/ui/DestinationSearch'
+import { useCountryStore } from '../stores/HotelSearch'
 
 const fetcher = (url: string) => fetch(url).then(response => response.json())
 
@@ -28,8 +30,19 @@ export const ResultsPage = () => {
   const checkout = searchParams.checkout ?? undefined
   const guests = searchParams.guests ?? undefined
 
+  // Clear booking data when starting a new search
+  useEffect(() => {
+    useRoomBookingStore.getState().clearRoomBookingData()
+  }, [])
+
   const priceAPI = `${BACKEND_URL}/hotels/prices?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`
   const hotelAPI = `${BACKEND_URL}/hotels?destination_id=${destinationId}`
+
+  const { country } = useCountryStore()
+  const pageTitle = useMemo(() => {
+    const term = country?.term ?? 'No Destination'
+    return `Hotel Search Results for ${term}`
+  }, [country])
 
   const {
     data: pricedata,
@@ -163,7 +176,6 @@ export const ResultsPage = () => {
       && (priceloading || hotelloading || pricedata?.completed !== true)
   const hasError = priceerror || hotelerror
 
-  const pageTitle = 'Hotel Search Results'
   return (
     <>
       <NavBar pageTitle={pageTitle} />
