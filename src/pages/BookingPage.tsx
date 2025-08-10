@@ -226,10 +226,22 @@ export const BookingPage = () => {
       <Elements stripe={stripePromise}>
         <div className="p-6">
           <p className="mb-6">
-            Hotel ID: <strong>{params.hotel_id}</strong><br />
-            Destination ID: <strong>{searchParams.destination_id}</strong><br />
-            Check-in: <strong>{searchParams.checkin}</strong><br />
-            Check-out: <strong>{searchParams.checkout}</strong><br />
+            Hotel ID:
+            {' '}
+            <strong>{params.hotel_id}</strong>
+            <br />
+            Destination ID:
+            {' '}
+            <strong>{searchParams.destination_id}</strong>
+            <br />
+            Check-in:
+            {' '}
+            <strong>{searchParams.checkin}</strong>
+            <br />
+            Check-out:
+            {' '}
+            <strong>{searchParams.checkout}</strong>
+            <br />
           </p>
 
           <div className="flex flex-col lg:flex-row lg:items-start lg:gap-8">

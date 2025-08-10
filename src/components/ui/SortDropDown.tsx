@@ -1,6 +1,9 @@
+import type { StitchedHotel } from '../../types/params'
+
 interface SortDropdownProps {
   selectedvalue: string
   setvalue: React.Dispatch<React.SetStateAction<string>> // update string state value with usestate
+  InitialHotel?: StitchedHotel[]
 }
 
 export default function Sortdropdown({
@@ -14,7 +17,12 @@ export default function Sortdropdown({
   return (
     <div>
       <label htmlFor="sortdropdown">Sort list by: </label>
-      <select id="sortdropdown" value={selectedvalue} onChange={handleChange}>
+      <select
+        id="sortdropdown"
+        value={selectedvalue}
+        onChange={handleChange}
+        data-testid="sort-dropdown"
+      >
         <option value="Price (Ascending)">Price (Ascending)</option>
         <option value="Price (Descending)">Price (Descending)</option>
         <option value="Rating (Ascending)">Rating (Ascending)</option>

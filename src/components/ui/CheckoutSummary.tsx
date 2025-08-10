@@ -10,17 +10,25 @@ export const CheckoutSummary = () => {
         {selectedRooms.map((room, idx) => (
           <li key={`${room.key}-${idx}`} className="border-b pb-2">
             <div className="font-medium">{room.roomNormalizedDescription}</div>
-            <div className="text-sm text-gray-600">{room.breakfast_display}</div>
+            <div className="text-sm text-gray-600">
+              {room.breakfast_display}
+            </div>
             <div className="text-sm text-gray-600">
               {room.free_cancellation ? 'Free Cancellation' : 'Non-Refundable'}
             </div>
-            <div className="font-semibold mt-1">${room.price.toFixed(2)}</div>
+            <div className="font-semibold mt-1">
+              $
+              {room.price.toFixed(2)}
+            </div>
           </li>
         ))}
       </ul>
       <div className="border-t mt-4 pt-2 font-bold text-lg flex gap-2">
         <div>Total:</div>
-        <div className="text-green-600">${getTotalPrice().toFixed(2)}</div>
+        <div className="text-green-600">
+          $
+          {getTotalPrice().toFixed(2)}
+        </div>
       </div>
     </div>
   )

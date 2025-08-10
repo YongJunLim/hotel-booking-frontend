@@ -28,7 +28,9 @@ export const RoomCard = ({ room }: RoomCardProps) => {
         roomNormalizedDescription: room.roomNormalizedDescription,
         price: room.price,
         free_cancellation: room.free_cancellation,
-        breakfast_display: getBreakfastDisplay(room.roomAdditionalInfo.breakfastInfo)
+        breakfast_display: getBreakfastDisplay(
+          room.roomAdditionalInfo.breakfastInfo,
+        ),
       })
     }
   }
