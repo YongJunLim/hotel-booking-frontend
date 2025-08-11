@@ -45,6 +45,8 @@ describe('Make Hotel Room(s) Booking', () => {
     // Select destination (simulate typeahead selection)
     cy.get('input[role="combobox"]').type('Singapore')
     cy.contains('Singapore, Singapore').click()
+    // easier to see
+    cy.wait(500)
 
     // Open the date picker popover and navigate to December
     cy.get('[data-testid="start-date-button"]').click()
@@ -171,7 +173,7 @@ describe('Make Hotel Room(s) Booking', () => {
     ).should('be.visible')
   })
 
-  it('Alternative Flow 3: Navigate to hotel details page via browser history', () => {
+  it('Alternative Flow 3: Navigate to hotel details page via browser history and Main Flow (continued)', () => {
     // Visit hotel details page directly
     cy.visit(
       '/hotels/detail/qO6Y?destination_id=RsBU&checkin=2025-12-10&checkout=2025-12-17&lang=en_US&currency=SGD&country_code=SG&guests=2|2',
