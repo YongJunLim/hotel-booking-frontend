@@ -1,9 +1,9 @@
-import { defineConfig } from "cypress";
+import { defineConfig } from 'cypress'
 
 export default defineConfig({
   e2e: {
-    baseUrl: "http://localhost:5173",
-    specPattern: "tests/cypress/e2e/**/*.cy.{js,ts,jsx,tsx}",
+    baseUrl: 'http://localhost:5173',
+    specPattern: 'tests/cypress/e2e/**/*.cy.{js,ts,jsx,tsx}',
     supportFile: false,
   },
-});
+})

@@ -21,6 +21,7 @@
   "include": [
     "vitest.config.ts",
     "vite.config.ts",
+    "cypress.config.ts",
     "tests/**/*.ts",
     "tests/**/*.tsx",
     "src",
