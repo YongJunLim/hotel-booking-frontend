@@ -1,4 +1,27 @@
 describe('Make Hotel Room(s) Booking', () => {
+  before(() => {
+    // Visit the signup page
+    cy.visit('/signup')
+
+    // Fill in the signup form
+    cy.get('input#name').type('E2E Test User')
+    cy.get('input#email').type('e2e@test.com')
+    cy.get('input#passwd').type('pass123')
+
+    // Submit the signup form
+    cy.get('button#signup').click()
+
+    // Ensure redirection to /login
+    cy.url({ timeout: 10000 }).should(
+      'eq',
+      `${Cypress.config().baseUrl}/login`,
+    )
+
+    cy.contains('User created successfully', { timeout: 3000 }).should(
+      'be.visible',
+    )
+  })
+
   beforeEach(() => {
     cy.intercept('GET', /\/api\/v1\/hotels\/prices.*/).as('getHotelPrices')
 
@@ -162,5 +185,98 @@ describe('Make Hotel Room(s) Booking', () => {
     cy.get('.card .btn-primary')
       .should('be.disabled')
       .and('contain', 'Add Room')
+
+    // Click the Login button in the NavBar/MyAccountDropdown
+    cy.get('.navbar').within(() => {
+      cy.contains('Login').click()
+    })
+
+    // Ensure redirect to /login
+    cy.url({ timeout: 10000 }).should(
+      'eq',
+      `${Cypress.config().baseUrl}/login`,
+    )
+
+    // Login with test account
+    cy.get('input#email').type('e2e@test.com')
+    cy.get('input#passwd').type('pass123')
+    cy.get('button#login').click()
+    cy.url({ timeout: 10000 }).should('include', Cypress.config().baseUrl)
+
+    // Should redirect back to hotel details page (because of redirectUrl logic)
+    cy.url({ timeout: 10000 }).should('include', '/hotels/detail/qO6Y')
+
+    // 1. Ensure "Add Room" is enabled
+    cy.get('.card .btn-primary')
+      .should('not.be.disabled')
+      .and('contain', 'Add Room')
+
+    // 2. Add 1 Room
+    cy.get('.card .btn-primary').first().click()
+
+    // 3. Ensure selected room appears in 'Room Selection Summary'
+    cy.get('.mb-6.p-4.bg-base-200.rounded-lg').should('be.visible')
+    cy.get(
+      '.mb-6.p-4.bg-base-200.rounded-lg .flex.justify-between.items-center',
+    )
+      .filter(':not(:contains("Total:"))')
+      .should('have.length', 1)
+
+    // 4. Remove the same room
+    cy.get('.card .btn-outline.btn-error').first().click()
+
+    // 5. Ensure 'Room Selection Summary' is gone
+    cy.get('.mb-6.p-4.bg-base-200.rounded-lg').should('not.exist')
+
+    // 6. Add 2 more rooms
+    cy.get('.card .btn-primary').eq(0).click()
+    cy.get('.card .btn-primary').eq(1).click()
+
+    // 7. Ensure both rooms are in 'Room Selection Summary'
+    cy.get(
+      '.mb-6.p-4.bg-base-200.rounded-lg .flex.justify-between.items-center',
+    )
+      .filter(':not(:contains("Total:"))')
+      .should('have.length', 2)
+
+    // 8. Ensure all "Add Room" buttons are disabled
+    cy.get('.card .btn-primary').should('be.disabled')
+
+    // 9. Ensure 'Book Selected Rooms (2)' button is shown
+    cy.get('button.btn.btn-primary')
+      .contains('Book Selected Rooms (2)')
+      .should('be.visible')
+  })
+
+  // Delete Test account
+  after(() => {
+    // Log in as E2E Test User
+    cy.visit('/login')
+    cy.get('input#email').type('e2e@test.com')
+    cy.get('input#passwd').type('pass123')
+    cy.get('button#login').click()
+
+    // Wait for login and redirect to home
+    cy.url({ timeout: 10000 }).should('include', Cypress.config().baseUrl)
+    cy.window().should(
+      win => expect(win.localStorage.getItem('auth-storage')).to.not.be.null,
+    )
+    cy.wait(500)
+    // Go to user account page
+    cy.visit('/user')
+
+    // Click Delete Account button
+    cy.get('button#deleteButton').click()
+
+    // Enter password in the confirmation dialog
+    cy.get('input#passwd_del').type('pass123')
+
+    // Confirm deletion
+    cy.get('a#deleteAccount').click()
+
+    // Assert toast message
+    cy.contains('Your account has been deleted successfully.', {
+      timeout: 3000,
+    }).should('be.visible')
   })
 })
