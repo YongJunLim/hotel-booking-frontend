@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { devtools, persist, createJSONStorage } from 'zustand/middleware'
 
-interface RoomDetails {
+export interface RoomDetails {
   key: string
   roomNormalizedDescription: string
   price: number

@@ -9,7 +9,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -44,7 +46,7 @@
     "@types/react-dom": "^19.1.2",
     "@types/wouter": "^2.0.1",
     "@vitejs/plugin-react-swc": "^3.9.0",
-    "cypress": "^14.5.2",
+    "cypress": "^14.5.4",
     "daisyui": "^5.0.43",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",
