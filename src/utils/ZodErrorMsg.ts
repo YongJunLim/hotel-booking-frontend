@@ -1,4 +1,4 @@
-import type { AuthResponse } from '../types/user'
+import { AuthResponse } from '../types/user'
 
 type ZodIssue = { message: string }
 

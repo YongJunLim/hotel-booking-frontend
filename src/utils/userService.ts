@@ -1,9 +1,9 @@
 import { BACKEND_URL } from '../config/api'
-import type { bookingResponse } from '../types/booking'
-import type { EditUserRequestBody, GetUserResponse } from '../types/user'
+import type { bookingResponse } from '../types/booking.ts'
+import type { UpdateUserRequest, userResponse } from '../types/user'
 
 export const userService = {
-  getProfile: async (token: string | null): Promise<GetUserResponse> => {
+  getProfile: async (token: string | null): Promise<userResponse> => {
     if (!token) {
       return { success: false, message: 'Invalid token' }
     }
@@ -13,10 +13,10 @@ export const userService = {
       headers: { Authorization: `Bearer ${token}` },
     })
 
-    return await res.json() as GetUserResponse
+    return await res.json() as userResponse
   },
 
-  editProfile: async (token: string | null, reqBody: EditUserRequestBody): Promise<GetUserResponse> => {
+  editProfile: async (token: string | null, reqBody: UpdateUserRequest): Promise<userResponse> => {
     if (!token) {
       return { success: false, message: 'Invalid token' }
     }
@@ -29,7 +29,7 @@ export const userService = {
       body: JSON.stringify(reqBody),
     })
 
-    return await res.json() as GetUserResponse
+    return await res.json() as userResponse
   },
 
   getBooking: async (token: string | null): Promise<bookingResponse> => {

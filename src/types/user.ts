@@ -1,9 +1,5 @@
+// user details
 export interface UserDetails {
-  email: string
-  firstName: string
-}
-
-export interface UserDetailswithAdmin {
   email: string
   firstName: string
   isAdmin: boolean
@@ -12,46 +8,29 @@ export interface UserDetailswithAdmin {
   phoneNumber?: string
 }
 
-export interface CreateUserRequestBody {
-  firstName: string
-  email: string
+// User creation requires password
+export interface CreateUserRequest extends Omit<UserDetails, 'isAdmin'> {
   password: string
-  lastName?: string
-  salutation?: string
-  phoneNumber?: string
 }
 
-export interface EditUserRequestBody {
-  firstName?: string
-  email?: string
+// User update allows partial fields but requires password
+export interface UpdateUserRequest extends Partial<UserDetails> {
   password: string
-  lastName?: string
-  salutation?: string
-  phoneNumber?: string
 }
 
-export interface GetUserResponse {
+export interface userResponse {
   success: boolean
-  data?: {
-    firstName: string
-    email: string
-    isAdmin: boolean
-    lastName?: string
-    salutation?: string
-    phoneNumber?: string
-  }
+  data?: UserDetails
   error?: { message?: string }
   message: string
 }
-
 export interface AuthResponse {
   success: boolean
-  data?: {
-    firstName: string
-    email: string
-    isAdmin: boolean
-    token: string
-  }
+  data?: UserDetails & { token: string }
   error?: { message?: string }
+  message: string
+}
+export interface DeleteResponse {
+  success: boolean
   message: string
 }

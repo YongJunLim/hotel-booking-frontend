@@ -1,66 +1,56 @@
 import { Link, useLocation } from 'wouter'
+// import useAuthStore from '../store'
 import useAuthStore from '../stores/AuthStore'
-import { useState, useEffect } from 'react'
+import useToastStore from '../stores/ToastStore'
+import { useState } from 'react'
 import { BACKEND_URL } from '../config/api'
+import { AuthResponse } from '../types/user'
 import { getErrorMessage } from '../utils/ZodErrorMsg'
-import type { AuthResponse } from '../types/user'
 
 export const Login = () => {
   const [message, setMessage] = useState('')
   const [msgClass, setMsgClass] = useState('')
+  // const { login } = useAuthStore();
   const login = useAuthStore(state => state.login)
-  const setToast = useAuthStore(state => state.setToast)
-  const toast = useAuthStore(state => state.toast)
-  const clearToast = useAuthStore(state => state.clearToast)
+  const setToast = useToastStore(state => state.setToast)
+  // const toastMsg = useToastStore(state => state.toastMsg)
+  // const clearToast = useToastStore(state => state.clearToast)
   const redirectUrl = useAuthStore(state => state.redirectUrl)
   const clearRedirectUrl = useAuthStore(state => state.clearRedirectUrl)
   const [, nav] = useLocation()
 
-  useEffect(() => {
-    if (toast) {
-      const timer = setTimeout(() => clearToast(), 3000)
-      return () => clearTimeout(timer)
-    }
-  }, [toast, clearToast])
+  // Already implemented auto-clearing in useToastStore
+  // useEffect(() => {
+  //   if (toastMsg) {
+  //     const timer = setTimeout(() => clearToast(), 3000)
+  //     return () => clearTimeout(timer)
+  //   }
+  // }, [toastMsg, clearToast])
 
   return (
     <>
-      {toast !== ''
-        ? (
-          <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
-            {toast}
-          </div>
-        )
-        : null}
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
         <h1 className="text-4xl font-bold mb-8 flex">Hotel Booking</h1>
       </div>
 
       <p className="mb-4 text-2xl font-bold flex">Login Form</p>
-      <div className="grid gap-4 mb-6 md:grid-cols-2 w-1/2">
-        {/* Email Input Field */}
-        <div className="col-span-2 block items-center gap-2">
-          <p>Email:</p>
-          <input
-            type="email"
-            id="email"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="john@company.com"
-            required
-          />
-        </div>
-        {/* Password Input Field */}
-        <div className="col-span-2 block items-center gap-2">
-          <p>Password:</p>
-          <input
-            id="passwd"
-            type="password"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="•••••••••"
-            required
-          />
-        </div>
-
+      <div className="grid gap-6 mb-6 md:grid-cols-2 w-1/2">
+        <p>Email:</p>
+        <input
+          type="email"
+          id="email"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="john@company.com"
+          required
+        />
+        <p>Password:</p>
+        <input
+          id="passwd"
+          type="password"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="•••••••••"
+          required
+        />
       </div>
       <p className="mb-4 p-0.5 ">
         Dont have an Account?
@@ -101,7 +91,7 @@ export const Login = () => {
     const passwd_inp = document.getElementById('passwd') as HTMLInputElement
 
     // Login API call
-    console.log('email,password', email_inp.value, passwd_inp.value)
+    // console.log('email,password', email_inp.value, passwd_inp.value)
     const response = await fetch(`${BACKEND_URL}/users/login`, {
       method: 'POST',
       headers: {
@@ -115,6 +105,7 @@ export const Login = () => {
     const msg = (await response.json()) as AuthResponse
     console.log(msg)
     // Handle login
+
     if (response.ok && msg.data?.token) {
       login(
         {
@@ -135,9 +126,9 @@ export const Login = () => {
       }
     }
     else {
-      const zodmsg = getErrorMessage(msg)
-      setMessage(zodmsg)
       setMsgClass('text-red-800')
+      const errorMessage = getErrorMessage(msg)
+      setMessage(errorMessage)
     }
   }
   async function onSubmitClick(): Promise<void> {

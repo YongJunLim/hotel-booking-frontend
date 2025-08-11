@@ -5,7 +5,7 @@ export const HomePage = () => {
   return (
     <>
       <div>
-        <img className="h-96 w-full object-cover" src="/travel.jpg" />
+        <img className="h-76 w-full object-cover" src="/travel.jpg" />
       </div>
       <NavBar pageTitle="Hotel Booking" />
       <div>

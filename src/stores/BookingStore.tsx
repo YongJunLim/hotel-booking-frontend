@@ -1,7 +1,7 @@
 import { create } from 'zustand'
-import type { Booking } from '../types/booking'
+import type { Booking } from '../types/booking.ts'
 import { persist, devtools } from 'zustand/middleware'
-import useAuthStore from './AuthStore'
+import useAuthStore from './AuthStore.js'
 import { userService } from '../utils/userService'
 interface BookingStore {
   bookingStatus: boolean

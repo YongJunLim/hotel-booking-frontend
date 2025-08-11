@@ -1,10 +1,11 @@
 import { Link } from 'wouter'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import DeleteToast from './DeleteAccount'
 import useAuthStore from '../stores/AuthStore'
 import { RedirectToast } from '../components/ui/Redirect'
 import useBookingStore from '../stores/BookingStore'
-import type { EditUserRequestBody } from '../types/user'
+import type { UpdateUserRequest } from '../types/user'
+import useToastStore from '../stores/ToastStore'
 
 export const UserPage = () => {
   const [isClick, setIsClick] = useState(false)
@@ -12,17 +13,24 @@ export const UserPage = () => {
   const { isLoggedIn, userDetails, accessToken, getProfile, editProfile } = useAuthStore()
   // BookingStore
   const { fetchBooking, bookings, selectedBooking, setSelectedBooking, bookingStatus } = useBookingStore()
-  // const fetchBooking = useBookingStore(state => state.fetchBooking)
-  // const bookings = useBookingStore(state => state.bookings)
-  // const selectedBooking = useBookingStore(state => state.selectedBooking)
-  // const setSelectedBooking = useBookingStore(state => state.setSelectedBooking)
-  // const bookingstatus = useBookingStore(state => state.bookingstatus)
+  // Toast Store
+  const setToast = useToastStore(state => state.setToast)
   const [message, setMessage] = useState('')
   const [msgClass, setMsgClass] = useState('')
   const [editButton, setEditButton] = useState(false)
   const [showRedirectToast, setShowRedirectToast] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const toggleDropdown = () => setIsOpen(!isOpen)
+
+  const FetchBooking = useCallback(async () => {
+    await fetchBooking()
+    if (bookingStatus) {
+      setToast('Booking list is updated', 'success')
+    }
+    else {
+      setToast('Failed to fetch Booking list', 'error')
+    }
+  }, [fetchBooking, bookingStatus, accessToken, setToast])
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -31,8 +39,11 @@ export const UserPage = () => {
     else {
       const loadData = async () => {
         try {
-          await fetchBooking()
-          await getProfile()
+          await FetchBooking()
+          const result = await getProfile()
+          if (!result) {
+            setToast('Failed to retrieve user details', 'error')
+          }
         }
         catch (error) {
           console.error('Failed to load data:', error)
@@ -40,7 +51,7 @@ export const UserPage = () => {
       }
       void loadData()
     }
-  }, [isLoggedIn, getProfile, fetchBooking, accessToken])
+  }, [isLoggedIn, getProfile, FetchBooking, setToast, accessToken])
 
   useEffect(() => {
     console.log('Booking list updated', bookings)
@@ -69,7 +80,7 @@ export const UserPage = () => {
       return
     }
     else {
-      const reqbody: EditUserRequestBody = {
+      const reqbody: UpdateUserRequest = {
         password: inputs.password,
       }
       if (inputs.email) reqbody.email = inputs.email
@@ -78,10 +89,18 @@ export const UserPage = () => {
       if (inputs.salutation) reqbody.salutation = inputs.salutation
       if (inputs.phoneNumber) reqbody.phoneNumber = inputs.phoneNumber
       console.log(reqbody)
-      await editProfile(reqbody)
-      await getProfile()
-      setMessage('')
-      return
+      try {
+        const response = await editProfile(reqbody)
+        console.log(response)
+        setToast(response.message, response.success ? 'success' : 'error')
+
+        if (response.success) {
+          await getProfile() // Refresh profile data
+        }
+      }
+      catch {
+        setToast('Failed to update profile', 'error')
+      }
     }
   }
 
@@ -103,6 +122,7 @@ export const UserPage = () => {
           </nav>
           <div
             id="detail"
+            data-testid="detail"
             className={`${isClick ? 'opacity-50' : 'opacity-100'} items-center justify-between mx-auto w-full max-w-4xl p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700`}
           >
             <div className="relative flex justify-end px-4 pt-4">
@@ -121,6 +141,7 @@ export const UserPage = () => {
                 <div className="absolute right-0 top-full mt-1 z-50 min-w-[11rem] w-max bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700 dark:ring-gray-600">
                   <div className="py-1">
                     <button
+                      data-testid="open-edit"
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                       onClick={() => {
                         setEditButton(true)
@@ -131,6 +152,7 @@ export const UserPage = () => {
                     </button>
                     <button
                       id="deleteButton"
+                      data-testid="close-delete"
                       className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-400 dark:hover:text-white"
                       onClick={() => {
                         handleClick()
@@ -153,7 +175,7 @@ export const UserPage = () => {
                   {/* Name */}
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-400">Name</p>
-                    <p className="text-gray-900 dark:text-white">
+                    <p data-testid="username" className="text-gray-900 dark:text-white">
                       {[userDetails.salutation, userDetails.firstName, userDetails.lastName]
                         .filter(Boolean)
                         .join(' ')}
@@ -185,7 +207,20 @@ export const UserPage = () => {
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white mr-4">
                     Booking list
                   </h2>
-                  <button onClick={() => { void fetchBooking() }}>Refresh</button>
+                  <button onClick={() => {
+                    const submitFetch = async () => {
+                      try {
+                        await FetchBooking()
+                      }
+                      catch (error) {
+                        console.error('Fetch booking failed:', error)
+                      }
+                    }
+                    void submitFetch()
+                  }}
+                  >
+                    Refresh
+                  </button>
                 </div>
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                   <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -209,24 +244,24 @@ export const UserPage = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {bookings.map(item => (
-                        <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
-                          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      {bookings.map((item, index) => (
+                        <tr key={item._id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
+                          <th data-testid={`roomtype-${index}`} scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             {item.roomType}
                           </th>
-                          <td className="px-6 py-4">
+                          <td data-testid={`startdate-${index}`} className="px-6 py-4">
                             {' '}
                             {item.startDate}
                           </td>
-                          <td className="px-6 py-4">
+                          <td data-testid={`enddate-${index}`} className="px-6 py-4">
                             {' '}
                             {item.endDate}
                           </td>
-                          <td className="px-6 py-4">
+                          <td data-testid={`nights-${index}`} className="px-6 py-4">
                             {' '}
                             {item.nights}
                           </td>
-                          <td className="px-6 py-4">
+                          <td data-testid={`info-${index}`} className="px-6 py-4">
                             <a href="#" onClick={() => { void setSelectedBooking(item) }} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
                           </td>
                         </tr>
@@ -263,12 +298,12 @@ export const UserPage = () => {
                     <p>
                       <strong>Start Date:</strong>
                       {' '}
-                      {new Date(selectedBooking.startDate).toLocaleDateString()}
+                      {selectedBooking.startDate}
                     </p>
                     <p>
                       <strong>End Date:</strong>
                       {' '}
-                      {new Date(selectedBooking.endDate).toLocaleDateString()}
+                      {selectedBooking.endDate}
                     </p>
                     <p>
                       <strong>Adults:</strong>
@@ -401,6 +436,7 @@ export const UserPage = () => {
 
               {/* Submit Button */}
               <button
+                data-testid="submit-edit"
                 onClick={() => {
                   const submit = async () => {
                     try {

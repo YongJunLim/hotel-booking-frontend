@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
-import DropdownWithButtons from './DropDown'
+import DropDownWithButtons from './DropDown'
 // import { MyAccountDropdown } from "../components/ui/MyAccount";
 import { type Destination } from '../../types/destination'
 import DayPicker from './DayPicker'
 import { type Country } from '../../types/forms'
-import { useFormStore, useCountryStore } from '../../store'
+import { useFormStore, useCountryStore } from '../../stores/HotelSearch'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { useLocation } from 'wouter'
 import { TypeaheadSearch } from './TypeaheadSearch'
@@ -69,38 +69,45 @@ export default function DestinationSearch(): React.ReactElement {
   }, [start, end, sum, Room, country, setValue])
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data.country_)
+    let hasError = false
     if (data.start_ == undefined || data.end_ == undefined) {
       setError('root', {
         type: 'manual',
         message: 'Please select a start date and an end date.',
       })
-      return
+      hasError = true
     }
     else {
       clearErrors('root')
     }
 
-    if (data.sum_ == 0) {
-      setError('sum_', {
+    const today: Date = new Date()
+    const minStartDate: Date = new Date()
+    minStartDate.setDate(today.getDate() + 3)
+    const minEndDate = from
+      ? new Date(from.getTime() + 24 * 60 * 60 * 1000)
+      : new Date(today.getTime() + 4 * 24 * 60 * 60 * 1000)
+    if (data.start_ && data.start_ < minStartDate.toLocaleDateString('sv-SE')) {
+      setError('start_', {
         type: 'manual',
-        message: 'Please enter the number of guests PER room.',
+        message: 'Start date must be at least 3 days from today.',
       })
-      return
+      hasError = true
     }
     else {
-      clearErrors('sum_')
+      clearErrors('start_')
     }
 
-    if (data.Room_ == 0) {
-      setError('Room_', {
+    if (data.end_ && data.end_ < minEndDate.toLocaleDateString('sv-SE')) {
+      setError('end_', {
         type: 'manual',
-        message: 'Please enter the number of rooms you require.',
+        message: 'End date must be at least 1 day after the start date.',
       })
-      return
+      console.log('End date:', data.end_)
+      hasError = true
     }
     else {
-      clearErrors('Room_')
+      clearErrors('end_')
     }
 
     if (data.country_?.uid == '') {
@@ -108,11 +115,13 @@ export default function DestinationSearch(): React.ReactElement {
         type: 'manual',
         message: 'Please enter a destination.',
       })
-      return
+      hasError = true
     }
     else {
       clearErrors('country_')
     }
+
+    if (hasError) return
 
     navigate(
       `/results/${country.uid}?checkin=${start}&checkout=${end}&lang=en_US&currency=SGD&country_code=SG&guests=${Array(Room).fill(sum).join('|')}`,
@@ -121,12 +130,12 @@ export default function DestinationSearch(): React.ReactElement {
   return (
     <>
       <div className="w-full border border-gray-400 rounded-lg p-4 shadow-md">
-        <DropdownWithButtons></DropdownWithButtons>
-        <div className="flex flex-col sm:flex-row flex-wrap gap-8 py-4 w-full">
+        <DropDownWithButtons></DropDownWithButtons>
+        <div className="flex flex-col sm:flex-row flex-wrap gap-6 py-4 w-full">
           <TypeaheadSearch
             onSelect={handleDestinationSelect}
             placeholder="Search destinations..."
-            className="w-full md:w-[70%] min-w-[300px]"
+            className="w-full md:w-[78%] min-w-[300px]"
             limit={5}
             threshold={0.3}
           />
@@ -142,42 +151,30 @@ export default function DestinationSearch(): React.ReactElement {
             <div>
               <input
                 type="hidden"
-                {...register('sum_', {
-                  required: 'Please select the number of guests PER room.',
-                })}
-              />
-              <input
-                type="hidden"
-                {...register('Room_', {
-                  required: 'Please select the number of rooms you require.',
-                })}
-              />
-              <input
-                type="hidden"
                 {...register('country_', {
                   required: 'Please enter a destination.',
                 })}
               />
+              <input type="hidden" {...register('start_')} />
+              <input type="hidden" {...register('end_')} />
             </div>
+            {errors.root && (
+              <p className="text-red-500">{errors.root.message}</p>
+            )}
             {errors.start_ && (
               <p className="text-red-500">{errors.start_.message}</p>
             )}
             {errors.end_ && (
               <p className="text-red-500">{errors.end_.message}</p>
             )}
-            {errors.root && (
-              <p className="text-red-500">{errors.root.message}</p>
-            )}
-            {errors.sum_ && (
-              <p className="text-red-500">{errors.sum_.message}</p>
-            )}
-            {errors.Room_ && (
-              <p className="text-red-500">{errors.Room_.message}</p>
-            )}
             {errors.country_ && (
               <p className="text-red-500">{errors.country_.message}</p>
             )}
-            <button type="submit" className="btn btn-primary mt-2">
+            <button
+              type="submit"
+              className="btn btn-primary mt-2"
+              data-testid="search-button"
+            >
               Search
             </button>
           </form>

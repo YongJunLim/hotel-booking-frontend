@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'wouter'
 import { BACKEND_URL } from '../config/api'
-import useAuthStore from '../stores/AuthStore'
+import useToastStore from '../stores/ToastStore'
+import { CreateUserRequest, AuthResponse } from '../types/user'
 import { getErrorMessage } from '../utils/ZodErrorMsg'
-import type { AuthResponse, CreateUserRequestBody } from '../types/user'
 
 export const Signup = () => {
   const [message, setMessage] = useState('')
@@ -12,7 +12,7 @@ export const Signup = () => {
     passwd: false,
     conf_passwd: false,
   })
-  const setToast = useAuthStore(state => state.setToast)
+  const setToast = useToastStore(state => state.setToast)
   const [, nav] = useLocation()
 
   return (
@@ -48,16 +48,6 @@ export const Signup = () => {
             <input type="tel" id="phone" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="12345678" pattern="[0-9]{8}" />
           </div>
         </div>
-        {/* Name input field */}
-        {/* <div className="col-span-2 block items-center gap-2">
-          <p>Name:</p>
-          <input
-            id="name"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="John"
-            required
-          />
-        </div> */}
 
         {/* Email input field */}
         <div className="col-span-2 block items-center gap-2">
@@ -154,18 +144,10 @@ export const Signup = () => {
       password: (document.getElementById('passwd') as HTMLInputElement).value,
       confirmPassword: (document.getElementById('conf_passwd') as HTMLInputElement).value,
     }
-    // const firstname_inp = document.getElementById('first_name') as HTMLInputElement
-    // const lastname_inp = document.getElementById('last_name') as HTMLInputElement
-    // const saluation_inp = document.getElementById('saluation') as HTMLInputElement
-    // const phone_inp = document.getElementById('phone') as HTMLInputElement
-
-    // const email_inp = document.getElementById('email') as HTMLInputElement
-    // const passwd_inp = document.getElementById('passwd') as HTMLInputElement
-    // const conf_passwd_inp = document.getElementById('conf_passwd') as HTMLInputElement
     console.log(inputs)
 
     if (validateInput(inputs.firstName, inputs.email, inputs.password, inputs.confirmPassword)) {
-      const reqbody: CreateUserRequestBody = {
+      const reqbody: CreateUserRequest = {
         firstName: inputs.firstName,
         email: inputs.email,
         password: inputs.password,

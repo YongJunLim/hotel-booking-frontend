@@ -11,7 +11,7 @@ import { MAPTILER_TOKEN } from '../../config/api'
 import type { StitchedHotel } from '../../types/params'
 import { useEffect, useState, useRef } from 'react'
 import { useLocation } from 'wouter'
-import marker from '../../assets/marker.png'
+import { type HotelProperties, handleMapClick, loadMarkerImage } from '../../utils/mapselectUtils'
 
 interface MapSelectProps {
   hotels: StitchedHotel[]
@@ -19,15 +19,6 @@ interface MapSelectProps {
   checkout?: string
   guests?: string
   destinationId?: string
-}
-
-interface HotelProperties {
-  name: string
-  address: string
-  price: number
-  rating: number
-  id: string
-  icon: string
 }
 
 interface HoverInfo {
@@ -55,12 +46,6 @@ export const MapSelect = ({
       )
     }
   }, [selectedFeature, destinationId, checkin, checkout, guests, navigate])
-  const handleMapClick = (e: MapLayerMouseEvent) => {
-    const feature = e.features?.[0]
-    if (feature) {
-      setSelectedFeature(feature.properties)
-    }
-  }
 
   useEffect(() => {
     if (hotels[0]) {
@@ -70,21 +55,10 @@ export const MapSelect = ({
         speed: 1.0,
       })
     }
+    console.log(mapRef.current)
   }, [hotels])
 
   const mapRef = useRef<MapRef | null>(null)
-
-  const loadMarkerImage = async (map: maplibregl.Map) => {
-    try {
-      const image = await map.loadImage(marker)
-      if (image && !map.hasImage('marker')) {
-        map.addImage('marker', image.data)
-      }
-    }
-    catch (error) {
-      console.error('Error loading marker image:', error)
-    }
-  }
 
   return (
     <div className="w-full h-75 rounded-lg overflow-hidden shadow-md">
@@ -96,7 +70,7 @@ export const MapSelect = ({
           zoom: 1,
         }}
         mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=${MAPTILER_TOKEN}`}
-        onClick={handleMapClick}
+        onClick={e => handleMapClick(e, setSelectedFeature)}
         onMouseMove={(e: MapLayerMouseEvent) => {
           const feature = e.features?.[0]
           if (feature) {
@@ -129,7 +103,7 @@ export const MapSelect = ({
               properties: {
                 name: hotel.name,
                 address: hotel.address,
-                price: hotel.price,
+                price: hotel.price ?? 0,
                 rating: hotel.rating,
                 id: hotel.id,
                 icon: 'marker',
