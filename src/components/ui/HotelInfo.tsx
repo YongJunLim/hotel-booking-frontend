@@ -5,6 +5,7 @@ import { MapView } from './MapView'
 import StarUI from './StarRating'
 import { ImageCarousel } from './ImageCarousel'
 import { fetcher } from '../../utils/ApiUtils'
+import DOMPurify from 'dompurify'
 
 interface HotelInfoProps {
   hotelId: string
@@ -78,7 +79,9 @@ export const HotelInfo = ({ hotelId }: HotelInfoProps) => {
         </div>
         <div
           className="collapse-content text-sm"
-          dangerouslySetInnerHTML={{ __html: data.description }}
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(data.description),
+          }}
         />
       </div>
     </div>

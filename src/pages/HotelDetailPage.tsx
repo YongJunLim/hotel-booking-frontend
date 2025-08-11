@@ -2,11 +2,11 @@ import { useParams, Link, useLocation } from 'wouter'
 import useSWR from 'swr'
 import { useEffect } from 'react'
 import { useSearchParams } from '../hooks/useSearchParams'
-import { RoomCard } from '../components/ui/RoomCard'
 import type { PriceBaseResponse } from '../types/api'
 import type { Room } from '../types/hotel'
 import { BACKEND_URL } from '../config/api'
 import { HotelInfo } from '../components/ui/HotelInfo'
+import { RoomSection } from '../components/ui/RoomSection'
 import { NavBar } from '../components/layout/NavBar'
 import useRoomBookingStore from '../stores/RoomBookingStore'
 import useAuthStore from '../stores/AuthStore'
@@ -136,37 +136,12 @@ export const HotelDetailPage = () => {
                 ? (
                   <div className="space-y-4">
                     {Object.entries(groupedRooms).map(([roomType, rooms]) => (
-                      <div key={roomType}>
-                        <h3 className="text-lg font-semibold mb-4">
-                          {rooms[0]?.roomNormalizedDescription
-                            || `Room Type ${roomType}`}
-                        </h3>
-                        <div className="flex flex-col gap-4">
-                          {rooms[0]?.long_description && (
-                            <div
-                              tabIndex={0}
-                              className="collapse collapse-plus bg-base-100 border-base-300 border mb-4"
-                            >
-                              <div className="collapse-title font-semibold">
-                                View Room Details
-                              </div>
-                              <div
-                                className="collapse-content text-sm"
-                                dangerouslySetInnerHTML={{
-                                  __html: rooms[0].long_description,
-                                }}
-                              />
-                            </div>
-                          )}
-                          {rooms?.map(room => (
-                            <RoomCard
-                              key={room.key}
-                              room={room}
-                              currency={searchParams.currency || undefined}
-                            />
-                          ))}
-                        </div>
-                      </div>
+                      <RoomSection
+                        key={roomType}
+                        roomType={roomType}
+                        rooms={rooms}
+                        currency={searchParams.currency || undefined}
+                      />
                     ))}
                   </div>
                 )
