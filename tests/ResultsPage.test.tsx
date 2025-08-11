@@ -7,7 +7,7 @@ import {
 } from '@testing-library/react'
 import { describe, it, beforeEach, expect, vi, Mock } from 'vitest'
 import { ResultsPage } from '../src/pages/ResultsPage'
-import { MockHotelData, MockPriceData } from './stores/__mocks__/MockHotel'
+import { MockHotelData, MockPriceData } from './../__mocks__/MockHotel'
 import { Hotel } from '../src/types/params'
 import useSWR from 'swr'
 import { MapLayerMouseEvent } from 'maplibre-gl'

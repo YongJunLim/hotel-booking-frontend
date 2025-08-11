@@ -19,7 +19,7 @@ import useSWR from 'swr'
 
 const mockUseSWR = vi.mocked(useSWR)
 
-describe('Integration with TypeaheadSearch calling API', () => {
+describe('TypeaheadSearch Component calling API Unit Test', () => {
   const mockDestinations: DestinationResponse = {
     success: true,
     query: 'Rome',
@@ -324,7 +324,7 @@ describe('Integration with TypeaheadSearch calling API', () => {
     fireEvent.keyDown(input, { key: 'ArrowDown' })
     fireEvent.keyDown(input, { key: 'ArrowUp' })
     fireEvent.keyDown(input, { key: 'Enter' })
-  
+
     expect(mockOnSelect).toHaveBeenCalledWith(mockDestinations.results[0])
     expect(input.getAttribute('aria-expanded')).toBe('false')
   })

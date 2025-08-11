@@ -145,16 +145,17 @@ export default function DestinationSearch(): React.ReactElement {
               threshold={0.3}
             />
             <p className={`text-xs font-bold ${
-              epiGrade.level === 'high' 
-              ? 'text-green-600' 
-              : epiGrade.level === 'moderate' 
-              ? 'text-yellow-600' 
-              : epiGrade.level === 'low' 
-              ? 'text-red-600' 
-              : epiGrade.level === 'none'
-              ? 'text-gray-500'
-              : 'text-purple-600'
-              }`}>
+              epiGrade.level === 'high'
+                ? 'text-green-600'
+                : epiGrade.level === 'moderate'
+                  ? 'text-yellow-600'
+                  : epiGrade.level === 'low'
+                    ? 'text-red-600'
+                    : epiGrade.level === 'none'
+                      ? 'text-gray-500'
+                      : 'text-purple-600'
+            }`}
+            >
               {epiGrade.message}
             </p>
           </div>

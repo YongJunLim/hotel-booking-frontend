@@ -8,9 +8,9 @@ export const SustainabilityTips = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setIsVisible(false)
-      
+
       setTimeout(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % sustainabilityTips.length)
+        setCurrentIndex(prevIndex => (prevIndex + 1) % sustainabilityTips.length)
         setIsVisible(true)
       }, 600)
     }, 10000)
@@ -23,7 +23,11 @@ export const SustainabilityTips = () => {
   return (
     <div className="p-4 bg-green-50 rounded-lg">
       <h3 className="text-lg font-semibold text-green-800 mb-2">
-        💡 Sustainability Tip {currentIndex + 1}/{sustainabilityTips.length}
+        💡 Sustainability Tip
+        {' '}
+        {currentIndex + 1}
+        /
+        {sustainabilityTips.length}
       </h3>
       <div className={`transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
         <p className="text-green-700 font-medium">
@@ -33,7 +37,7 @@ export const SustainabilityTips = () => {
           {currentTip.tip}
         </p>
       </div>
-      
+
       {/* Progress indicator */}
       <div className="flex gap-1 mt-3">
         {sustainabilityTips.map((_, index) => (

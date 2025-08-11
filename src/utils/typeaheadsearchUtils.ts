@@ -46,35 +46,37 @@ export const handleKeyDown = (
   }
 }
 
-export const evaluateEpiData = (term:string) => {
+export const evaluateEpiData = (term: string) => {
   const lowerTerm = term.toLowerCase()
   const a = epiData.filter(item => lowerTerm.includes(item.country.toLowerCase()))
   if (a.length === 0) {
     return {
       message: 'There is no environmental data available for this destination.',
-      level: 'none'
+      level: 'none',
     }
   }
-  if (a[0]["EPI.new"] >= 67 && a[0]["EPI.new"] <= 100) {
+  if (a[0]['EPI.new'] >= 67 && a[0]['EPI.new'] <= 100) {
     return {
       message: 'This destination is highly environmentally friendly!',
-      level: 'high'
+      level: 'high',
     }
-  } else if (a[0]["EPI.new"] >= 34 && a[0]["EPI.new"] < 67) {
+  }
+  else if (a[0]['EPI.new'] >= 34 && a[0]['EPI.new'] < 67) {
     return {
       message: 'This destination has moderate environmental friendliness.',
-      level: 'moderate'
+      level: 'moderate',
     }
-  } else if (a[0]["EPI.new"] < 34 && a[0]["EPI.new"] >= 0) {
+  }
+  else if (a[0]['EPI.new'] < 34 && a[0]['EPI.new'] >= 0) {
     return {
       message: 'This destination has low environmental friendliness.',
-      level: 'low'
+      level: 'low',
     }
   }
   else {
     return {
       message: 'This grading is impossible.',
-      level: 'impossible'
+      level: 'impossible',
     }
   }
 }

@@ -63,7 +63,7 @@ mockUseCountryStore.mockImplementation((selector) => {
   return mockCountryStoreState
 })
 
-describe('DestinationSearch Integration Test', () => {
+describe('DestinationSearch Integration Test (Errors)', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockNavigate.mockClear()

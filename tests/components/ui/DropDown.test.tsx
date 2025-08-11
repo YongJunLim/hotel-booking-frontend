@@ -11,7 +11,7 @@ vi.mock('../../../src/stores/HotelSearchStore', () => {
 
 const mockUseFormStore = vi.mocked(useFormStore)
 
-describe('Integration Test for DropDownWithButtons', () => {
+describe('DropDownWithButtons Component UI Test', () => {
   let mockStoreState = {
     Adult: 1,
     Children: 0,

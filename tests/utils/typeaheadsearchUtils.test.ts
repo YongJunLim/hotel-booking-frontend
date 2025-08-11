@@ -120,8 +120,8 @@ describe('evaluateEpiData Unit Test', () => {
     const term = 'Paris'
     const result = evaluateEpiData(term)
     expect(result).toEqual({
-        message: 'There is no environmental data available for this destination.',
-        level: 'none',
+      message: 'There is no environmental data available for this destination.',
+      level: 'none',
     })
   })
 
