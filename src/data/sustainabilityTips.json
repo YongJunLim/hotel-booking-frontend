@@ -1,0 +1,167 @@
+[
+    {
+      "id": 1,
+      "tip": "Consider fewer, longer trips and to less popular locations.",
+      "category": "Destination"
+    },
+    {
+      "id": 2,
+      "tip": "Establish a destination \"basecamp\" with day trips. It is often a more relaxing, immersive, rejuvenating experience that requires less packing and unpacking.",
+      "category": "Destination"
+    },
+    {
+      "id": 3,
+      "tip": "Prioritize sustainable destinations aligned with the United Nations Sustainable Development Goals and certified to the internationally recognized Global Sustainable Tourism Council (GSTC) Criteria. Sustainable destinations minimize tourism's negative socioeconomic, cultural, and environmental impacts. Green Destinations, EarthCheck, and Vireo are GSTC Accredited Certification Bodies with this map of certified sustainable destinations.",
+      "category": "Destination"
+    },
+    {
+      "id": 4,
+      "tip": "When possible, try to avoid flying—a mode of transportation with exceptionally high carbon emissions. Traveling between some destinations by public transport (buses, trains, etc.) is often more relaxing than the hustle and bustle of airports and congested airplanes.",
+      "category": "Mode of Transportation"
+    },
+    {
+      "id": 5,
+      "tip": "If traveling by car, the more passengers the better. Single-passenger car rides may have a larger climate impact than flying, under some circumstances. If traveling by air, minimize your carbon footprint by selecting non-stop flights and newer, more energy-efficient aircraft, traveling in economy, and packing light. Use the acronym: NERD (New, Economy, Regular, Direct) to guide your flight choices. Some online booking agents and airlines display carbon emissions for each flight in search results.",
+      "category": "Mode of Transportation"
+    },
+    {
+      "id": 6,
+      "tip": "Travel with companies that have set Science Based Net-Zero climate targets, which are goals consistent with limiting global temperature rise to 1.5°C.",
+      "category": "Mode of Transportation"
+    },
+    {
+        "id": 7,
+        "tip": "Once you have chosen the most efficient means and route possible, consider paying a premium for alternative jet fuel credits if they are offered by the airline, or carbon credits if alternative jet fuel (which is still rare) is not available. While your flight will still have a climate impact, your investment will be contributing to funding climate solutions.",
+        "category": "Mode of Transportation"
+    },
+    {
+        "id": 8,
+        "tip": "Select sustainable travel companies verified by independent auditors such as GSTC Accredited Certification Bodies or B-Corp certification. The GSTC Industry Criteria (for accommodations and tour operators) are available on its website.",
+        "category": "Accomodations, tour operators, and cruise lines"
+    },
+    {
+        "id": 9,
+        "tip": "Book your travel through an online or traditional agency that researches and offers sustainable options with a description of their selection criteria.",
+        "category": "Accomodations, tour operators, and cruise lines"
+    },
+    {
+        "id": 10,
+        "tip": "Check whether the travel company has a sustainability section on its website with a detailed action plan, science-based climate targets, sustainability practices and initiatives, and transparent annual reports. If a company does not share its program on its website, sustainability is likely not a priority for the organization.",
+        "category": "Accomodations, tour operators, and cruise lines"
+    },
+    {
+        "id": 11,
+        "tip": "Pack light for air travel.",
+        "category": "Packing"
+    },
+    {
+        "id": 12,
+        "tip": "Bring a refillable water bottle.",
+        "category": "Packing"
+    },
+    {
+        "id": 13,
+        "tip": "Use a toiletry kit with refillable soft containers and avoid using hotel toiletries and soaps if possible.",
+        "category": "Packing"
+    },
+    {
+        "id": 14,
+        "tip": "Wear quick-dry clothing to avoid using a dryer.",
+        "category": "Packing"
+    },
+    {
+        "id": 15,
+        "tip": "Carry an ultralight packable daypack or shopping tote bag.",
+        "category": "Packing"
+    },
+    {
+        "id": 16,
+        "tip": "Apply reef-safe sunscreen (sunscreens that do not contain oxybenzone and octinoxate).",
+        "category": "Packing"
+    },
+    {
+        "id": 17,
+        "tip": "PLASTIC: Avoid single-use plastic bottles and containers. Bring a refillable water bottle and reusable toiletry containers.",
+        "category": "Consumables"
+    },
+    {
+        "id": 18,
+        "tip": "FOOD: Reduce the amount of food you waste, and select locally sourced sustainable foods.",
+        "category": "Consumables"
+    },
+    {
+        "id": 19,
+        "tip": "WATER: Hang hotel towels to dry and reduce the number of times you request a change of linens.",
+        "category": "Consumables"
+    },
+    {
+        "id": 20,
+        "tip": "RECYCLE: Do not litter and recycle where available.",
+        "category": "Consumables"
+    },
+    {
+        "id": 21,
+        "tip": "Walk, bike, and use public transportation.",
+        "category": "Energy"
+    },
+    {
+        "id": 22,
+        "tip": "Turn off lights, heating, and air conditioning when you leave your room.",
+        "category": "Energy"
+    },
+    {
+        "id": 23,
+        "tip": "Book wildlife experiences that contribute to biodiversity conservation and support local communities—especially those that rely on tourism for preservation.",
+        "category": "Wildlife"
+    },
+    {
+        "id": 24,
+        "tip": "Avoid captive animal experiences unless the facility is certified by internationally recognized animal welfare organizations.",
+        "category": "Wildlife"
+    },
+    {
+        "id": 25,
+        "tip": "Do not touch or feed wildlife for your and the animal's safety.",
+        "category": "Wildlife"
+    },
+    {
+        "id": 26,
+        "tip": "Avoid touching and stepping on coral. Use reef-safe sunscreen.",
+        "category": "Wildlife"
+    },
+    {
+        "id": 27,
+        "tip": "PROTECTED AREAS: Follow park regulations, tread lightly, and follow Leave No Trace Principles.",
+        "category": "Wildlife"
+    },
+    {
+        "id": 28,
+        "tip": "Support local artisans and community-owned businesses and pay a fair price.",
+        "category": "Shopping"
+    },
+    {
+        "id": 29,
+        "tip": "Do not buy animal, coral, shell, hardwood, or live plant products. It is challenging to determine whether the product is illegal or sustainably sourced. We have a series of Buyer Beware recommendations to help guide your decision-making.",
+        "category": "Shopping"
+    },
+    {
+        "id": 30,
+        "tip": "Learn about your destination's history, culture, customs, and etiquette. This includes religious practices, how to dress appropriately, local laws, and more. The State Department website or the World Culture Encyclopedia website are great places to start.",
+        "category": "Digital"
+    },
+    {
+        "id": 31,
+        "tip": "Ask permission before photographing an individual. Know that some holy sites and government buildings may also have photo restrictions. Look for signage to help you.",
+        "category": "Digital"
+    },
+    {
+        "id": 32,
+        "tip": "Share candid observations and constructive feedback with your family, friends, fellow travelers, and owners of travel companies. Don't be afraid to highlight the good and shed light on the bad. Word-of-mouth marketing is the best source of business for travel companies, and social media can drive behavior change.",
+        "category": "Share & Support"
+    },
+    {
+        "id": 33,
+        "tip": "Support local and international organizations that protect a destination's natural and cultural integrity. It creates livelihood incentives to value nature and culture.",
+        "category": "Share & Support"
+    }
+]

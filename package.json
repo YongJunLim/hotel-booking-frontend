@@ -21,7 +21,6 @@
     "@stripe/stripe-js": "^7.4.0",
     "@tailwindcss/vite": "^4.1.10",
     "dompurify": "^3.2.6",
-    "fast-check": "^4.2.0",
     "ky": "^1.8.2",
     "maplibre-gl": "^5.6.1",
     "react": "^19.1.0",
@@ -31,6 +30,7 @@
     "swr": "^2.3.4",
     "tailwindcss": "^4.1.10",
     "wouter": "^3.7.1",
+    "xlsx": "^0.18.5",
     "zod": "^3.25.64",
     "zustand": "^5.0.5",
     "zustand-persist": "^0.4.0"
@@ -51,6 +51,7 @@
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
+    "fast-check": "^3.23.2",
     "globals": "^16.0.0",
     "jsdom": "^26.1.0",
     "msw": "^2.10.4",

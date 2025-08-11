@@ -1,4 +1,4 @@
-import { Hotel } from '../../../src/types/params'
+import { Hotel } from '../src/types/hotel'
 
 export const MockHotelData: Hotel[] = [
   {
@@ -16,6 +16,9 @@ export const MockHotelData: Hotel[] = [
       count: 0,
       prefix: 'https://1avenuecookie.net/1a1a/',
     },
+    hires_image_index: '',
+    number_of_images: 0,
+    checkin_time: '',
   },
   {
     id: '2a2a',
@@ -32,6 +35,9 @@ export const MockHotelData: Hotel[] = [
       count: 0,
       prefix: 'https://2avenuebook.net/2a2a/',
     },
+    hires_image_index: '',
+    number_of_images: 0,
+    checkin_time: '',
   },
   {
     id: '2b2b',
@@ -48,6 +54,9 @@ export const MockHotelData: Hotel[] = [
       count: 0,
       prefix: 'https://2bvenuemilk.net/1a1a/',
     },
+    hires_image_index: '',
+    number_of_images: 0,
+    checkin_time: '',
   },
   {
     id: '3a3a',
@@ -64,6 +73,9 @@ export const MockHotelData: Hotel[] = [
       count: 0,
       prefix: 'https://3avenueOreo.net/1a1a/',
     },
+    hires_image_index: '',
+    number_of_images: 0,
+    checkin_time: '',
   },
   {
     id: '3c3c',
@@ -80,6 +92,9 @@ export const MockHotelData: Hotel[] = [
       count: 0,
       prefix: 'https://3cvenueOreo.net/1a1a/',
     },
+    hires_image_index: '',
+    number_of_images: 0,
+    checkin_time: '',
   },
 ]
 
