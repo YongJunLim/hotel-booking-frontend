@@ -96,10 +96,16 @@ const createMockMapEvent = (
     _sub: function (_p: Point): Point {
       throw new Error('Function not implemented.')
     },
-    multiByPoint: function (_p: Point): Point {
+    multByPoint: function (_p: Point): Point {
       throw new Error('Function not implemented.')
     },
     divByPoint: function (_p: Point): Point {
+      throw new Error('Function not implemented.')
+    },
+    _multByPoint: function (_p: Point): Point {
+      throw new Error('Function not implemented.')
+    },
+    _divByPoint: function (_p: Point): Point {
       throw new Error('Function not implemented.')
     },
     mult: function (_k: number): Point {
@@ -227,7 +233,7 @@ const mockHotel: StitchedHotel = {
   description: 'A lovely hotel in California.',
 }
 
-describe('MapSelect Component Unit Test', () => {
+describe('MapSelect', () => {
   afterEach(() => {
     vi.clearAllMocks()
   })
