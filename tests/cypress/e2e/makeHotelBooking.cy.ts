@@ -1,3 +1,5 @@
+import type { RoomDetails } from '../../../src/stores/RoomBookingStore'
+
 describe('Make Hotel Room(s) Booking', () => {
   before(() => {
     // Visit the signup page
@@ -158,7 +160,7 @@ describe('Make Hotel Room(s) Booking', () => {
 
     // Drag the price slider min handle to the right (set to high price)
     cy.get('[data-testid="price-range-slider"] .MuiSlider-track').click(
-      110, // width of 220px
+      100, // width of 220px
       10,
       { force: true },
     )
@@ -246,6 +248,29 @@ describe('Make Hotel Room(s) Booking', () => {
     cy.get('button.btn.btn-primary')
       .contains('Book Selected Rooms (2)')
       .should('be.visible')
+      .click()
+
+    // 10. Ensure navigation to BookingPage
+    cy.url({ timeout: 10000 }).should('include', '/booking/')
+
+    // 11. Ensure RoomBookingStore is populated in sessionStorage
+    type PersistedRoomBooking = {
+      state: {
+        selectedRooms: RoomDetails[]
+      }
+    }
+    cy.window().then((win) => {
+      const bookingStore = win.sessionStorage.getItem('room-booking-storage')
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      expect(bookingStore).to.not.be.null
+      const parsed = JSON.parse(bookingStore!) as PersistedRoomBooking
+      expect(parsed.state.selectedRooms).to.have.length(2)
+    })
+
+    // 12. Assert that Checkout Summary is shown
+    cy.get('.p-4.border.rounded-md.shadow-md.bg-base-200.max-w-md.w-full')
+      .should('be.visible')
+      .and('contain.text', 'Your Booking Summary')
   })
 
   // Delete Test account
