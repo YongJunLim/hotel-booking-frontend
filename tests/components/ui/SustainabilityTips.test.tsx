@@ -35,7 +35,9 @@ describe('SustainabilityTips Component Unit Test', () => {
 
   describe('Initial Rendering', () => {
     it('renders the initial tip correctly', () => {
-      render(<SustainabilityTips />)
+      act(() => {
+        render(<SustainabilityTips />)
+      })
 
       // Check header
       expect(screen.getByText('💡 Sustainability Tip 1/4')).toBeInTheDocument()
@@ -46,7 +48,9 @@ describe('SustainabilityTips Component Unit Test', () => {
     })
 
     it('displays the correct number of progress indicators', () => {
-      render(<SustainabilityTips />)
+      act(() => {
+        render(<SustainabilityTips />)
+      })
 
       const progressIndicators = screen.getAllByRole('generic').filter(el =>
         el.className.includes('h-1') && el.className.includes('rounded-full'),
@@ -56,7 +60,9 @@ describe('SustainabilityTips Component Unit Test', () => {
     })
 
     it('highlights the correct progress indicator for current tip', () => {
-      render(<SustainabilityTips />)
+      act(() => {
+        render(<SustainabilityTips />)
+      })
 
       const progressIndicators = screen.getAllByRole('generic').filter(el =>
         el.className.includes('h-1') && el.className.includes('rounded-full'),
@@ -73,7 +79,9 @@ describe('SustainabilityTips Component Unit Test', () => {
 
   describe('Timer Functionality', () => {
     it('advances to next tip after 10 seconds', () => {
-      render(<SustainabilityTips />)
+      act(() => {
+        render(<SustainabilityTips />)
+      })
 
       // Initially shows first tip
       expect(screen.getByText('💡 Sustainability Tip 1/4')).toBeInTheDocument()
@@ -81,15 +89,9 @@ describe('SustainabilityTips Component Unit Test', () => {
 
       // Fast-forward time: 10 seconds (timer) + 300ms (fade out) + time for state update
       act(() => {
-        vi.advanceTimersByTime(10000) // Timer interval
-      })
-
-      act(() => {
-        vi.advanceTimersByTime(600) // Fade out duration
-      })
-
-      act(() => {
-        vi.advanceTimersByTime(100) // State update time
+        vi.advanceTimersByTime(10000)
+        vi.advanceTimersByTime(600)
+        vi.advanceTimersByTime(100)
       })
 
       // Should now show second tip
@@ -99,7 +101,9 @@ describe('SustainabilityTips Component Unit Test', () => {
     })
 
     it('cycles through all tips and returns to first', () => {
-      render(<SustainabilityTips />)
+      act(() => {
+        render(<SustainabilityTips />)
+      })
 
       // Start at tip 1
       expect(screen.getByText('💡 Sustainability Tip 1/4')).toBeInTheDocument()
@@ -107,11 +111,10 @@ describe('SustainabilityTips Component Unit Test', () => {
       // Advance through all tips
       for (let i = 0; i < 4; i++) {
         act(() => {
-          vi.advanceTimersByTime(10000) // Timer
-          vi.advanceTimersByTime(600) // Fade
-          vi.advanceTimersByTime(100) // State update
+          vi.advanceTimersByTime(10000)
+          vi.advanceTimersByTime(600)
+          vi.advanceTimersByTime(100)
         })
-
         const expectedTipNumber = ((i + 1) % 4) + 1
         expect(screen.getByText(`💡 Sustainability Tip ${expectedTipNumber}/4`)).toBeInTheDocument()
       }
@@ -124,9 +127,17 @@ describe('SustainabilityTips Component Unit Test', () => {
     it('cleans up interval on unmount', () => {
       const clearIntervalSpy = vi.spyOn(global, 'clearInterval')
 
-      const { unmount } = render(<SustainabilityTips />)
+      let unmount: (() => void) | undefined
+      act(() => {
+        const result = render(<SustainabilityTips />)
+        unmount = result.unmount
+      })
 
-      unmount()
+      if (typeof unmount === 'function') {
+        act(() => {
+          (unmount as () => void)()
+        })
+      }
 
       expect(clearIntervalSpy).toHaveBeenCalled()
 
@@ -136,7 +147,9 @@ describe('SustainabilityTips Component Unit Test', () => {
 
   describe('Animation and Transitions', () => {
     it('has fade transition during tip change', () => {
-      render(<SustainabilityTips />)
+      act(() => {
+        render(<SustainabilityTips />)
+      })
 
       const contentDiv = screen.getByText('Transportation').parentElement
 
@@ -146,18 +159,13 @@ describe('SustainabilityTips Component Unit Test', () => {
       // Trigger the timer
       act(() => {
         vi.advanceTimersByTime(10000)
-      })
-
-      // During fade out
-      act(() => {
-        vi.advanceTimersByTime(300) // Half fade duration
+        vi.advanceTimersByTime(300)
       })
 
       expect(contentDiv).toHaveClass('opacity-0')
 
-      // Complete fade and state update
       act(() => {
-        vi.advanceTimersByTime(300) // Complete fade + state update
+        vi.advanceTimersByTime(300)
       })
 
       // Should be visible again with new content
@@ -165,7 +173,9 @@ describe('SustainabilityTips Component Unit Test', () => {
     })
 
     it('updates progress indicator when tip changes', () => {
-      render(<SustainabilityTips />)
+      act(() => {
+        render(<SustainabilityTips />)
+      })
 
       // Get initial progress indicators
       let progressIndicators = screen.getAllByRole('generic').filter(el =>
@@ -178,9 +188,9 @@ describe('SustainabilityTips Component Unit Test', () => {
 
       // Advance to next tip
       act(() => {
-        vi.advanceTimersByTime(10000) // Timer
-        vi.advanceTimersByTime(600) // Fade
-        vi.advanceTimersByTime(100) // State update
+        vi.advanceTimersByTime(10000)
+        vi.advanceTimersByTime(600)
+        vi.advanceTimersByTime(100)
       })
 
       // Re-query progress indicators after state change
@@ -195,27 +205,19 @@ describe('SustainabilityTips Component Unit Test', () => {
 
   describe('Content Display', () => {
     it('displays all tip categories correctly', () => {
-      render(<SustainabilityTips />)
+      act(() => {
+        render(<SustainabilityTips />)
+      })
 
       const expectedCategories = ['Transportation', 'Accommodation', 'Activities', 'Food']
 
       for (let i = 0; i < expectedCategories.length; i++) {
         if (i > 0) {
-          // Complete the full transition cycle
           act(() => {
-            vi.advanceTimersByTime(10000) // Timer triggers
-          })
-
-          act(() => {
-            vi.advanceTimersByTime(600) // Fade out completes
-          })
-
-          act(() => {
-            vi.advanceTimersByTime(100) // State update happens
-          })
-
-          act(() => {
-            vi.advanceTimersByTime(100) // Fade in completes
+            vi.advanceTimersByTime(10000)
+            vi.advanceTimersByTime(600)
+            vi.advanceTimersByTime(100)
+            vi.advanceTimersByTime(100)
           })
         }
 
@@ -234,7 +236,9 @@ describe('SustainabilityTips Component Unit Test', () => {
 
   describe('Styling and Layout', () => {
     it('has correct styling classes', () => {
-      render(<SustainabilityTips />)
+      act(() => {
+        render(<SustainabilityTips />)
+      })
 
       // Main container - find by heading first
       const heading = screen.getByRole('heading', { level: 3 })
@@ -254,7 +258,9 @@ describe('SustainabilityTips Component Unit Test', () => {
     })
 
     it('has proper accessibility structure', () => {
-      render(<SustainabilityTips />)
+      act(() => {
+        render(<SustainabilityTips />)
+      })
 
       // Should have heading structure
       const heading = screen.getByRole('heading', { level: 3 })
@@ -272,7 +278,9 @@ describe('SustainabilityTips Component Unit Test', () => {
 
   describe('Edge Cases', () => {
     it('handles component state correctly', () => {
-      render(<SustainabilityTips />)
+      act(() => {
+        render(<SustainabilityTips />)
+      })
 
       // Test basic functionality works
       expect(screen.getByText('💡 Sustainability Tip 1/4')).toBeInTheDocument()
@@ -280,7 +288,9 @@ describe('SustainabilityTips Component Unit Test', () => {
     })
 
     it('handles rapid timer advances without errors', () => {
-      render(<SustainabilityTips />)
+      act(() => {
+        render(<SustainabilityTips />)
+      })
 
       // Rapidly advance through multiple cycles
       expect(() => {
@@ -295,7 +305,9 @@ describe('SustainabilityTips Component Unit Test', () => {
     })
 
     it('maintains state consistency during transitions', () => {
-      render(<SustainabilityTips />)
+      act(() => {
+        render(<SustainabilityTips />)
+      })
 
       // Advance to second tip
       act(() => {

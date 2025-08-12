@@ -2,6 +2,7 @@ import { describe, it, vi, expect, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { TypeaheadSearch } from '../../../src/components/ui/TypeaheadSearch'
 import type { DestinationResponse } from '../../../src/types/api'
+import { act } from '@testing-library/react'
 
 vi.mock('../../src/config/api', () => ({
   BACKEND_URL: 'http://localhost:9000/api/v1',
@@ -72,7 +73,9 @@ describe('TypeaheadSearch Component calling API Unit Test', () => {
     render(<TypeaheadSearch />)
 
     const input = screen.getByRole('combobox')
-    fireEvent.change(input, { target: { value: 'R' } })
+    act(() => {
+      fireEvent.change(input, { target: { value: 'R' } })
+    })
 
     // SWR should be called with null (no API call)
     expect(mockUseSWR).toHaveBeenCalledWith(
@@ -94,7 +97,9 @@ describe('TypeaheadSearch Component calling API Unit Test', () => {
     render(<TypeaheadSearch limit={5} threshold={0.4} />)
 
     const input = screen.getByRole('combobox')
-    fireEvent.change(input, { target: { value: 'Rome' } })
+    act(() => {
+      fireEvent.change(input, { target: { value: 'Rome' } })
+    })
 
     // Should construct correct API URL
     const expectedUrl = 'http://localhost:9000/api/v1/destinations?name=Rome&limit=5&threshold=0.4'
@@ -121,7 +126,10 @@ describe('TypeaheadSearch Component calling API Unit Test', () => {
     render(<TypeaheadSearch />)
 
     const input = screen.getByRole('combobox')
-    fireEvent.change(input, { target: { value: 'Rome' } })
+
+    act(() => {
+      fireEvent.change(input, { target: { value: 'Rome' } })
+    })
 
     expect(screen.getByText('Searching...')).toBeInTheDocument()
 
@@ -145,7 +153,10 @@ describe('TypeaheadSearch Component calling API Unit Test', () => {
     render(<TypeaheadSearch />)
 
     const input = screen.getByRole('combobox')
-    fireEvent.change(input, { target: { value: 'Rome' } })
+
+    act(() => {
+      fireEvent.change(input, { target: { value: 'Rome' } })
+    })
 
     await waitFor(() => {
       expect(screen.getByText('Rome, Italy')).toBeInTheDocument()
@@ -169,7 +180,10 @@ describe('TypeaheadSearch Component calling API Unit Test', () => {
     render(<TypeaheadSearch />)
 
     const input = screen.getByRole('combobox')
-    fireEvent.change(input, { target: { value: 'Rome' } })
+
+    act(() => {
+      fireEvent.change(input, { target: { value: 'Rome' } })
+    })
 
     expect(screen.getByText('Error loading suggestions')).toBeInTheDocument()
     expect(screen.getByText('Error loading suggestions')).toHaveClass('text-error')
@@ -193,7 +207,10 @@ describe('TypeaheadSearch Component calling API Unit Test', () => {
     render(<TypeaheadSearch />)
 
     const input = screen.getByRole('combobox')
-    fireEvent.change(input, { target: { value: 'Nonexistent' } })
+
+    act(() => {
+      fireEvent.change(input, { target: { value: 'Nonexistent' } })
+    })
 
     expect(screen.getByText('No destinations found')).toBeInTheDocument()
   })
@@ -212,7 +229,10 @@ describe('TypeaheadSearch Component calling API Unit Test', () => {
     render(<TypeaheadSearch onSelect={mockOnSelect} />)
 
     const input = screen.getByRole('combobox')
-    fireEvent.change(input, { target: { value: 'Rome' } })
+
+    act(() => {
+      fireEvent.change(input, { target: { value: 'Rome' } })
+    })
 
     await waitFor(() => {
       const romeButton = screen.getByText('Rome, Italy').closest('button')
@@ -242,7 +262,10 @@ describe('TypeaheadSearch Component calling API Unit Test', () => {
     render(<TypeaheadSearch />)
 
     const input = screen.getByRole('combobox')
-    fireEvent.change(input, { target: { value: 'Rome' } })
+
+    act(() => {
+      fireEvent.change(input, { target: { value: 'Rome' } })
+    })
 
     await waitFor(() => {
       const romeButton = screen.getByText('Rome, Italy').closest('button')
@@ -270,7 +293,10 @@ describe('TypeaheadSearch Component calling API Unit Test', () => {
     render(<TypeaheadSearch />)
 
     const input = screen.getByRole('combobox')
-    fireEvent.change(input, { target: { value: 'Rome' } })
+
+    act(() => {
+      fireEvent.change(input, { target: { value: 'Rome' } })
+    })
 
     expect(screen.getByText('No destinations found')).toBeInTheDocument()
   })
@@ -287,7 +313,10 @@ describe('TypeaheadSearch Component calling API Unit Test', () => {
     render(<TypeaheadSearch />)
 
     const input = screen.getByRole('combobox')
-    fireEvent.change(input, { target: { value: 'Rome' } })
+
+    act(() => {
+      fireEvent.change(input, { target: { value: 'Rome' } })
+    })
 
     const expectedUrl = 'http://localhost:9000/api/v1/destinations?name=Rome&limit=10&threshold=0.3'
     expect(mockUseSWR).toHaveBeenCalledWith(
@@ -314,7 +343,9 @@ describe('TypeaheadSearch Component calling API Unit Test', () => {
 
     render(<TypeaheadSearch onSelect={mockOnSelect} />)
     const input = screen.getByRole('combobox')
-    fireEvent.change(input, { target: { value: 'Rome' } })
+    act(() => {
+      fireEvent.change(input, { target: { value: 'Rome' } })
+    })
 
     await waitFor(() => {
       expect(screen.getByText('Rome, Italy')).toBeInTheDocument()
@@ -340,7 +371,11 @@ describe('TypeaheadSearch Component calling API Unit Test', () => {
     })
     render(<TypeaheadSearch />)
     const input = screen.getByRole('combobox')
-    fireEvent.change(input, { target: { value: 'Rome' } })
+
+    act(() => {
+      fireEvent.change(input, { target: { value: 'Rome' } })
+    })
+
     expect(screen.getByText('Error loading suggestions')).toBeInTheDocument()
     expect(mockUseSWR).toHaveBeenCalledWith(
       'http://localhost:9000/api/v1/destinations?name=Rome&limit=10&threshold=0.3',
@@ -372,7 +407,10 @@ describe('TypeaheadSearch Component calling API Unit Test', () => {
     })
     render(<TypeaheadSearch />)
     const input = screen.getByRole('combobox')
-    fireEvent.change(input, { target: { value: 'Empty' } })
+
+    act(() => {
+      fireEvent.change(input, { target: { value: 'Empty' } })
+    })
     expect(screen.getByText('No destinations found')).toBeInTheDocument()
   })
 
@@ -388,7 +426,9 @@ describe('TypeaheadSearch Component calling API Unit Test', () => {
     })
     const { rerender } = render(<TypeaheadSearch />)
     const input = screen.getByRole('combobox')
-    fireEvent.change(input, { target: { value: 'Rome' } })
+    act(() => {
+      fireEvent.change(input, { target: { value: 'Rome' } })
+    })
     expect(input).toHaveValue('Rome')
     rerender(<TypeaheadSearch />)
     expect(input).toHaveValue('Rome')

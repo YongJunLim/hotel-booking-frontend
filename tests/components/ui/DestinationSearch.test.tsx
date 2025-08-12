@@ -1,6 +1,6 @@
 import DestinationSearch from '../../../src/components/ui/DestinationSearch'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { vi, expect } from 'vitest'
+import { vi, expect, describe, it, beforeEach } from 'vitest'
 import {
   useFormStore,
   useCountryStore,
@@ -442,17 +442,19 @@ describe('DestinationSearch Integration Test (Errors)', () => {
       'input[name="country_"]',
     ) as HTMLInputElement
 
-    if (startInput) {
-      fireEvent.change(startInput, { target: { value: startDate } })
-    }
-    if (endInput) {
-      fireEvent.change(endInput, { target: { value: endDate } })
-    }
-    if (countryInput) {
-      fireEvent.change(countryInput, {
-        target: { value: JSON.stringify(testMockCountryStoreState.country) },
-      })
-    }
+    act(() => {
+      if (startInput) {
+        fireEvent.change(startInput, { target: { value: startDate } })
+      }
+      if (endInput) {
+        fireEvent.change(endInput, { target: { value: endDate } })
+      }
+      if (countryInput) {
+        fireEvent.change(countryInput, {
+          target: { value: JSON.stringify(testMockCountryStoreState.country) },
+        })
+      }
+    })
 
     act(() => {
       fireEvent.click(screen.getByTestId('search-button'))
@@ -545,17 +547,19 @@ describe('DestinationSearch Integration Test (Errors)', () => {
     const start = startDate.toLocaleDateString('sv-SE')
     const end = endDate.toLocaleDateString('sv-SE')
 
-    if (startInput) {
-      fireEvent.change(startInput, { target: { value: start } })
-    }
-    if (endInput) {
-      fireEvent.change(endInput, { target: { value: end } })
-    }
-    if (countryInput) {
-      fireEvent.change(countryInput, {
-        target: { value: JSON.stringify(testMockCountryStoreState.country) },
-      })
-    }
+    act(() => {
+      if (startInput) {
+        fireEvent.change(startInput, { target: { value: start } })
+      }
+      if (endInput) {
+        fireEvent.change(endInput, { target: { value: end } })
+      }
+      if (countryInput) {
+        fireEvent.change(countryInput, {
+          target: { value: JSON.stringify(testMockCountryStoreState.country) },
+        })
+      }
+    })
 
     act(() => {
       fireEvent.click(screen.getByTestId('search-button'))
@@ -649,17 +653,19 @@ describe('DestinationSearch Integration Test (Errors)', () => {
     const start = startDate.toLocaleDateString('sv-SE')
     const end = endDate.toLocaleDateString('sv-SE')
 
-    if (startInput) {
-      fireEvent.change(startInput, { target: { value: start } })
-    }
-    if (endInput) {
-      fireEvent.change(endInput, { target: { value: end } })
-    }
-    if (countryInput) {
-      fireEvent.change(countryInput, {
-        target: { value: JSON.stringify(testMockCountryStoreState.country) },
-      })
-    }
+    act(() => {
+      if (startInput) {
+        fireEvent.change(startInput, { target: { value: start } })
+      }
+      if (endInput) {
+        fireEvent.change(endInput, { target: { value: end } })
+      }
+      if (countryInput) {
+        fireEvent.change(countryInput, {
+          target: { value: JSON.stringify(testMockCountryStoreState.country) },
+        })
+      }
+    })
 
     act(() => {
       fireEvent.click(screen.getByTestId('search-button'))
@@ -753,17 +759,19 @@ describe('DestinationSearch Integration Test (Errors)', () => {
     const start = startDate.toLocaleDateString('sv-SE')
     const end = endDate.toLocaleDateString('sv-SE')
 
-    if (startInput) {
-      fireEvent.change(startInput, { target: { value: start } })
-    }
-    if (endInput) {
-      fireEvent.change(endInput, { target: { value: end } })
-    }
-    if (countryInput) {
-      fireEvent.change(countryInput, {
-        target: { value: JSON.stringify(testMockCountryStoreState.country) },
-      })
-    }
+    act(() => {
+      if (startInput) {
+        fireEvent.change(startInput, { target: { value: start } })
+      }
+      if (endInput) {
+        fireEvent.change(endInput, { target: { value: end } })
+      }
+      if (countryInput) {
+        fireEvent.change(countryInput, {
+          target: { value: JSON.stringify(testMockCountryStoreState.country) },
+        })
+      }
+    })
 
     act(() => {
       fireEvent.click(screen.getByTestId('search-button'))
@@ -847,7 +855,9 @@ describe('DestinationSearch Integration Test (Errors)', () => {
     const start = startDate.toLocaleDateString('sv-SE')
     const end = endDate.toLocaleDateString('sv-SE')
 
-    render(<DestinationSearch />)
+    act(() => {
+      render(<DestinationSearch />)
+    })
 
     await new Promise(resolve => setTimeout(resolve, 200))
 
@@ -861,19 +871,18 @@ describe('DestinationSearch Integration Test (Errors)', () => {
       'input[name="country_"]',
     ) as HTMLInputElement
 
-    if (startInput) {
-      fireEvent.change(startInput, { target: { value: start } })
-    }
-    if (endInput) {
-      fireEvent.change(endInput, { target: { value: end } })
-    }
-    if (countryInput) {
-      fireEvent.change(countryInput, {
-        target: { value: JSON.stringify(testMockCountryStoreState.country) },
-      })
-    }
-
     act(() => {
+      if (startInput) {
+        fireEvent.change(startInput, { target: { value: start } })
+      }
+      if (endInput) {
+        fireEvent.change(endInput, { target: { value: end } })
+      }
+      if (countryInput) {
+        fireEvent.change(countryInput, {
+          target: { value: JSON.stringify(testMockCountryStoreState.country) },
+        })
+      }
       fireEvent.click(screen.getByTestId('search-button'))
     })
 

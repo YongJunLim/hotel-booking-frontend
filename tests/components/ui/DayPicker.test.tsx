@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { describe, it, vi, expect } from 'vitest'
+import { describe, it, vi, expect, beforeEach } from 'vitest'
 import App from '../../../src/components/ui/DayPicker'
 import DayPickerComponent from '../../../src/components/ui/DayPicker'
 import { useFormStore } from '../../../src/stores/HotelSearchStore'
