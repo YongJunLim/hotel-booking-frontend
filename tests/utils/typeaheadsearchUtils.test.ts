@@ -41,6 +41,44 @@ describe('handleKeyDown Unit Test', () => {
     expect(updateFn(1)).toBe(1)
   })
 
+  it('should not continue moving downwards when the bottom most item is reached and ArrowDown is pressed', () => {
+    const setHighlightedIndex = vi.fn()
+    const setStartIndex = vi.fn()
+    const suggestions: Destination[] = [{
+      uid: '1', term: 'Paris', type: 'city',
+      lat: 0,
+      lng: 0,
+    },
+    {
+      uid: '2', term: 'London', type: 'city',
+      lat: 0,
+      lng: 0,
+    }]
+    const startIndex = 1
+    const maxVisibleItems = 4
+    const handleSelect = vi.fn()
+
+    const event = {
+      key: 'ArrowDown',
+      preventDefault: vi.fn(),
+      stopPropagation: vi.fn(),
+    } as unknown as React.KeyboardEvent<HTMLInputElement>
+    handleKeyDown(
+      event,
+      1,
+      setHighlightedIndex,
+      suggestions,
+      startIndex,
+      setStartIndex,
+      maxVisibleItems,
+      handleSelect,
+    )
+
+    expect(setHighlightedIndex).toHaveBeenCalled()
+    const updateFn = setHighlightedIndex.mock.calls[0][0] as (prev: number) => number
+    expect(updateFn(1)).toBe(1)
+  })
+
   it('should call setHighlightedIndex with the correct value when ArrowUp is pressed', () => {
     const setHighlightedIndex = vi.fn()
     const setStartIndex = vi.fn()
@@ -76,6 +114,44 @@ describe('handleKeyDown Unit Test', () => {
     expect(setHighlightedIndex).toHaveBeenCalled()
     const updateFn = setHighlightedIndex.mock.calls[0][0] as (prev: number) => number
     expect(updateFn(1)).toBe(0)
+  })
+
+  it('should not continue moving upwards when the top most item is reached and ArrowUp is pressed', () => {
+    const setHighlightedIndex = vi.fn()
+    const setStartIndex = vi.fn()
+    const suggestions: Destination[] = [{
+      uid: '1', term: 'Paris', type: 'city',
+      lat: 0,
+      lng: 0,
+    },
+    {
+      uid: '2', term: 'London', type: 'city',
+      lat: 0,
+      lng: 0,
+    }]
+    const startIndex = 0
+    const maxVisibleItems = 4
+    const handleSelect = vi.fn()
+
+    const event = {
+      key: 'ArrowUp',
+      preventDefault: vi.fn(),
+      stopPropagation: vi.fn(),
+    } as unknown as React.KeyboardEvent<HTMLInputElement>
+    handleKeyDown(
+      event,
+      0,
+      setHighlightedIndex,
+      suggestions,
+      startIndex,
+      setStartIndex,
+      maxVisibleItems,
+      handleSelect,
+    )
+
+    expect(setHighlightedIndex).toHaveBeenCalled()
+    const updateFn = setHighlightedIndex.mock.calls[0][0] as (prev: number) => number
+    expect(updateFn(0)).toBe(0)
   })
 
   it('should call handleSelect with the correct suggestion when Enter is pressed', () => {
@@ -121,6 +197,15 @@ describe('evaluateEpiData Unit Test', () => {
     const result = evaluateEpiData(term)
     expect(result).toEqual({
       message: 'There is no environmental data available for this destination.',
+      level: 'none',
+    })
+  })
+
+  it('should return the correct output for an empty term', () => {
+    const term = ''
+    const result = evaluateEpiData(term)
+    expect(result).toEqual({
+      message: 'No destination selected.',
       level: 'none',
     })
   })
