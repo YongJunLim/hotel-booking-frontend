@@ -5,10 +5,8 @@ import useSWR from 'swr'
 import type { Destination } from '../../types/destination'
 import type { DestinationResponse } from '../../types/api'
 import { BACKEND_URL } from '../../config/api'
-import { handleKeyDown } from '../../utils/typeaheadsearchUtils'
+import { handleKeyDown, fetcher } from '../../utils/typeaheadsearchUtils'
 import { useCountryStore } from '../../stores/HotelSearchStore'
-
-const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 interface TypeaheadSearchProps {
   onSelect?: (destination: Destination) => void

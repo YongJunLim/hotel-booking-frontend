@@ -86,3 +86,5 @@ export const evaluateEpiData = (term: string) => {
     }
   }
 }
+
+export const fetcher = (url: string) => fetch(url).then(res => res.json())

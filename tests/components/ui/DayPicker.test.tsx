@@ -97,11 +97,9 @@ describe('DayPicker Component UI Test', () => {
 
   it('should select a start date and end date which are the same when clicking on a calendar date once', async () => {
     render(<DayPickerComponent />)
-    // Open calendar for start date
     const startButton = screen.getByTestId('start-date-button')
     fireEvent.click(startButton)
 
-    // Wait for calendar to appear within the component
     await waitFor(() => {
       expect(screen.getByRole('calendar')).toBeInTheDocument()
     })
@@ -114,12 +112,10 @@ describe('DayPicker Component UI Test', () => {
     expect(startDateButton).toBeInTheDocument()
     fireEvent.click(startDateButton)
 
-    // Wait a bit for any async updates
     await waitFor(() => {
       expect(mockStoreState.setRange).toHaveBeenCalledTimes(1)
     }, { timeout: 3000 })
 
-    // Continue with the rest of the test...
     const firstCall = mockStoreState.setRange.mock.calls[0][0] as DateRange
     expect(firstCall.from).toBeInstanceOf(Date)
     expect(firstCall.to).toBeInstanceOf(Date)
@@ -138,11 +134,9 @@ describe('DayPicker Component UI Test', () => {
   it('should update to while keeping from constant if second date is later than first date', async () => {
     const { rerender } = render(<DayPickerComponent />)
 
-    // Open calendar for start date
     const startButton = screen.getByTestId('start-date-button')
     fireEvent.click(startButton)
 
-    // Wait for calendar to appear within the component
     await waitFor(() => {
       expect(screen.getByRole('calendar')).toBeInTheDocument()
     })
@@ -155,12 +149,10 @@ describe('DayPicker Component UI Test', () => {
     expect(startDateButton).toBeInTheDocument()
     fireEvent.click(startDateButton)
 
-    // Wait a bit for any async updates
     await waitFor(() => {
       expect(mockStoreState.setRange).toHaveBeenCalledTimes(1)
     }, { timeout: 3000 })
 
-    // Continue with the rest of the test...
     const firstCall = mockStoreState.setRange.mock.calls[0][0] as DateRange
     expect(firstCall.from).toBeInstanceOf(Date)
     expect(firstCall.to).toBeInstanceOf(Date)
@@ -183,14 +175,12 @@ describe('DayPicker Component UI Test', () => {
 
     rerender(<DayPickerComponent />)
 
-    // Re-open calendar
     fireEvent.click(startButton)
 
     await waitFor(() => {
       expect(screen.getByRole('calendar')).toBeInTheDocument()
     })
 
-    // Select end date (day 25)
     const endDateButton = dayButtons.find(btn => parseInt(btn.textContent || '0') === 25) || dayButtons[10]
 
     fireEvent.click(endDateButton)
@@ -209,7 +199,6 @@ describe('DayPicker Component UI Test', () => {
       expect(secondFromDate).toBe(15)
       expect(secondToDate).toBe(25)
 
-      // Verify chronological order: from should be earlier than to
       expect(secondCall.from.getTime()).toBeLessThan(secondCall.to.getTime())
     }
   })
@@ -217,11 +206,9 @@ describe('DayPicker Component UI Test', () => {
   it('should update from while keeping to constant if second date is earlier than first date', async () => {
     const { rerender } = render(<DayPickerComponent />)
 
-    // Open calendar for start date
     const startButton = screen.getByTestId('start-date-button')
     fireEvent.click(startButton)
 
-    // Wait for calendar to appear within the component
     await waitFor(() => {
       expect(screen.getByRole('calendar')).toBeInTheDocument()
     })
@@ -234,12 +221,10 @@ describe('DayPicker Component UI Test', () => {
     expect(startDateButton).toBeInTheDocument()
     fireEvent.click(startDateButton)
 
-    // Wait a bit for any async updates
     await waitFor(() => {
       expect(mockStoreState.setRange).toHaveBeenCalledTimes(1)
     }, { timeout: 3000 })
 
-    // Continue with the rest of the test...
     const firstCall = mockStoreState.setRange.mock.calls[0][0] as DateRange
     expect(firstCall.from).toBeInstanceOf(Date)
     expect(firstCall.to).toBeInstanceOf(Date)
@@ -261,14 +246,12 @@ describe('DayPicker Component UI Test', () => {
 
     rerender(<DayPickerComponent />)
 
-    // Re-open calendar
     fireEvent.click(startButton)
 
     await waitFor(() => {
       expect(screen.getByRole('calendar')).toBeInTheDocument()
     })
 
-    // Select end date (day 15)
     const endDateButton = screen.getByRole('button', { name: /15/ })
 
     fireEvent.click(endDateButton)
@@ -288,7 +271,6 @@ describe('DayPicker Component UI Test', () => {
       expect(secondFromDate).toBe(15)
       expect(secondToDate).toBe(25)
 
-      // Verify chronological order: from should be earlier than to
       expect(secondCall.from.getTime()).toBeLessThan(secondCall.to.getTime())
     }
   })
@@ -296,11 +278,9 @@ describe('DayPicker Component UI Test', () => {
   it('should handle selecting dates in different months for range', async () => {
     const { rerender } = render(<DayPickerComponent />)
 
-    // Open calendar
     const startButton = screen.getByTestId('start-date-button')
     fireEvent.click(startButton)
 
-    // Wait for calendar to appear within the component
     await waitFor(() => {
       expect(screen.getByRole('calendar')).toBeInTheDocument()
     })
@@ -313,12 +293,10 @@ describe('DayPicker Component UI Test', () => {
     expect(startDateButton).toBeInTheDocument()
     fireEvent.click(startDateButton)
 
-    // Wait a bit for any async updates
     await waitFor(() => {
       expect(mockStoreState.setRange).toHaveBeenCalledTimes(1)
     }, { timeout: 3000 })
 
-    // Continue with the rest of the test...
     const firstCall = mockStoreState.setRange.mock.calls[0][0] as DateRange
     mockStoreState.range = {
       from: firstCall.from,
@@ -328,26 +306,22 @@ describe('DayPicker Component UI Test', () => {
 
     rerender(<DayPickerComponent />)
 
-    // Re-open calendar
     fireEvent.click(startButton)
 
     await waitFor(() => {
       expect(screen.getByRole('calendar')).toBeInTheDocument()
     })
 
-    // Navigate to next month - look for next button
     const nextButton = screen.getByRole('button', { name: /next/i })
 
     if (nextButton) {
       fireEvent.click(nextButton)
     }
 
-    // Wait for navigation
     await waitFor(() => {
       expect(screen.getByRole('calendar')).toBeInTheDocument()
     })
 
-    // Select end date (day 15)
     const endDateButton = screen.getByRole('button', { name: /15/ })
 
     fireEvent.click(endDateButton)
@@ -360,7 +334,6 @@ describe('DayPicker Component UI Test', () => {
     expect(secondCall.from).toBeInstanceOf(Date)
     expect(secondCall.to).toBeInstanceOf(Date)
     if (secondCall.from && secondCall.to) {
-      // Verify the dates are correct
       const fromDate = secondCall.from.getDate()
       const toDate = secondCall.to.getDate()
       const fromMonth = secondCall.from.getMonth()
@@ -369,10 +342,8 @@ describe('DayPicker Component UI Test', () => {
       expect(fromDate).toBe(25)
       expect(toDate).toBe(15)
 
-      // Verify the months are different (cross-month selection)
       expect(fromMonth).not.toBe(toMonth)
 
-      // Verify chronological order: from should be earlier than to
       expect(secondCall.from.getTime()).toBeLessThan(secondCall.to.getTime())
     }
   })
@@ -391,7 +362,7 @@ describe('DayPicker Component UI Test', () => {
       },
       setRange: vi.fn(),
     }
-    // Mock store with pre-selected dates
+
     const mockStateWithDates = {
       ...mockStoreState,
       range: {
@@ -407,7 +378,6 @@ describe('DayPicker Component UI Test', () => {
     const startButton = screen.getByTestId('start-date-button')
     const endButton = screen.getByTestId('end-date-button')
 
-    // Check formatted dates are displayed
     expect(startButton).toHaveTextContent('31/07/2025')
     expect(endButton).toHaveTextContent('01/08/2025')
   })

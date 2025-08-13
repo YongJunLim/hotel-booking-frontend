@@ -17,7 +17,7 @@ import { BACKEND_URL } from '../config/api'
 import { MapSelect } from '../components/ui/MapSelect'
 import StarRatingFilter from '../components/ui/FilterStar'
 import RangeSlider from '../components/ui/FilterPrice'
-import DestinationSearch from '../components/ui/DestinationSearch'
+import DestinationSearch from '../components/ui/HotelSearch'
 import { useCountryStore } from '../stores/HotelSearchStore'
 
 const fetcher = (url: string) => fetch(url).then(response => response.json())
