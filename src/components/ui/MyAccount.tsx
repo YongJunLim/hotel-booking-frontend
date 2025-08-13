@@ -15,7 +15,7 @@ export const MyAccountDropdown = () => {
   }
   if (!isLoggedIn) {
     return (
-      <Link href="/login" className="btn btn-primary">
+      <Link href="/Login" className="btn btn-primary">
         Login
       </Link>
     )

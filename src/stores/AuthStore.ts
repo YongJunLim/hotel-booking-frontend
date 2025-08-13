@@ -1,6 +1,12 @@
 import { create } from 'zustand'
 import { devtools, persist, createJSONStorage } from 'zustand/middleware'
-import { type UserDetails } from '../types/user'
+import {
+  type UserDetails,
+  UpdateUserRequest,
+  userResponse,
+} from '../types/user'
+import { userService } from '../utils/userService'
+import useBookingStore from './BookingStore'
 
 interface AuthStore {
   isLoggedIn: boolean
@@ -13,6 +19,8 @@ interface AuthStore {
   isTokenValid: () => boolean
   setRedirectUrl: (url: string) => void
   clearRedirectUrl: () => void
+  getProfile: () => Promise<boolean>
+  editProfile: (reqbody: UpdateUserRequest) => Promise<userResponse>
 }
 
 interface JWTPayload {
@@ -28,6 +36,7 @@ const useAuthStore = create<AuthStore>()(
         userDetails: {
           email: '',
           firstName: '',
+          isAdmin: false,
         },
         accessToken: null,
         redirectUrl: '/',
@@ -43,9 +52,17 @@ const useAuthStore = create<AuthStore>()(
         logout: () => {
           set({
             isLoggedIn: false,
-            userDetails: { email: '', firstName: '' },
+            userDetails: {
+              email: '',
+              firstName: '',
+              isAdmin: false,
+              lastName: '',
+              salutation: '',
+              phoneNumber: '',
+            },
             accessToken: null,
           })
+          useBookingStore.getState().clearBooking()
           // no longer needed as always tracking redirectUrl regardless of login status
           // get().clearRedirectUrl()
         },
@@ -91,6 +108,24 @@ const useAuthStore = create<AuthStore>()(
             console.error('Invalid token format:', error)
             return false
           }
+        },
+
+        getProfile: async () => {
+          const { accessToken } = get()
+          const res = await userService.getProfile(accessToken)
+          if (res.success) {
+            set({ userDetails: res.data })
+            return true
+          }
+          else {
+            return false
+          }
+        },
+
+        editProfile: async (reqbody: UpdateUserRequest) => {
+          const { accessToken } = get()
+          const res = await userService.editProfile(accessToken, reqbody)
+          return res
         },
       }),
 

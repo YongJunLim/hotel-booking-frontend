@@ -1,7 +1,10 @@
 import '../../__mocks__/zustandMiddleware'
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { useFormStore, useCountryStore } from '../../src/stores/HotelSearchStore'
+import {
+  useFormStore,
+  useCountryStore,
+} from '../../src/stores/HotelSearchStore'
 import { mockStorage } from '../../__mocks__/zustandMiddleware'
 
 interface StoredFormData {
@@ -149,7 +152,8 @@ describe('Unit Test for FormStore', () => {
   })
 
   it('should persist state to sessionStorage', async () => {
-    const { setAdult, setChildren, setRoom, setRange } = useFormStore.getState()
+    const { setAdult, setChildren, setRoom, setRange }
+      = useFormStore.getState()
 
     mockStorage.setItem.mockClear()
 
@@ -171,7 +175,9 @@ describe('Unit Test for FormStore', () => {
     expect(storedData.state.Adult).toBe(2)
     expect(storedData.state.Children).toBe(1)
     expect(storedData.state.Room).toBe(2)
-    expect(new Date(storedData.state.range.from)).toEqual(new Date('2025-08-10'))
+    expect(new Date(storedData.state.range.from)).toEqual(
+      new Date('2025-08-10'),
+    )
     expect(new Date(storedData.state.range.to)).toEqual(new Date('2025-08-15'))
   })
 })
