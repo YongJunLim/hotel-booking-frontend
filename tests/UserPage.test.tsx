@@ -308,7 +308,7 @@ describe('UserPage Integration Tests', () => {
 
       // Verify profile refresh
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(mockUserService.getProfile).toHaveBeenCalledTimes(2) // Initial + refresh
       })
     })
@@ -328,7 +328,7 @@ describe('UserPage Integration Tests', () => {
       const toastStore = useToastStore.getState()
       const setToastSpy = vi.spyOn(toastStore, 'setToast')
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(setToastSpy).toHaveBeenCalledWith('Update failed', 'error')
       })
     })
@@ -420,7 +420,7 @@ describe('UserPage Integration Tests', () => {
       const toastStore = useToastStore.getState()
       const setToastSpy = vi.spyOn(toastStore, 'setToast')
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(setToastSpy).toHaveBeenCalledWith(
           'Failed to retrieve user details',
           'error',
@@ -435,7 +435,7 @@ describe('UserPage Integration Tests', () => {
 
       const toastStore = useToastStore.getState()
       const setToastSpy = vi.spyOn(toastStore, 'setToast')
-      await waitFor(() => {
+      waitFor(() => {
         expect(setToastSpy).toHaveBeenCalledWith(
           'Failed to fetch Booking list',
           'error',
