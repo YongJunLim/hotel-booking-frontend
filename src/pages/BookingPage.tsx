@@ -68,7 +68,7 @@ const CheckoutForm = () => {
         if (!res.ok) throw new Error('Failed to fetch profile')
         const data = await res.json()
         console.log('Json response stringified:', JSON.stringify(data, null, 2))
-        const user = data.user
+        const user = data.data
 
         setFormData(prev => ({
           ...prev,
@@ -156,6 +156,7 @@ const CheckoutForm = () => {
       phoneNumber: formData.phone
     }
 
+    /*
     const profileUpdateRes = await fetch(`${BACKEND_URL}/users/profile`, {
       method: 'PUT',
       headers: {
@@ -175,6 +176,7 @@ const CheckoutForm = () => {
       alert('Failed to update profile')
       return
     }
+    */
 
     // ========== Send Booking Request ==========
     const email = userDetails.email
