@@ -1,12 +1,12 @@
 import { render, screen, waitFor, act } from '@testing-library/react'
-import userEvent, { UserEvent } from '@testing-library/user-event'
-import { vi, describe, it, expect, beforeEach, afterEach, Mock } from 'vitest'
+import userEvent from '@testing-library/user-event'
+import { vi, describe, it, expect, beforeEach, MockedFunction } from 'vitest'
 import useAuthStore from '../src/stores/AuthStore'
 import useBookingStore from '../src/stores/BookingStore'
 import useToastStore from '../src/stores/ToastStore'
 import { UserPage } from '../src/pages/UserPage'
 import { UpdateUserRequest, userResponse } from '../src/types/user'
-import { Booking, bookingResponse } from '../src/types/booking'
+import { bookingResponse } from '../src/types/booking'
 
 // Test data factories - reuse from your store tests
 const createTestUser = (overrides = {}) => ({
@@ -53,7 +53,7 @@ const createTestBookings = () => [
 ]
 
 vi.mock('wouter', () => ({
-  Link: ({ href, children, className }: any) => (
+  Link: ({ href, children, className }: { href: string, children: React.ReactNode, className?: string }) => (
     <a href={href} className={className}>
       {children}
     </a>
@@ -62,7 +62,7 @@ vi.mock('wouter', () => ({
 }))
 
 vi.mock('./DeleteAccount', () => ({
-  default: ({ open, onClose }: { open: boolean, onClose: () => void }) => (
+  default: ({ onClose }: { open: boolean, onClose: () => void }) => (
     <button onClick={onClose} data-testid="close-delete">Close Delete</button>
   ),
 }))
@@ -83,12 +83,10 @@ vi.mock('../utils/userService', () => ({
 }))
 
 describe('UserPage Integration Tests', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let mockFetchBookings: any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let mockgetProfile: any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let mockeditProfile: any
+  let mockFetchBookings: MockedFunction<() => Promise<unknown>>
+
+  let mockgetProfile: MockedFunction<() => Promise<boolean | undefined>>
+  let mockeditProfile: MockedFunction<(reqbody: UpdateUserRequest) => Promise<userResponse>>
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -96,9 +94,9 @@ describe('UserPage Integration Tests', () => {
     // Reset all stores to initial state
     useAuthStore.getState().logout()
     useBookingStore.getState().clearBooking()
-    mockFetchBookings = vi.spyOn(useBookingStore.getState(), 'fetchBooking')
-    mockeditProfile = vi.spyOn(useAuthStore.getState(), 'editProfile')
-    mockgetProfile = vi.spyOn(useAuthStore.getState(), 'getProfile')
+    mockFetchBookings = vi.spyOn(useBookingStore.getState(), 'fetchBooking') as MockedFunction<() => Promise<unknown>>
+    mockeditProfile = vi.spyOn(useAuthStore.getState(), 'editProfile') as MockedFunction<(reqbody: UpdateUserRequest) => Promise<userResponse>>
+    mockgetProfile = vi.spyOn(useAuthStore.getState(), 'getProfile') as MockedFunction<() => Promise<boolean | undefined>>
 
     // useToastStore.getState().setToast
 
@@ -137,8 +135,8 @@ describe('UserPage Integration Tests', () => {
 
     mockeditProfile.mockImplementation(async (reqbody: UpdateUserRequest) => {
       const token = useAuthStore.getState().accessToken
-      const response = await mockUserService.editProfile(token, reqbody)
-      return response as userResponse
+      const response = await mockUserService.editProfile(token, reqbody) as userResponse
+      return response
     })
 
     // Setup fetchBookings mock to simulate successful booking fetch
@@ -247,7 +245,7 @@ describe('UserPage Integration Tests', () => {
       render(<UserPage />)
       console.log('After login:', useAuthStore.getState())
       // Wait for data to load via store integration
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByText('Mr John Doe')).toBeInTheDocument()
         expect(screen.getByText('test@example.com')).toBeInTheDocument()
         expect(screen.getByText('12345678')).toBeInTheDocument()
@@ -292,15 +290,10 @@ describe('UserPage Integration Tests', () => {
 
       render(<UserPage />)
 
-      // await act(async () => {
-      //   await mockUserService.editProfile()
-      // })
       await openEditForm()
       await fillEditForm({ password: 'password123' })
       await submitEditForm()
 
-      // Since toast store is unit tested, we trust setToast works
-      // Spy on setToast before the action
       const toastStore = useToastStore.getState()
       const setToastSpy = vi.spyOn(toastStore, 'setToast')
 
