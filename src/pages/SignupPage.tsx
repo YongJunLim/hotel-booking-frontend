@@ -15,6 +15,17 @@ export const Signup = () => {
   const setToast = useToastStore(state => state.setToast)
   const [, nav] = useLocation()
 
+  interface SignUpResponse {
+    success: boolean
+    data: {
+      firstName: string
+      email: string
+      isAdmin: boolean
+      token: string
+    }
+    message: string
+  }
+
   return (
     <>
       <h1 className="text-4xl font-bold mb-8">Hotel Booking</h1>
@@ -176,9 +187,9 @@ export const Signup = () => {
         const errorMessage = getErrorMessage(msg)
         setMessage(errorMessage)
       }
+      setMsgClass('text-red-800')
     }
   }
-
   async function onSubmitClick() {
     await submitNewUser()
   }

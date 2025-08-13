@@ -18,7 +18,7 @@ import { MapSelect } from '../components/ui/MapSelect'
 import StarRatingFilter from '../components/ui/FilterStar'
 import RangeSlider from '../components/ui/FilterPrice'
 import DestinationSearch from '../components/ui/DestinationSearch'
-import { useCountryStore } from '../stores/HotelSearch'
+import { useCountryStore } from '../stores/HotelSearchStore'
 
 const fetcher = (url: string) => fetch(url).then(response => response.json())
 
@@ -39,7 +39,7 @@ export const ResultsPage = () => {
   const hotelAPI = `${BACKEND_URL}/hotels?destination_id=${destinationId}`
 
   const { country } = useCountryStore()
-  const pageTitle = useMemo(() => {
+  const pagetitle = useMemo(() => {
     const term = country?.term ?? 'No Destination'
     return `Hotel Search Results for ${term}`
   }, [country])
@@ -170,15 +170,24 @@ export const ResultsPage = () => {
     }
   }, [priceloading, hotelloading])
   const isloading
-    = initialLoad
-      && !priceerror
-      && !hotelerror
-      && (priceloading || hotelloading || pricedata?.completed !== true)
-  const hasError = priceerror || hotelerror
+    = priceloading || hotelloading || pricedata?.completed !== true
+
+  const [showNoHotels, setShowNoHotels] = useState(false)
+  useEffect(() => {
+    if (!isloading && sortedlist.length === 0) {
+      const timer = setTimeout(() => {
+        setShowNoHotels(true)
+      }, 500)
+      return () => clearTimeout(timer)
+    }
+    else {
+      setShowNoHotels(false)
+    }
+  }, [isloading, sortedlist])
 
   return (
     <>
-      <NavBar pageTitle={pageTitle} />
+      <NavBar pageTitle={pagetitle} />
       <div className="py-2">
         <DestinationSearch />
       </div>
@@ -186,29 +195,26 @@ export const ResultsPage = () => {
       <div className="mb-3">
         <div className="pt-8"></div>
 
-        {hasError && (
-          <>
-            {hotelerror && (
-              <div className="alert alert-error">
-                <span>
-                  Error loading hotel data:
-                  {hotelerror.message}
-                </span>
-              </div>
-            )}
-            {priceerror && (
-              <div className="alert alert-error">
-                <span>
-                  Error loading price data:
-                  {priceerror.message}
-                </span>
-              </div>
-            )}
-          </>
+        {hotelerror && (
+          <div className="alert alert-error">
+            <span>
+              Error loading hotel data:
+              {hotelerror.message}
+            </span>
+          </div>
+        )}
+
+        {priceerror && (
+          <div className="alert alert-error">
+            <span>
+              Error loading price data:
+              {priceerror.message}
+            </span>
+          </div>
         )}
       </div>
 
-      {isloading
+      {isloading && !priceerror && !hotelerror
         ? (
           <div>
             <span>
@@ -286,43 +292,42 @@ export const ResultsPage = () => {
                   </div>
                 </aside>
 
-                <div className="space-y-5 flex-1">
-                  {sortedlist.length === 0
-                    ? (
-                      <div className="alert alert-error">
-                        <span>
-                          No matching hotels found. Please try a different criteria!
-                        </span>
-                      </div>
-                    )
-                    : (
-                      <>
-                        {shownlist.map((hotel: StitchedHotel) => (
-                          <HotelCard
-                            key={hotel.id}
-                            hotel={hotel}
-                            hotelprice={hotel.price}
-                            checkin={checkin}
-                            checkout={checkout}
-                            guests={guests}
-                            destinationId={destinationId}
-                          />
-                        ))}
-                        {shownlist.length < sortedlist.length && (
-                          <button
-                            className="btn btn-primary mt-4"
-                            onClick={() => setshow(show => show + 1)}
-                          >
-                            Load More
-                          </button>
-                        )}
-                      </>
-                    )}
-                </div>
+              <div className="space-y-5 flex-1">
+                {showNoHotels
+                  ? (
+                    <div className="alert alert-error">
+                      <span>
+                        No matching hotels found. Please try a different criteria!
+                      </span>
+                    </div>
+                  )
+                  : (
+                    <>
+                      {shownlist.map((hotel: StitchedHotel) => (
+                        <HotelCard
+                          key={hotel.id}
+                          hotel={hotel}
+                          hotelprice={hotel.price}
+                          checkin={checkin}
+                          checkout={checkout}
+                          guests={guests}
+                          destinationId={destinationId}
+                        />
+                      ))}
+                      {shownlist.length < sortedlist.length && (
+                        <button
+                          className="btn btn-primary mt-4"
+                          onClick={() => setshow(show => show + 1)}
+                        >
+                          Load More
+                        </button>
+                      )}
+                    </>
+                  )}
               </div>
-            </>
-          )
-          : null}
+            </div>
+          </>
+        )}
       <div className="pt-17">
         <Link href="/" className="btn btn-outline">
           Back to Home

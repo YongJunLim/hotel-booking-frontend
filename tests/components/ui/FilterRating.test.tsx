@@ -1,7 +1,11 @@
 import { render, screen, fireEvent, within } from '@testing-library/react'
 import { describe, it, beforeEach, expect, vi, Mock } from 'vitest'
 import { ResultsPage } from '../../../src/pages/ResultsPage'
+<<<<<<< HEAD
 import { MockHotelData, MockPriceData } from '../../stores/__mocks__/MockHotel'
+=======
+import { MockHotelData, MockPriceData } from '../../../__mocks__/MockHotel'
+>>>>>>> main
 import { Hotel } from '../../../src/types/params'
 import useSWR from 'swr'
 
@@ -88,7 +92,11 @@ describe('Filter by Rating', () => {
     expect(rating).toEqual(['3.5 star'])
   })
 
+<<<<<<< HEAD
   it('Filter min 5 max 3 rating (error)', () => {
+=======
+  it('Filter min 5 max 3 rating (error)', async () => {
+>>>>>>> main
     const MinInput = screen.getByTestId('min-rating-star-5')
     const MaxInput = screen.getByTestId('max-rating-star-3')
 
@@ -97,7 +105,11 @@ describe('Filter by Rating', () => {
 
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
+<<<<<<< HEAD
     expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
+=======
+    await screen.findByText(/No matching hotels found/i)
+>>>>>>> main
   })
 })
 
@@ -127,7 +139,11 @@ describe('Filter empty list', () => {
     render(<ResultsPage></ResultsPage>)
   })
 
+<<<<<<< HEAD
   it('filters no hotel cards when data is empty', () => {
+=======
+  it('filters no hotel cards when data is empty', async () => {
+>>>>>>> main
     const MinInput = screen.getByTestId('min-rating-star-3')
     const MaxInput = screen.getByTestId('min-rating-star-3')
 
@@ -136,6 +152,10 @@ describe('Filter empty list', () => {
 
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
+<<<<<<< HEAD
     expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
+=======
+    await screen.findByText(/No matching hotels found/i)
+>>>>>>> main
   })
 })

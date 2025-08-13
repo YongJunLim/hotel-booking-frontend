@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
+<<<<<<< HEAD
 import { describe, it, vi, expect, test } from 'vitest'
 import { incrementBy, decrementBy, CheckAdultAndChildren, CheckRoom } from '../../../src/utils/dropdownUtils'
 import DropDownWithButtons from '../../../src/components/ui/DropDown'
@@ -118,6 +119,13 @@ test('CheckRoom should throw an error if input is not positive', () => {
 })
 
 vi.mock('../../../src/stores/HotelSearch', () => {
+=======
+import { describe, it, vi, expect } from 'vitest'
+import DropDownWithButtons from '../../../src/components/ui/DropDown'
+import { useFormStore } from '../../../src/stores/HotelSearchStore'
+
+vi.mock('../../../src/stores/HotelSearchStore', () => {
+>>>>>>> main
   return {
     useFormStore: vi.fn(),
   }
@@ -125,7 +133,11 @@ vi.mock('../../../src/stores/HotelSearch', () => {
 
 const mockUseFormStore = vi.mocked(useFormStore)
 
+<<<<<<< HEAD
 describe('Integration Test for DropDownWithButtons', () => {
+=======
+describe('DropDownWithButtons Component UI Test', () => {
+>>>>>>> main
   let mockStoreState = {
     Adult: 1,
     Children: 0,

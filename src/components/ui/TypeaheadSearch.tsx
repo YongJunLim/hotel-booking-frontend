@@ -6,7 +6,7 @@ import type { Destination } from '../../types/destination'
 import type { DestinationResponse } from '../../types/api'
 import { BACKEND_URL } from '../../config/api'
 import { handleKeyDown } from '../../utils/typeaheadsearchUtils'
-import { useCountryStore } from '../../stores/HotelSearch'
+import { useCountryStore } from '../../stores/HotelSearchStore'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
@@ -35,6 +35,7 @@ export const TypeaheadSearch = ({
   const justSelectedRef = useRef(false)
 
   const country = useCountryStore(state => state.country)
+
   useEffect(() => {
     if (country && country.term && !justSelectedRef.current) {
       setQuery(country.term)

@@ -1,0 +1,722 @@
+[
+  {
+    "country": "Afghanistan",
+    "EPI.new": 31
+  },
+  {
+    "country": "Albania",
+    "EPI.new": 52.2
+  },
+  {
+    "country": "Algeria",
+    "EPI.new": 41.7
+  },
+  {
+    "country": "Angola",
+    "EPI.new": 40.1
+  },
+  {
+    "country": "Antigua and Barbuda",
+    "EPI.new": 55.6
+  },
+  {
+    "country": "Argentina",
+    "EPI.new": 47
+  },
+  {
+    "country": "Armenia",
+    "EPI.new": 44.9
+  },
+  {
+    "country": "Australia",
+    "EPI.new": 63.1
+  },
+  {
+    "country": "Austria",
+    "EPI.new": 68.9
+  },
+  {
+    "country": "Azerbaijan",
+    "EPI.new": 40.5
+  },
+  {
+    "country": "Bahamas",
+    "EPI.new": 55.9
+  },
+  {
+    "country": "Bahrain",
+    "EPI.new": 35.3
+  },
+  {
+    "country": "Bangladesh",
+    "EPI.new": 28.1
+  },
+  {
+    "country": "Barbados",
+    "EPI.new": 53.1
+  },
+  {
+    "country": "Belarus",
+    "EPI.new": 58.2
+  },
+  {
+    "country": "Belgium",
+    "EPI.new": 66.8
+  },
+  {
+    "country": "Belize",
+    "EPI.new": 47.4
+  },
+  {
+    "country": "Benin",
+    "EPI.new": 37.8
+  },
+  {
+    "country": "Bhutan",
+    "EPI.new": 43.3
+  },
+  {
+    "country": "Bolivia",
+    "EPI.new": 45.3
+  },
+  {
+    "country": "Bosnia and Herzegovina",
+    "EPI.new": 46
+  },
+  {
+    "country": "Botswana",
+    "EPI.new": 49.2
+  },
+  {
+    "country": "Brazil",
+    "EPI.new": 53
+  },
+  {
+    "country": "Brunei Darussalam",
+    "EPI.new": 48.3
+  },
+  {
+    "country": "Bulgaria",
+    "EPI.new": 56.2
+  },
+  {
+    "country": "Burkina Faso",
+    "EPI.new": 42.2
+  },
+  {
+    "country": "Burundi",
+    "EPI.new": 33.5
+  },
+  {
+    "country": "Cabo Verde",
+    "EPI.new": 38
+  },
+  {
+    "country": "Cambodia",
+    "EPI.new": 31.2
+  },
+  {
+    "country": "Cameroon",
+    "EPI.new": 38.6
+  },
+  {
+    "country": "Canada",
+    "EPI.new": 61.1
+  },
+  {
+    "country": "Central African Republic",
+    "EPI.new": 39
+  },
+  {
+    "country": "Chad",
+    "EPI.new": 35.9
+  },
+  {
+    "country": "Chile",
+    "EPI.new": 49.6
+  },
+  {
+    "country": "China",
+    "EPI.new": 35.4
+  },
+  {
+    "country": "Colombia",
+    "EPI.new": 49.7
+  },
+  {
+    "country": "Comoros",
+    "EPI.new": 38.2
+  },
+  {
+    "country": "Costa Rica",
+    "EPI.new": 55.5
+  },
+  {
+    "country": "Cote d'Ivoire",
+    "EPI.new": 42.9
+  },
+  {
+    "country": "Croatia",
+    "EPI.new": 62.3
+  },
+  {
+    "country": "Cuba",
+    "EPI.new": 52.5
+  },
+  {
+    "country": "Cyprus",
+    "EPI.new": 53.9
+  },
+  {
+    "country": "Czech Republic",
+    "EPI.new": 65.5
+  },
+  {
+    "country": "Dem. Rep. Congo",
+    "EPI.new": 39.5
+  },
+  {
+    "country": "Denmark",
+    "EPI.new": 67.7
+  },
+  {
+    "country": "Djibouti",
+    "EPI.new": 32.3
+  },
+  {
+    "country": "Dominica",
+    "EPI.new": 49.3
+  },
+  {
+    "country": "Dominican Republic",
+    "EPI.new": 47.7
+  },
+  {
+    "country": "Ecuador",
+    "EPI.new": 51.3
+  },
+  {
+    "country": "Egypt",
+    "EPI.new": 43.7
+  },
+  {
+    "country": "El Salvador",
+    "EPI.new": 41.6
+  },
+  {
+    "country": "Equatorial Guinea",
+    "EPI.new": 41.7
+  },
+  {
+    "country": "Eritrea",
+    "EPI.new": 29
+  },
+  {
+    "country": "Estonia",
+    "EPI.new": 75.7
+  },
+  {
+    "country": "Eswatini",
+    "EPI.new": 38.7
+  },
+  {
+    "country": "Ethiopia",
+    "EPI.new": 36.3
+  },
+  {
+    "country": "Fiji",
+    "EPI.new": 46
+  },
+  {
+    "country": "Finland",
+    "EPI.new": 73.8
+  },
+  {
+    "country": "France",
+    "EPI.new": 67
+  },
+  {
+    "country": "Gabon",
+    "EPI.new": 53.3
+  },
+  {
+    "country": "Gambia",
+    "EPI.new": 37.6
+  },
+  {
+    "country": "Georgia",
+    "EPI.new": 47.3
+  },
+  {
+    "country": "Germany",
+    "EPI.new": 74.5
+  },
+  {
+    "country": "Ghana",
+    "EPI.new": 36.9
+  },
+  {
+    "country": "Greece",
+    "EPI.new": 67.3
+  },
+  {
+    "country": "Grenada",
+    "EPI.new": 45.8
+  },
+  {
+    "country": "Guatemala",
+    "EPI.new": 32.5
+  },
+  {
+    "country": "Guinea",
+    "EPI.new": 36.5
+  },
+  {
+    "country": "Guinea-Bissau",
+    "EPI.new": 42
+  },
+  {
+    "country": "Guyana",
+    "EPI.new": 49
+  },
+  {
+    "country": "Haiti",
+    "EPI.new": 36.4
+  },
+  {
+    "country": "Honduras",
+    "EPI.new": 40.2
+  },
+  {
+    "country": "Hungary",
+    "EPI.new": 59.8
+  },
+  {
+    "country": "Iceland",
+    "EPI.new": 64.3
+  },
+  {
+    "country": "India",
+    "EPI.new": 27.6
+  },
+  {
+    "country": "Indonesia",
+    "EPI.new": 33.6
+  },
+  {
+    "country": "Iran",
+    "EPI.new": 41.8
+  },
+  {
+    "country": "Iraq",
+    "EPI.new": 30.3
+  },
+  {
+    "country": "Ireland",
+    "EPI.new": 65.8
+  },
+  {
+    "country": "Israel",
+    "EPI.new": 48
+  },
+  {
+    "country": "Italy",
+    "EPI.new": 60.3
+  },
+  {
+    "country": "Jamaica",
+    "EPI.new": 48.5
+  },
+  {
+    "country": "Japan",
+    "EPI.new": 61.4
+  },
+  {
+    "country": "Jordan",
+    "EPI.new": 47.3
+  },
+  {
+    "country": "Kazakhstan",
+    "EPI.new": 47.8
+  },
+  {
+    "country": "Kenya",
+    "EPI.new": 36.9
+  },
+  {
+    "country": "Kiribati",
+    "EPI.new": 44.3
+  },
+  {
+    "country": "Kuwait",
+    "EPI.new": 44.4
+  },
+  {
+    "country": "Kyrgyzstan",
+    "EPI.new": 42.8
+  },
+  {
+    "country": "Laos",
+    "EPI.new": 26.3
+  },
+  {
+    "country": "Latvia",
+    "EPI.new": 60.2
+  },
+  {
+    "country": "Lebanon",
+    "EPI.new": 39.9
+  },
+  {
+    "country": "Lesotho",
+    "EPI.new": 36.9
+  },
+  {
+    "country": "Liberia",
+    "EPI.new": 34.3
+  },
+  {
+    "country": "Lithuania",
+    "EPI.new": 64.1
+  },
+  {
+    "country": "Luxembourg",
+    "EPI.new": 75.1
+  },
+  {
+    "country": "Madagascar",
+    "EPI.new": 30.1
+  },
+  {
+    "country": "Malawi",
+    "EPI.new": 35.1
+  },
+  {
+    "country": "Malaysia",
+    "EPI.new": 41
+  },
+  {
+    "country": "Maldives",
+    "EPI.new": 38.1
+  },
+  {
+    "country": "Mali",
+    "EPI.new": 34.5
+  },
+  {
+    "country": "Malta",
+    "EPI.new": 66.9
+  },
+  {
+    "country": "Marshall Islands",
+    "EPI.new": 42.5
+  },
+  {
+    "country": "Mauritania",
+    "EPI.new": 34.6
+  },
+  {
+    "country": "Mauritius",
+    "EPI.new": 47.3
+  },
+  {
+    "country": "Mexico",
+    "EPI.new": 44.2
+  },
+  {
+    "country": "Micronesia",
+    "EPI.new": 40.8
+  },
+  {
+    "country": "Moldova",
+    "EPI.new": 46.1
+  },
+  {
+    "country": "Mongolia",
+    "EPI.new": 37.2
+  },
+  {
+    "country": "Montenegro",
+    "EPI.new": 47.7
+  },
+  {
+    "country": "Morocco",
+    "EPI.new": 39.5
+  },
+  {
+    "country": "Mozambique",
+    "EPI.new": 39
+  },
+  {
+    "country": "Myanmar",
+    "EPI.new": 27.1
+  },
+  {
+    "country": "Namibia",
+    "EPI.new": 44
+  },
+  {
+    "country": "Nepal",
+    "EPI.new": 33.1
+  },
+  {
+    "country": "Netherlands",
+    "EPI.new": 66.9
+  },
+  {
+    "country": "New Zealand",
+    "EPI.new": 57.3
+  },
+  {
+    "country": "Nicaragua",
+    "EPI.new": 47.4
+  },
+  {
+    "country": "Niger",
+    "EPI.new": 40
+  },
+  {
+    "country": "Nigeria",
+    "EPI.new": 37.9
+  },
+  {
+    "country": "North Macedonia",
+    "EPI.new": 50.3
+  },
+  {
+    "country": "Norway",
+    "EPI.new": 69.9
+  },
+  {
+    "country": "Oman",
+    "EPI.new": 51.3
+  },
+  {
+    "country": "Pakistan",
+    "EPI.new": 25.5
+  },
+  {
+    "country": "Panama",
+    "EPI.new": 52.9
+  },
+  {
+    "country": "Papua New Guinea",
+    "EPI.new": 36.9
+  },
+  {
+    "country": "Paraguay",
+    "EPI.new": 39.5
+  },
+  {
+    "country": "Peru",
+    "EPI.new": 46.5
+  },
+  {
+    "country": "Philippines",
+    "EPI.new": 32.1
+  },
+  {
+    "country": "Poland",
+    "EPI.new": 64.2
+  },
+  {
+    "country": "Portugal",
+    "EPI.new": 61.9
+  },
+  {
+    "country": "Qatar",
+    "EPI.new": 46.8
+  },
+  {
+    "country": "Republic of Congo",
+    "EPI.new": 41.6
+  },
+  {
+    "country": "Romania",
+    "EPI.new": 57.3
+  },
+  {
+    "country": "Russia",
+    "EPI.new": 46.7
+  },
+  {
+    "country": "Rwanda",
+    "EPI.new": 33.9
+  },
+  {
+    "country": "Saint Lucia",
+    "EPI.new": 51.1
+  },
+  {
+    "country": "Saint Vincent and the Grenadines",
+    "EPI.new": 54.2
+  },
+  {
+    "country": "Samoa",
+    "EPI.new": 47.1
+  },
+  {
+    "country": "Sao Tome and Principe",
+    "EPI.new": 36.2
+  },
+  {
+    "country": "Saudi Arabia",
+    "EPI.new": 42.5
+  },
+  {
+    "country": "Senegal",
+    "EPI.new": 43.8
+  },
+  {
+    "country": "Serbia",
+    "EPI.new": 49.8
+  },
+  {
+    "country": "Seychelles",
+    "EPI.new": 47.9
+  },
+  {
+    "country": "Sierra Leone",
+    "EPI.new": 39.9
+  },
+  {
+    "country": "Singapore",
+    "EPI.new": 53
+  },
+  {
+    "country": "Slovakia",
+    "EPI.new": 65.1
+  },
+  {
+    "country": "Slovenia",
+    "EPI.new": 62.4
+  },
+  {
+    "country": "Solomon Islands",
+    "EPI.new": 42.2
+  },
+  {
+    "country": "South Africa",
+    "EPI.new": 42.7
+  },
+  {
+    "country": "South Korea",
+    "EPI.new": 50.6
+  },
+  {
+    "country": "Spain",
+    "EPI.new": 64
+  },
+  {
+    "country": "Sri Lanka",
+    "EPI.new": 38.8
+  },
+  {
+    "country": "Sudan",
+    "EPI.new": 39.1
+  },
+  {
+    "country": "Suriname",
+    "EPI.new": 56.9
+  },
+  {
+    "country": "Sweden",
+    "EPI.new": 70.3
+  },
+  {
+    "country": "Switzerland",
+    "EPI.new": 67.8
+  },
+  {
+    "country": "Taiwan",
+    "EPI.new": 50.1
+  },
+  {
+    "country": "Tajikistan",
+    "EPI.new": 32.3
+  },
+  {
+    "country": "Tanzania",
+    "EPI.new": 43.6
+  },
+  {
+    "country": "Thailand",
+    "EPI.new": 45.7
+  },
+  {
+    "country": "Timor-Leste",
+    "EPI.new": 49.9
+  },
+  {
+    "country": "Togo",
+    "EPI.new": 35.7
+  },
+  {
+    "country": "Tonga",
+    "EPI.new": 40.4
+  },
+  {
+    "country": "Trinidad and Tobago",
+    "EPI.new": 52.5
+  },
+  {
+    "country": "Tunisia",
+    "EPI.new": 45.3
+  },
+  {
+    "country": "Turkiye",
+    "EPI.new": 37.2
+  },
+  {
+    "country": "Turkmenistan",
+    "EPI.new": 40.6
+  },
+  {
+    "country": "Uganda",
+    "EPI.new": 35.8
+  },
+  {
+    "country": "Ukraine",
+    "EPI.new": 54.6
+  },
+  {
+    "country": "United Arab Emirates",
+    "EPI.new": 51.6
+  },
+  {
+    "country": "United Kingdom",
+    "EPI.new": 72.6
+  },
+  {
+    "country": "United States of America",
+    "EPI.new": 57.2
+  },
+  {
+    "country": "Uruguay",
+    "EPI.new": 44.1
+  },
+  {
+    "country": "Uzbekistan",
+    "EPI.new": 42.6
+  },
+  {
+    "country": "Vanuatu",
+    "EPI.new": 45
+  },
+  {
+    "country": "Venezuela",
+    "EPI.new": 53.3
+  },
+  {
+    "country": "Viet Nam",
+    "EPI.new": 24.6
+  },
+  {
+    "country": "Zambia",
+    "EPI.new": 46.7
+  },
+  {
+    "country": "Zimbabwe",
+    "EPI.new": 51.6
+  }
+]

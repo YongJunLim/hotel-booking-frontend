@@ -1,7 +1,11 @@
 import { render, screen, fireEvent, within } from '@testing-library/react'
 import { describe, it, beforeEach, expect, vi, Mock } from 'vitest'
 import { ResultsPage } from '../../../src/pages/ResultsPage'
+<<<<<<< HEAD
 import { MockHotelData, MockPriceData } from '../../stores/__mocks__/MockHotel'
+=======
+import { MockHotelData, MockPriceData } from '../../../__mocks__/MockHotel'
+>>>>>>> main
 import { Hotel } from '../../../src/types/params'
 import useSWR from 'swr'
 
@@ -120,7 +124,11 @@ describe('Filter empty list', () => {
     render(<ResultsPage></ResultsPage>)
   })
 
+<<<<<<< HEAD
   it('filters no hotel cards when data is empty', () => {
+=======
+  it('filters no hotel cards when data is empty', async () => {
+>>>>>>> main
     const slider = screen.getByTestId('price-range-slider')
     const inputs = slider.querySelectorAll('input')
 
@@ -129,6 +137,10 @@ describe('Filter empty list', () => {
 
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
+<<<<<<< HEAD
     expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
+=======
+    await screen.findByText(/No matching hotels found/i)
+>>>>>>> main
   })
 })
