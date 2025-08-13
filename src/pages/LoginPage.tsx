@@ -1,9 +1,6 @@
 import { Link, useLocation } from 'wouter'
 // import useAuthStore from '../store'
-// import useAuthStore from '../store'
 import useAuthStore from '../stores/AuthStore'
-import useToastStore from '../stores/ToastStore'
-import { useState } from 'react'
 import useToastStore from '../stores/ToastStore'
 import { useState } from 'react'
 import { BACKEND_URL } from '../config/api'
@@ -14,11 +11,7 @@ export const Login = () => {
   const [message, setMessage] = useState('')
   const [msgClass, setMsgClass] = useState('')
   // const { login } = useAuthStore();
-  // const { login } = useAuthStore();
   const login = useAuthStore(state => state.login)
-  const setToast = useToastStore(state => state.setToast)
-  // const toastMsg = useToastStore(state => state.toastMsg)
-  // const clearToast = useToastStore(state => state.clearToast)
   const setToast = useToastStore(state => state.setToast)
   // const toastMsg = useToastStore(state => state.toastMsg)
   // const clearToast = useToastStore(state => state.clearToast)
@@ -33,28 +26,6 @@ export const Login = () => {
   //     return () => clearTimeout(timer)
   //   }
   // }, [toastMsg, clearToast])
-  // Already implemented auto-clearing in useToastStore
-  // useEffect(() => {
-  //   if (toastMsg) {
-  //     const timer = setTimeout(() => clearToast(), 3000)
-  //     return () => clearTimeout(timer)
-  //   }
-  // }, [toastMsg, clearToast])
-
-  interface LoginResponse {
-    data: {
-      firstName: string
-      email: string
-      isAdmin: boolean
-      token: string
-    }
-    message: string
-    error?: {
-      issues?: {
-        message: string
-      }[]
-    }
-  }
 
   return (
     <>
@@ -63,23 +34,6 @@ export const Login = () => {
       </div>
 
       <p className="mb-4 text-2xl font-bold flex">Login Form</p>
-      <div className="grid gap-6 mb-6 md:grid-cols-2 w-1/2">
-        <p>Email:</p>
-        <input
-          type="email"
-          id="email"
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="john@company.com"
-          required
-        />
-        <p>Password:</p>
-        <input
-          id="passwd"
-          type="password"
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="•••••••••"
-          required
-        />
       <div className="grid gap-6 mb-6 md:grid-cols-2 w-1/2">
         <p>Email:</p>
         <input
@@ -138,7 +92,6 @@ export const Login = () => {
 
     // Login API call
     // console.log('email,password', email_inp.value, passwd_inp.value)
-    // console.log('email,password', email_inp.value, passwd_inp.value)
     const response = await fetch(`${BACKEND_URL}/users/login`, {
       method: 'POST',
       headers: {
@@ -151,22 +104,9 @@ export const Login = () => {
     })
     const msg = (await response.json()) as AuthResponse
     console.log(msg)
-    const msg = (await response.json()) as LoginResponse
     // Handle login
 
     if (response.ok && msg.data?.token) {
-    const isSuccess = response.ok && msg.data?.token
-    if (isSuccess) {
-      // sessionStorage.setItem("accessToken", msg.data.token);
-      // sessionStorage.setItem(
-      //   "details",
-      //   JSON.stringify({
-      //     email: msg.data.email,
-      //     firstName: msg.data.firstName,
-      //   }),
-      // );
-      // sessionStorage.setItem("toast", msg.message);
-      // login();
       login(
         {
           email: msg.data.email,
@@ -186,11 +126,6 @@ export const Login = () => {
       }
     }
     else {
-      const zodError = msg.error?.issues?.[0]?.message
-      const fallbackmsg = msg.message
-      console.log(msg.message)
-      console.log(zodError)
-      setMessage(zodError || fallbackmsg)
       setMsgClass('text-red-800')
       const errorMessage = getErrorMessage(msg)
       setMessage(errorMessage)

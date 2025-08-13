@@ -1,11 +1,7 @@
 import { render, screen, fireEvent, within } from '@testing-library/react'
 import { describe, it, beforeEach, expect, vi, Mock } from 'vitest'
 import { ResultsPage } from '../../../src/pages/ResultsPage'
-<<<<<<< HEAD
-import { MockHotelData, MockPriceData } from '../../stores/__mocks__/MockHotel'
-=======
 import { MockHotelData, MockPriceData } from '../../../__mocks__/MockHotel'
->>>>>>> main
 import { Hotel } from '../../../src/types/params'
 import useSWR from 'swr'
 
@@ -123,20 +119,12 @@ describe('Sort empty list', () => {
     render(<ResultsPage></ResultsPage>)
   })
 
-<<<<<<< HEAD
-  it('renders no hotel cards when data is empty', () => {
-=======
   it('renders no hotel cards when data is empty', async () => {
->>>>>>> main
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
 
     const dropdown = screen.getByTestId('sort-dropdown')
     expect(dropdown).toBeInTheDocument()
-<<<<<<< HEAD
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
-=======
     await screen.findByText(/No matching hotels found/i)
->>>>>>> main
   })
 })

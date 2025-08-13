@@ -1,11 +1,7 @@
 import { render, screen, within } from '@testing-library/react'
 import { describe, expect, beforeEach, vi, Mock } from 'vitest'
 import { ResultsPage } from '../../../src/pages/ResultsPage'
-<<<<<<< HEAD
-import { MockHotelData, MockPriceData } from '../../stores/__mocks__/MockHotel'
-=======
 import { MockHotelData, MockPriceData } from '../../../__mocks__/MockHotel'
->>>>>>> main
 import { Hotel } from '../../../src/types/params'
 import useSWR from 'swr'
 
@@ -92,17 +88,10 @@ describe('empty price data', () => {
     render(<ResultsPage></ResultsPage>)
   })
 
-<<<<<<< HEAD
-  it('shows stitched hotels with matching id sorted by price ascending', () => {
-    const hotelCards = screen.queryAllByTestId('hotel-card')
-    expect(hotelCards.length).toBe(0)
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
-=======
   it('shows stitched hotels with matching id sorted by price ascending', async () => {
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
     await screen.findByText(/No matching hotels found/i)
->>>>>>> main
   })
 })
 
@@ -132,17 +121,10 @@ describe('empty hotel data', () => {
     render(<ResultsPage></ResultsPage>)
   })
 
-<<<<<<< HEAD
-  it('shows stitched hotels with matching id sorted by price ascending', () => {
-    const hotelCards = screen.queryAllByTestId('hotel-card')
-    expect(hotelCards.length).toBe(0)
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
-=======
   it('shows stitched hotels with matching id sorted by price ascending', async () => {
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
     await screen.findByText(/No matching hotels found/i)
->>>>>>> main
   })
 })
 
@@ -172,16 +154,9 @@ describe('empty price & hotel data', () => {
     render(<ResultsPage></ResultsPage>)
   })
 
-<<<<<<< HEAD
-  it('shows stitched hotels with matching id sorted by price ascending', () => {
-    const hotelCards = screen.queryAllByTestId('hotel-card')
-    expect(hotelCards.length).toBe(0)
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
-=======
   it('shows stitched hotels with matching id sorted by price ascending', async () => {
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
     await screen.findByText(/No matching hotels found/i)
->>>>>>> main
   })
 })

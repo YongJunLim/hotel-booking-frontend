@@ -10,15 +10,6 @@ vi.mock('react', async () => {
 })
 
 import * as React from 'react'
-<<<<<<< HEAD
-import { handleMapClick, loadMarkerImage } from '../../../src/utils/mapselectUtils'
-import { MapSelect } from '../../../src/components/ui/MapSelect'
-import { render, screen, waitFor, act } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
-import type { StitchedHotel, HotelCategories, HotelAmenities, ImageDetails } from '../../../src/types/params'
-import marker from '../../../src/assets/marker.png'
-import { LngLat, MapGeoJSONFeature, MapLayerMouseEvent, Point } from 'maplibre-gl'
-=======
 import {
   handleMapClick,
   loadMarkerImage,
@@ -39,7 +30,6 @@ import {
   MapLayerMouseEvent,
   Point,
 } from 'maplibre-gl'
->>>>>>> main
 
 let lastOnMouseMove: ((event: MapLayerMouseEvent) => void) | null = null
 let lastOnClick: ((event: MapLayerMouseEvent) => void) | null = null
@@ -58,23 +48,6 @@ interface MockComponentProps {
 }
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-<<<<<<< HEAD
-const createMockMapEvent = (hotel: StitchedHotel): Partial<MapLayerMouseEvent> => ({
-  features: [{
-    type: 'Feature',
-    geometry: {
-      type: 'Point',
-      coordinates: [hotel.longitude, hotel.latitude],
-    },
-    properties: hotel,
-    id: hotel.id,
-    source: 'my-geojson',
-    sourceLayer: '',
-    state: {},
-  }] as unknown as MapGeoJSONFeature[],
-  lngLat: {
-    lng: hotel.longitude, lat: hotel.latitude,
-=======
 const createMockMapEvent = (
   hotel: StitchedHotel,
 ): Partial<MapLayerMouseEvent> => ({
@@ -95,7 +68,6 @@ const createMockMapEvent = (
   lngLat: {
     lng: hotel.longitude,
     lat: hotel.latitude,
->>>>>>> main
     wrap: function (): LngLat {
       throw new Error('Function not implemented.')
     },
@@ -107,12 +79,8 @@ const createMockMapEvent = (
     },
   },
   point: {
-<<<<<<< HEAD
-    x: 0, y: 0,
-=======
     x: 0,
     y: 0,
->>>>>>> main
     clone: function (): Point {
       throw new Error('Function not implemented.')
     },
@@ -128,25 +96,18 @@ const createMockMapEvent = (
     _sub: function (_p: Point): Point {
       throw new Error('Function not implemented.')
     },
-<<<<<<< HEAD
-    multiByPoint: function (_p: Point): Point {
-=======
     multByPoint: function (_p: Point): Point {
->>>>>>> main
       throw new Error('Function not implemented.')
     },
     divByPoint: function (_p: Point): Point {
       throw new Error('Function not implemented.')
     },
-<<<<<<< HEAD
-=======
     _multByPoint: function (_p: Point): Point {
       throw new Error('Function not implemented.')
     },
     _divByPoint: function (_p: Point): Point {
       throw new Error('Function not implemented.')
     },
->>>>>>> main
     mult: function (_k: number): Point {
       throw new Error('Function not implemented.')
     },
@@ -234,13 +195,9 @@ vi.mock('react-map-gl/maplibre', () => ({
   },
   Source: (props: MockComponentProps) => <div>{props.children}</div>,
   Layer: () => <div />,
-<<<<<<< HEAD
-  Popup: (props: MockComponentProps) => <div data-testid="popup">{props.children}</div>,
-=======
   Popup: (props: MockComponentProps) => (
     <div data-testid="popup">{props.children}</div>
   ),
->>>>>>> main
 }))
 
 const mockNavigate = vi.fn()
@@ -248,14 +205,10 @@ vi.mock('wouter', () => ({
   useLocation: () => [null, mockNavigate],
 }))
 
-<<<<<<< HEAD
-const mockHotelCategories: HotelCategories = ['Luxury', 'Business'] as unknown as HotelCategories
-=======
 const mockHotelCategories: HotelCategories = [
   'Luxury',
   'Business',
 ] as unknown as HotelCategories
->>>>>>> main
 const mockHotelAmenities: HotelAmenities = {
   'Free WiFi': true,
   'Pool': true,
@@ -301,28 +254,20 @@ describe('MapSelect', () => {
   it('calls setSelectedFeature with the correct hotel on map click', () => {
     const setSelectedFeature = vi.fn()
     handleMapClick(
-<<<<<<< HEAD
-      { features: [{ properties: mockHotel }] } as unknown as MapLayerMouseEvent,
-=======
       {
         features: [{ properties: mockHotel }],
       } as unknown as MapLayerMouseEvent,
->>>>>>> main
       setSelectedFeature,
     )
     expect(setSelectedFeature).toHaveBeenCalledWith(mockHotel)
   })
 
   it('loads marker image', async () => {
-<<<<<<< HEAD
-    const map = { loadImage: vi.fn().mockResolvedValue({ data: marker }), hasImage: vi.fn(), addImage: vi.fn() }
-=======
     const map = {
       loadImage: vi.fn().mockResolvedValue({ data: marker }),
       hasImage: vi.fn(),
       addImage: vi.fn(),
     }
->>>>>>> main
     await loadMarkerImage(map as unknown as maplibregl.Map)
     expect(map.loadImage).toHaveBeenCalledWith(expect.any(String))
     expect(map.hasImage).toHaveBeenCalledWith('marker')
@@ -330,14 +275,6 @@ describe('MapSelect', () => {
   })
 
   it('handles error loading marker image', async () => {
-<<<<<<< HEAD
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-    const map = { loadImage: vi.fn().mockRejectedValue(new Error('Load error')), hasImage: vi.fn(), addImage: vi.fn() }
-
-    await loadMarkerImage(map as unknown as maplibregl.Map)
-
-    expect(consoleErrorSpy).toHaveBeenCalledWith('Error loading marker image:', expect.any(Error))
-=======
     const consoleErrorSpy = vi
       .spyOn(console, 'error')
       .mockImplementation(() => {})
@@ -353,7 +290,6 @@ describe('MapSelect', () => {
       'Error loading marker image:',
       expect.any(Error),
     )
->>>>>>> main
     consoleErrorSpy.mockRestore()
   })
 
@@ -376,13 +312,9 @@ describe('MapSelect', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('popup')).toHaveTextContent('Hotel California')
-<<<<<<< HEAD
-      expect(screen.getByTestId('popup')).toHaveTextContent('123 Main St, California')
-=======
       expect(screen.getByTestId('popup')).toHaveTextContent(
         '123 Main St, California',
       )
->>>>>>> main
     })
   })
 
@@ -410,49 +342,14 @@ describe('MapSelect', () => {
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith(
-<<<<<<< HEAD
-        expect.stringContaining(`/hotels/detail/${mockHotel.id}?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&lang=en_US&currency=SGD&country_code=SG&guests=${guests}`),
-=======
         expect.stringContaining(
           `/hotels/detail/${mockHotel.id}?destination_id=${destinationId}&checkin=${checkin}&checkout=${checkout}&lang=en_US&currency=SGD&country_code=SG&guests=${guests}`,
         ),
->>>>>>> main
       )
     })
   })
 
   it('calls flyTo on mapRef when hotels prop changes', async () => {
-<<<<<<< HEAD
-    const initialHotels = [{
-      id: '1',
-      name: 'Hotel California',
-      latitude: 34.0522,
-      longitude: -118.2437,
-      address: '123 Main St, California',
-      price: 200,
-      rating: 4.5,
-      categories: mockHotelCategories,
-      amenities: mockHotelAmenities,
-      image_details: mockImageDetails,
-      description: 'A lovely hotel in California.',
-      icon: 'marker',
-    }]
-
-    const newHotels = [{
-      id: '2',
-      name: 'Hotel New',
-      latitude: 40.7128,
-      longitude: -74.0060,
-      address: '456 New St, New York',
-      price: 300,
-      rating: 5.0,
-      categories: mockHotelCategories,
-      amenities: mockHotelAmenities,
-      image_details: mockImageDetails,
-      description: 'A brand new hotel in New York.',
-      icon: 'marker',
-    }]
-=======
     const initialHotels = [
       {
         id: '1',
@@ -486,7 +383,6 @@ describe('MapSelect', () => {
         icon: 'marker',
       },
     ]
->>>>>>> main
 
     const { rerender } = render(
       <MapSelect

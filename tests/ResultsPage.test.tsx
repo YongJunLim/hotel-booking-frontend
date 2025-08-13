@@ -7,11 +7,7 @@ import {
 } from '@testing-library/react'
 import { describe, it, beforeEach, expect, vi, Mock } from 'vitest'
 import { ResultsPage } from '../src/pages/ResultsPage'
-<<<<<<< HEAD
-import { MockHotelData, MockPriceData } from './stores/__mocks__/MockHotel'
-=======
 import { MockHotelData, MockPriceData } from './../__mocks__/MockHotel'
->>>>>>> main
 import { Hotel } from '../src/types/params'
 import useSWR from 'swr'
 import { MapLayerMouseEvent } from 'maplibre-gl'
@@ -238,11 +234,7 @@ describe('Results Page Integration test', () => {
     expect(names).toEqual(['Cookie A Hotel'])
   })
 
-<<<<<<< HEAD
-  it('filter rating + filter price (out of range)', () => {
-=======
   it('filter rating + filter price (out of range)', async () => {
->>>>>>> main
     const minRating = screen.getByTestId('min-rating-star-4')
     fireEvent.click(minRating)
 
@@ -253,11 +245,7 @@ describe('Results Page Integration test', () => {
 
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
-<<<<<<< HEAD
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
-=======
     await screen.findByText(/No matching hotels found/i)
->>>>>>> main
   })
 
   it('filter rating + filter price + map (out of range)', async () => {
@@ -271,11 +259,7 @@ describe('Results Page Integration test', () => {
 
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
-<<<<<<< HEAD
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
-=======
     await screen.findByText(/No matching hotels found/i)
->>>>>>> main
     await waitFor(() => {
       expect(mockSourceProps.data?.features.length).toBe(0)
     })
@@ -344,11 +328,7 @@ describe('Filter empty list', () => {
 
     const hotelCards = screen.queryAllByTestId('hotel-card')
     expect(hotelCards.length).toBe(0)
-<<<<<<< HEAD
-    expect(screen.getByText(/No matching hotels found/i)).toBeInTheDocument()
-=======
     await screen.findByText(/No matching hotels found/i)
->>>>>>> main
     await waitFor(() => {
       expect(mockSourceProps.data?.features.length).toBe(0)
     })

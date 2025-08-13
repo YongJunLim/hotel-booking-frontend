@@ -1,8 +1,5 @@
 import type { Destination } from '../types/destination'
-<<<<<<< HEAD
-=======
 import epiData from '../data/epi2024results.json'
->>>>>>> main
 
 export const handleKeyDown = (
   e: React.KeyboardEvent<HTMLInputElement>,
@@ -48,8 +45,6 @@ export const handleKeyDown = (
     }
   }
 }
-<<<<<<< HEAD
-=======
 
 export const evaluateEpiData = (term: string) => {
   const lowerTerm = term.toLowerCase()
@@ -85,4 +80,3 @@ export const evaluateEpiData = (term: string) => {
     }
   }
 }
->>>>>>> main
