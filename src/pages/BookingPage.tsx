@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'wouter'
+import { useLocation } from 'wouter'
 import { useSearchParams } from '../hooks/useSearchParams'
 import { loadStripe } from '@stripe/stripe-js'
 import {
@@ -11,14 +12,17 @@ import {
 import { NavBar } from '../components/layout/NavBar'
 import useRoomBookingStore from '../stores/RoomBookingStore'
 import { CheckoutSummary } from '../components/ui/CheckoutSummary'
+import useAuthStore from '../stores/AuthStore'
+import { BACKEND_URL } from '../config/api'
 
 const stripePromise = loadStripe(
   'pk_test_51RkOjuPSc0OCzrEzBwXXxxQaYDDeAQf66TRqSPK8zi8AuZDKUPyQrG3MRjTDPNXXHph6vbnzG8GOwkqZllAx7GcJ00KEWTx5jG',
-) // Replace with Stripe publishable key
+) // Stripe testing key
 
 const CheckoutForm = () => {
   const stripe = useStripe()
   const elements = useElements()
+  const [, setLocation] = useLocation()
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -38,7 +42,48 @@ const CheckoutForm = () => {
   console.log('Check-out:', roomBookingStore.checkout)
   console.log('Guests:', roomBookingStore.guests)
 
+  const { accessToken, userDetails } = useAuthStore()
   const [errorMessages, setErrorMessages] = useState<{ [key: string]: string }>({})
+
+  // ========== Redirect if nothing in checkout ==========
+  useEffect(() => {
+    if (!roomBookingStore.hotelId || roomBookingStore.selectedRooms.length === 0) {
+      setLocation('/')
+    }
+  }, [roomBookingStore.hotelId, roomBookingStore.selectedRooms, setLocation])
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (!accessToken) return
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/users/profile`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+
+        if (!res.ok) throw new Error('Failed to fetch profile')
+        const data = await res.json()
+        console.log('Json response stringified:', JSON.stringify(data, null, 2))
+        const user = data.user
+
+        setFormData(prev => ({
+          ...prev,
+          firstName: user.firstName || '',
+          lastName: user.lastName || '',
+          email: user.email || '',
+          phone: user.phoneNumber || '',
+        }))
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    fetchUserProfile()
+  }, [accessToken])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
@@ -77,6 +122,7 @@ const CheckoutForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    // Form validation
     const newErrors: { [key: string]: string } = {}
 
     if (!formData.firstName.trim()) {
@@ -100,31 +146,82 @@ const CheckoutForm = () => {
       return
     }
 
-    if (!stripe || !elements) return
+    //if (!stripe || !elements) return
 
-    console.log('Submitting booking with:', formData)
+    // ========== Update User Information ==========
+    const profilePayload = {
+      email: formData.email,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      phoneNumber: formData.phone
+    }
 
-    // Placeholder for api, to be updated
-    const res = await fetch('/api/bookings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...formData,
-        cardInfo: '[collected via Stripe]',
-      }),
+    const profileUpdateRes = await fetch(`${BACKEND_URL}/users/profile`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(profilePayload),
     })
 
-    if (res.ok) {
-      alert('Booking submitted successfully!')
+    console.log('Profile update response status:', profileUpdateRes.status)
+    console.log('Profile update response ok:', profileUpdateRes.ok)
+
+    const profileResText = await profileUpdateRes.text()
+    console.log('Profile update response body:', profileResText)
+
+    if (!profileUpdateRes.ok) {
+      alert('Failed to update profile')
+      return
     }
-    else {
-      alert('Booking failed')
+
+    // ========== Send Booking Request ==========
+    const email = userDetails.email
+    const roomTypes = roomBookingStore.selectedRooms.map(r => JSON.stringify(r))
+
+    const adults = roomBookingStore.guests
+    ? Number(roomBookingStore.guests.split('|')[0])
+    : 1
+
+    const bookingPayload = {
+      email,
+      startDate: roomBookingStore.checkin,
+      endDate: roomBookingStore.checkout,
+      adults,
+      roomTypes,
+      messageToHotel: formData.specialRequests,
+    }
+
+    console.log('Submitting booking with:', bookingPayload)
+
+    const bookingRes = await fetch(`${BACKEND_URL}/bookingWrapper`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(bookingPayload),
+    })
+
+    console.log('Booking response status:', bookingRes.status)
+    console.log('Booking response ok:', bookingRes.ok)
+
+    const resData = await bookingRes.json()
+    console.log('Booking response body:', resData)
+
+    if (!bookingRes.ok) {
+      alert('Failed to create bookings')
+      return
+    } else {
+      roomBookingStore.clearRoomBookingData()
+      setLocation(`/confirmation?count=${resData.bookings.length}`)
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-xl mx-auto">
-      <h2 className="text-2xl font-bold">Guest Information</h2>
+      <h2 className="text-2xl font-bold">Update Your Information</h2>
 
       <div className="flex gap-4">
         <div className="w-full">
@@ -177,6 +274,7 @@ const CheckoutForm = () => {
         {errorMessages.phone && <p className="text-red-500 text-sm mt-1">{errorMessages.phone}</p>}
       </div>
 
+      <h2 className="text-2xl font-bold">Booking Infomation</h2>
       <textarea
         name="specialRequests"
         placeholder="Special Requests"

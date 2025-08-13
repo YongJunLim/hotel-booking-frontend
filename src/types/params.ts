@@ -6,6 +6,7 @@ export interface SearchParams {
   currency: string | null
   country_code: string | null
   guests: string | null
+  count: string | null
 }
 
 export interface RouteParams {
