@@ -20,6 +20,7 @@ export interface UpdateUserRequest extends Partial<UserDetails> {
 
 export interface userResponse {
   success: boolean
+  updatedUser?: UserDetails // temp for editProfile()
   data?: UserDetails
   error?: { message?: string }
   message: string

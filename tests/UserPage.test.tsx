@@ -53,7 +53,15 @@ const createTestBookings = () => [
 ]
 
 vi.mock('wouter', () => ({
-  Link: ({ href, children, className }: { href: string, children: React.ReactNode, className?: string }) => (
+  Link: ({
+    href,
+    children,
+    className,
+  }: {
+    href: string
+    children: React.ReactNode
+    className?: string
+  }) => (
     <a href={href} className={className}>
       {children}
     </a>
@@ -63,7 +71,9 @@ vi.mock('wouter', () => ({
 
 vi.mock('./DeleteAccount', () => ({
   default: ({ onClose }: { open: boolean, onClose: () => void }) => (
-    <button onClick={onClose} data-testid="close-delete">Close Delete</button>
+    <button onClick={onClose} data-testid="close-delete">
+      Close Delete
+    </button>
   ),
 }))
 
@@ -86,7 +96,9 @@ describe('UserPage Integration Tests', () => {
   let mockFetchBookings: MockedFunction<() => Promise<unknown>>
 
   let mockgetProfile: MockedFunction<() => Promise<boolean | undefined>>
-  let mockeditProfile: MockedFunction<(reqbody: UpdateUserRequest) => Promise<userResponse>>
+  let mockeditProfile: MockedFunction<
+    (reqbody: UpdateUserRequest) => Promise<userResponse>
+  >
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -94,9 +106,18 @@ describe('UserPage Integration Tests', () => {
     // Reset all stores to initial state
     useAuthStore.getState().logout()
     useBookingStore.getState().clearBooking()
-    mockFetchBookings = vi.spyOn(useBookingStore.getState(), 'fetchBooking') as MockedFunction<() => Promise<unknown>>
-    mockeditProfile = vi.spyOn(useAuthStore.getState(), 'editProfile') as MockedFunction<(reqbody: UpdateUserRequest) => Promise<userResponse>>
-    mockgetProfile = vi.spyOn(useAuthStore.getState(), 'getProfile') as MockedFunction<() => Promise<boolean | undefined>>
+    mockFetchBookings = vi.spyOn(
+      useBookingStore.getState(),
+      'fetchBooking',
+    ) as MockedFunction<() => Promise<unknown>>
+    mockeditProfile = vi.spyOn(
+      useAuthStore.getState(),
+      'editProfile',
+    ) as MockedFunction<(reqbody: UpdateUserRequest) => Promise<userResponse>>
+    mockgetProfile = vi.spyOn(
+      useAuthStore.getState(),
+      'getProfile',
+    ) as MockedFunction<() => Promise<boolean | undefined>>
 
     // useToastStore.getState().setToast
 
@@ -119,7 +140,9 @@ describe('UserPage Integration Tests', () => {
     mockgetProfile.mockImplementation(async () => {
       try {
         const token = useAuthStore.getState().accessToken
-        const response = await mockUserService.getProfile(token) as userResponse
+        const response = (await mockUserService.getProfile(
+          token,
+        )) as userResponse
         if (response.success) {
           useAuthStore.setState({ userDetails: response.data })
           return true
@@ -135,7 +158,10 @@ describe('UserPage Integration Tests', () => {
 
     mockeditProfile.mockImplementation(async (reqbody: UpdateUserRequest) => {
       const token = useAuthStore.getState().accessToken
-      const response = await mockUserService.editProfile(token, reqbody) as userResponse
+      const response = (await mockUserService.editProfile(
+        token,
+        reqbody,
+      )) as userResponse
       return response
     })
 
@@ -145,7 +171,9 @@ describe('UserPage Integration Tests', () => {
         // Get token from auth store (since fetchBooking doesn't take parameters)
         const token = useAuthStore.getState().accessToken
         // Simulate calling userService.getBooking
-        const response = await mockUserService.getBooking(token) as bookingResponse
+        const response = (await mockUserService.getBooking(
+          token,
+        )) as bookingResponse
         if (response.success) {
           useBookingStore.setState({ bookings: response.bookings })
           return response.bookings
@@ -214,7 +242,10 @@ describe('UserPage Integration Tests', () => {
         expect(screen.getByRole('table')).toBeInTheDocument()
 
         // Debug: Log current store state
-        console.log('Current bookings in store:', useBookingStore.getState().bookings)
+        console.log(
+          'Current bookings in store:',
+          useBookingStore.getState().bookings,
+        )
 
         // Check that both room types are present
         expect(screen.getByText('Deluxe Room')).toBeInTheDocument()
@@ -277,7 +308,7 @@ describe('UserPage Integration Tests', () => {
 
       // Verify profile refresh
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(mockUserService.getProfile).toHaveBeenCalledTimes(2) // Initial + refresh
       })
     })
@@ -297,7 +328,7 @@ describe('UserPage Integration Tests', () => {
       const toastStore = useToastStore.getState()
       const setToastSpy = vi.spyOn(toastStore, 'setToast')
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(setToastSpy).toHaveBeenCalledWith('Update failed', 'error')
       })
     })
@@ -358,7 +389,9 @@ describe('UserPage Integration Tests', () => {
       render(<UserPage />)
 
       await waitFor(() => {
-        expect(screen.getByText('No bookings found or failed to load bookings.')).toBeInTheDocument()
+        expect(
+          screen.getByText('No bookings found or failed to load bookings.'),
+        ).toBeInTheDocument()
       })
     })
   })
@@ -387,8 +420,11 @@ describe('UserPage Integration Tests', () => {
       const toastStore = useToastStore.getState()
       const setToastSpy = vi.spyOn(toastStore, 'setToast')
 
-      waitFor(() => {
-        expect(setToastSpy).toHaveBeenCalledWith('Failed to retrieve user details', 'error')
+      await waitFor(() => {
+        expect(setToastSpy).toHaveBeenCalledWith(
+          'Failed to retrieve user details',
+          'error',
+        )
       })
     })
 
@@ -399,8 +435,11 @@ describe('UserPage Integration Tests', () => {
 
       const toastStore = useToastStore.getState()
       const setToastSpy = vi.spyOn(toastStore, 'setToast')
-      waitFor(() => {
-        expect(setToastSpy).toHaveBeenCalledWith('Failed to fetch Booking list', 'error')
+      await waitFor(() => {
+        expect(setToastSpy).toHaveBeenCalledWith(
+          'Failed to fetch Booking list',
+          'error',
+        )
       })
     })
   })
@@ -452,7 +491,11 @@ describe('UserPage Component Behavior', () => {
   // Only test component-specific logic that isn't covered by integration tests
 
   it('should validate password requirement in edit form', async () => {
-    const testUser = { email: 'test@test.com', firstName: 'Test', isAdmin: false }
+    const testUser = {
+      email: 'test@test.com',
+      firstName: 'Test',
+      isAdmin: false,
+    }
     useAuthStore.getState().login(testUser, 'valid-token')
 
     render(<UserPage></UserPage>)
@@ -478,7 +521,11 @@ describe('UserPage Component Behavior', () => {
   })
 
   it('should toggle UI states correctly', async () => {
-    const testUser = { email: 'test@test.com', firstName: 'Test', isAdmin: false }
+    const testUser = {
+      email: 'test@test.com',
+      firstName: 'Test',
+      isAdmin: false,
+    }
     useAuthStore.getState().login(testUser, 'valid-token')
 
     render(<UserPage></UserPage>)

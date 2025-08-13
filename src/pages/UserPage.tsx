@@ -10,11 +10,18 @@ import useToastStore from '../stores/ToastStore'
 export const UserPage = () => {
   const [isClick, setIsClick] = useState(false)
   // AuthStore
-  const { isLoggedIn, userDetails, accessToken, getProfile, editProfile } = useAuthStore()
+  const { isLoggedIn, accessToken, getProfile, editProfile } = useAuthStore()
   // BookingStore
-  const { fetchBooking, bookings, selectedBooking, setSelectedBooking, bookingStatus } = useBookingStore()
+  const {
+    fetchBooking,
+    bookings,
+    selectedBooking,
+    setSelectedBooking,
+    bookingStatus,
+  } = useBookingStore()
   // Toast Store
   const setToast = useToastStore(state => state.setToast)
+  const userDetails = useAuthStore(state => state.userDetails)
   const [message, setMessage] = useState('')
   const [msgClass, setMsgClass] = useState('')
   const [editButton, setEditButton] = useState(false)
@@ -67,12 +74,23 @@ export const UserPage = () => {
 
   async function submitEditProfile() {
     const inputs = {
-      firstName: (document.getElementById('first_name') as HTMLInputElement).value.trim(),
-      lastName: (document.getElementById('last_name') as HTMLInputElement).value.trim(),
-      salutation: (document.getElementById('salutation') as HTMLSelectElement).value.trim(),
-      phoneNumber: (document.getElementById('phone') as HTMLInputElement).value.trim(),
-      email: (document.getElementById('email') as HTMLInputElement).value.trim(),
-      password: (document.getElementById('passwd_edit') as HTMLInputElement).value,
+      firstName: (
+        document.getElementById('first_name') as HTMLInputElement
+      ).value.trim(),
+      lastName: (
+        document.getElementById('last_name') as HTMLInputElement
+      ).value.trim(),
+      salutation: (
+        document.getElementById('salutation') as HTMLSelectElement
+      ).value.trim(),
+      phoneNumber: (
+        document.getElementById('phone') as HTMLInputElement
+      ).value.trim(),
+      email: (
+        document.getElementById('email') as HTMLInputElement
+      ).value.trim(),
+      password: (document.getElementById('passwd_edit') as HTMLInputElement)
+        .value,
     }
     if (!inputs.password) {
       setMessage('Password is required')
@@ -93,8 +111,9 @@ export const UserPage = () => {
         const response = await editProfile(reqbody)
         console.log(response)
         setToast(response.message, response.success ? 'success' : 'error')
-
-        if (response.success) {
+        // if (response.success) {
+        if (response.updatedUser) {
+          console.log('getting profile')
           await getProfile() // Refresh profile data
         }
       }
@@ -132,7 +151,13 @@ export const UserPage = () => {
                 aria-expanded={isOpen}
                 aria-haspopup="true"
               >
-                <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                <svg
+                  className="w-5 h-5"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 16 3"
+                >
                   <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
                 </svg>
               </button>
@@ -174,16 +199,27 @@ export const UserPage = () => {
                 <div className="space-y-3">
                   {/* Name */}
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Name</p>
-                    <p data-testid="username" className="text-gray-900 dark:text-white">
-                      {[userDetails.salutation, userDetails.firstName, userDetails.lastName]
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      Name
+                    </p>
+                    <p
+                      data-testid="username"
+                      className="text-gray-900 dark:text-white"
+                    >
+                      {[
+                        userDetails.salutation,
+                        userDetails.firstName,
+                        userDetails.lastName,
+                      ]
                         .filter(Boolean)
                         .join(' ')}
                     </p>
                   </div>
                   {/* Email */}
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Email</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      Email
+                    </p>
                     <p className="text-gray-900 dark:text-white">
                       {userDetails.email}
                     </p>
@@ -192,13 +228,14 @@ export const UserPage = () => {
                   {/* Phone */}
                   {userDetails.phoneNumber && (
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Phone</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        Phone
+                      </p>
                       <p className="text-gray-900 dark:text-white">
                         {userDetails.phoneNumber}
                       </p>
                     </div>
                   )}
-
                 </div>
               </div>
               {/* Booking lists */}
@@ -207,17 +244,18 @@ export const UserPage = () => {
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white mr-4">
                     Booking list
                   </h2>
-                  <button onClick={() => {
-                    const submitFetch = async () => {
-                      try {
-                        await FetchBooking()
+                  <button
+                    onClick={() => {
+                      const submitFetch = async () => {
+                        try {
+                          await FetchBooking()
+                        }
+                        catch (error) {
+                          console.error('Fetch booking failed:', error)
+                        }
                       }
-                      catch (error) {
-                        console.error('Fetch booking failed:', error)
-                      }
-                    }
-                    void submitFetch()
-                  }}
+                      void submitFetch()
+                    }}
                   >
                     Refresh
                   </button>
@@ -245,24 +283,51 @@ export const UserPage = () => {
                     </thead>
                     <tbody>
                       {bookings.map((item, index) => (
-                        <tr key={item._id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
-                          <th data-testid={`roomtype-${index}`} scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <tr
+                          key={item._id}
+                          className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200"
+                        >
+                          <th
+                            data-testid={`roomtype-${index}`}
+                            scope="row"
+                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                          >
                             {item.roomType}
                           </th>
-                          <td data-testid={`startdate-${index}`} className="px-6 py-4">
+                          <td
+                            data-testid={`startdate-${index}`}
+                            className="px-6 py-4"
+                          >
                             {' '}
                             {item.startDate}
                           </td>
-                          <td data-testid={`enddate-${index}`} className="px-6 py-4">
+                          <td
+                            data-testid={`enddate-${index}`}
+                            className="px-6 py-4"
+                          >
                             {' '}
                             {item.endDate}
                           </td>
-                          <td data-testid={`nights-${index}`} className="px-6 py-4">
+                          <td
+                            data-testid={`nights-${index}`}
+                            className="px-6 py-4"
+                          >
                             {' '}
                             {item.nights}
                           </td>
-                          <td data-testid={`info-${index}`} className="px-6 py-4">
-                            <a href="#" onClick={() => { void setSelectedBooking(item) }} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
+                          <td
+                            data-testid={`info-${index}`}
+                            className="px-6 py-4"
+                          >
+                            <a
+                              href="#"
+                              onClick={() => {
+                                void setSelectedBooking(item)
+                              }}
+                              className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                            >
+                              View
+                            </a>
                           </td>
                         </tr>
                       ))}
@@ -279,8 +344,15 @@ export const UserPage = () => {
               {selectedBooking && (
                 <div>
                   <div className="flex">
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white mr-8">Viewed Information:</p>
-                    <button onClick={() => { void setSelectedBooking(null) }} className="text-lg text-gray-400 hover:text-gray-900 dark:text-gray-500 dark:hover:text-white">
+                    <p className="text-lg font-semibold text-gray-900 dark:text-white mr-8">
+                      Viewed Information:
+                    </p>
+                    <button
+                      onClick={() => {
+                        void setSelectedBooking(null)
+                      }}
+                      className="text-lg text-gray-400 hover:text-gray-900 dark:text-gray-500 dark:hover:text-white"
+                    >
                       Close
                     </button>
                   </div>
@@ -353,13 +425,19 @@ export const UserPage = () => {
           <div className="flex items-start space-x-3">
             <div className="flex-1 space-y-4">
               <div>
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Edit Profile</h2>
-                <p className="text-gray-600 dark:text-gray-400">Update any details below. All fields are optional.</p>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  Edit Profile
+                </h2>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Update any details below. All fields are optional.
+                </p>
               </div>
               <div className="grid gap-4 md:grid-cols-2">
                 {/* Name Fields */}
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">First name</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    First name
+                  </label>
                   <input
                     type="text"
                     id="first_name"
@@ -370,7 +448,9 @@ export const UserPage = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Last name</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Last name
+                  </label>
                   <input
                     type="text"
                     id="last_name"
@@ -381,7 +461,9 @@ export const UserPage = () => {
 
                 {/* Contact Fields */}
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Salutation</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Salutation
+                  </label>
                   <select
                     id="salutation"
                     className="w-full p-2 text-sm border rounded-lg bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-500 focus:border-transparent"
@@ -396,7 +478,9 @@ export const UserPage = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone number</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Phone number
+                  </label>
                   <input
                     type="tel"
                     id="phone"
@@ -408,7 +492,9 @@ export const UserPage = () => {
 
               {/* Email */}
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Email
+                </label>
                 <input
                   type="email"
                   id="email"
@@ -424,7 +510,9 @@ export const UserPage = () => {
                   {' '}
                   <span className="text-red-500">*</span>
                 </label>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Required to confirm changes</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                  Required to confirm changes
+                </p>
                 <input
                   type="password"
                   id="passwd_edit"
@@ -449,7 +537,6 @@ export const UserPage = () => {
                   void submit()
                 }}
                 className="w-full px-4 py-2 mt-4 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600"
-
               >
                 Save Changes
               </button>
@@ -461,8 +548,18 @@ export const UserPage = () => {
               aria-label="Close"
               onClick={() => setEditButton(false)}
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
             <p className={`${msgClass}`}>{message}</p>

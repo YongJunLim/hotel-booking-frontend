@@ -1,6 +1,10 @@
 import { create } from 'zustand'
 import { devtools, persist, createJSONStorage } from 'zustand/middleware'
-import { type UserDetails, UpdateUserRequest, userResponse } from '../types/user'
+import {
+  type UserDetails,
+  UpdateUserRequest,
+  userResponse,
+} from '../types/user'
 import { userService } from '../utils/userService'
 import useBookingStore from './BookingStore'
 
