@@ -52,6 +52,8 @@ const CheckoutForm = () => {
   const [cardError, setCardError] = useState<string | null>(null);
   const [cardComplete, setCardComplete] = useState(false);
 
+  const [submitting, setSubmitting] = useState(false)
+
   // ========== Redirect if nothing in checkout ==========
   useEffect(() => {
     if (!roomBookingStore.hotelId || roomBookingStore.selectedRooms.length === 0) {
@@ -127,6 +129,11 @@ const CheckoutForm = () => {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
+    if (submitting) {
+      return
+    }
+    setSubmitting(true)
+
     e.preventDefault()
 
     // ========== Form validation ==========
@@ -150,23 +157,27 @@ const CheckoutForm = () => {
 
     if (!stripe || !elements) {
       console.error("Stripe has not loaded yet");
+      setSubmitting(false)
       return;
     }
 
     // ========== Stripe card validation ==========
     if (!cardComplete) {
       setCardError('Please enter your valid card details.');
+      setSubmitting(false)
       return;
     }
     if (cardError) {
       setCardError('Error with card');
       alert(cardError);
+      setSubmitting(false)
       return;
     }
 
 
     if (Object.keys(newErrors).length > 0) {
       setErrorMessages(newErrors)
+      setSubmitting(false)
       return
     }
 
@@ -195,6 +206,7 @@ const CheckoutForm = () => {
 
     if (!profileUpdateRes.ok) {
       alert('Failed to update profile')
+      setSubmitting(false)
       return
     }
 
@@ -234,6 +246,7 @@ const CheckoutForm = () => {
 
     if (!bookingRes.ok) {
       alert('Failed to create bookings')
+      setSubmitting(false)
       return
     }
 
@@ -266,6 +279,7 @@ const CheckoutForm = () => {
 
     if (!paymentRes.ok) {
       alert('Failed to create payment');
+      setSubmitting(false)
       return;
     }
 
@@ -414,8 +428,12 @@ const CheckoutForm = () => {
       />
       {cardError && <p className="text-red-500 text-sm mt-1">{cardError}</p>}
 
-      <button type="submit" className="btn btn-primary mt-4 w-full">
-        Submit Booking
+      <button
+        type="submit"
+        className="btn btn-primary mt-4 w-full"
+        disabled={submitting}
+      >
+        {submitting ? 'Submitting...' : 'Submit Booking'}
       </button>
     </form>
   )
