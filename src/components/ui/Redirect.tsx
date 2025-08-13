@@ -10,7 +10,7 @@ export const RedirectToast = () => {
   }
 
   return (
-    <div id="toast-message-cta" className="justify-center items-center m-auto w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-sm dark:bg-gray-800 dark:text-gray-400" role="alert">
+    <div data-testid="redirect-toast" id="toast-message-cta" className="justify-center items-center m-auto w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-sm dark:bg-gray-800 dark:text-gray-400" role="alert">
       <div className="flex justify-center">
         <div className="ms-3 text-sm font-normal">
           <div className="mb-2 text-sm font-normal">You are currently not logged in. </div>
