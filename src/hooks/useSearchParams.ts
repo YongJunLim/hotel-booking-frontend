@@ -13,5 +13,6 @@ export const useSearchParams = (): SearchParams => {
     currency: searchParams.get('currency'),
     country_code: searchParams.get('country_code'),
     guests: searchParams.get('guests'),
+    count: searchParams.get('count'),
   }
 }
