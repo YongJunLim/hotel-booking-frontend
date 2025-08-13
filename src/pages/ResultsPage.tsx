@@ -137,7 +137,6 @@ export const ResultsPage = () => {
       const churchMatch = !sustainability.church || desc.includes('church')
       const heritageMatch
         = !sustainability.heritage || desc.includes('heritage')
-      console.log('desc', desc)
       return (
         starRange
         && priceRange
