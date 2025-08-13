@@ -1,30 +1,22 @@
 import { useState, useEffect } from 'react'
-// import useAuthStore from '../store'
 import useAuthStore from '../stores/AuthStore'
 import useToastStore from '../stores/ToastStore'
 import { useLocation } from 'wouter'
 import { BACKEND_URL } from '../config/api'
+import { DeleteResponse } from '../types/user'
 
 interface DeleteAccountProps {
   open: boolean
   onClose: () => void
 }
 
-interface DeleteResponse {
-  success: boolean
-  message: string
-}
-
 function DeleteToast({ open, onClose }: DeleteAccountProps) {
   const [isActive, setIsActive] = useState(false)
   const isLoggedIn = useAuthStore(state => state.isLoggedIn)
-  // const { logout } = useAuthStore();
   const logout = useAuthStore(state => state.logout)
   const accessToken = useAuthStore(state => state.accessToken)
-  // const curEmail = useAuthStore((state) => state.userdetails.email);
   const curEmail = useAuthStore(state => state.userDetails.email)
   const setToast = useToastStore(state => state.setToast)
-  const [msg, setMsg] = useState('')
   const [, nav] = useLocation()
 
   function closeClick() {
@@ -40,17 +32,12 @@ function DeleteToast({ open, onClose }: DeleteAccountProps) {
     const pwd_del = document.getElementById('passwd_del') as HTMLInputElement
     // let token: string | null;
     if (isLoggedIn) {
-      console.log('isloggedin', isLoggedIn)
-      console.log('password: ', pwd_del.value)
-      console.log('email: ', curEmail)
-      // token = sessionStorage.getItem("accessToken");
-      // if (token == null) {
-      //   token = "";
-      // }
+      // console.log('isloggedin', isLoggedIn)
+      // console.log('password: ', pwd_del.value)
+      // console.log('email: ', curEmail)
       const res = await fetch(`${BACKEND_URL}/users/delete`, {
         method: 'POST',
         headers: {
-          // Authorization: "Bearer " + token,
           'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
@@ -63,16 +50,15 @@ function DeleteToast({ open, onClose }: DeleteAccountProps) {
       const msg = (await res.json()) as DeleteResponse
       if (res.ok) {
         logout()
-        // sessionStorage.setItem("toast", msg.message);
         setToast(msg.message)
         nav('/')
       }
       else {
-        setMsg(msg.message || 'Account deletion failed.')
+        setToast(msg.message || 'Account deletion failed.', 'error')
       }
     }
     else {
-      setMsg('Please sign in first')
+      setToast('Please sign in first', 'error')
     }
   }
 
@@ -81,6 +67,7 @@ function DeleteToast({ open, onClose }: DeleteAccountProps) {
       <>
         <div
           id="toast-interactive"
+          data-testid="delete-toast"
           className="mx-auto m-8 item-center w-full max-w-sm p-4 text-gray-500 bg-white rounded-lg shadow-sm dark:bg-gray-800 dark:text-gray-400"
           role="alert"
         >
@@ -123,7 +110,6 @@ function DeleteToast({ open, onClose }: DeleteAccountProps) {
               >
                 Yes, delete my account
               </a>
-              <p>{msg}</p>
             </div>
             <button
               type="button"

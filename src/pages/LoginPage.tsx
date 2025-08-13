@@ -4,6 +4,8 @@ import useAuthStore from '../stores/AuthStore'
 import useToastStore from '../stores/ToastStore'
 import { useState } from 'react'
 import { BACKEND_URL } from '../config/api'
+import { AuthResponse } from '../types/user'
+import { getErrorMessage } from '../utils/ZodErrorMsg'
 
 export const Login = () => {
   const [message, setMessage] = useState('')
@@ -24,21 +26,6 @@ export const Login = () => {
   //     return () => clearTimeout(timer)
   //   }
   // }, [toastMsg, clearToast])
-
-  interface LoginResponse {
-    data: {
-      firstName: string
-      email: string
-      isAdmin: boolean
-      token: string
-    }
-    message: string
-    error?: {
-      issues?: {
-        message: string
-      }[]
-    }
-  }
 
   return (
     <>
@@ -115,24 +102,16 @@ export const Login = () => {
         password: passwd_inp.value,
       }),
     })
-    const msg = (await response.json()) as LoginResponse
+    const msg = (await response.json()) as AuthResponse
+    console.log(msg)
     // Handle login
-    const isSuccess = response.ok && msg.data?.token
-    if (isSuccess) {
-      // sessionStorage.setItem("accessToken", msg.data.token);
-      // sessionStorage.setItem(
-      //   "details",
-      //   JSON.stringify({
-      //     email: msg.data.email,
-      //     firstName: msg.data.firstName,
-      //   }),
-      // );
-      // sessionStorage.setItem("toast", msg.message);
-      // login();
+
+    if (response.ok && msg.data?.token) {
       login(
         {
           email: msg.data.email,
           firstName: msg.data.firstName,
+          isAdmin: msg.data.isAdmin,
         },
         msg.data.token,
       )
@@ -147,12 +126,9 @@ export const Login = () => {
       }
     }
     else {
-      const zodError = msg.error?.issues?.[0]?.message
-      const fallbackmsg = msg.message
-      console.log(msg.message)
-      console.log(zodError)
-      setMessage(zodError || fallbackmsg)
       setMsgClass('text-red-800')
+      const errorMessage = getErrorMessage(msg)
+      setMessage(errorMessage)
     }
   }
   async function onSubmitClick(): Promise<void> {

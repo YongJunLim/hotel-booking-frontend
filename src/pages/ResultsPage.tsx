@@ -18,8 +18,8 @@ import { MapSelect } from '../components/ui/MapSelect'
 import StarRatingFilter from '../components/ui/FilterStar'
 import RangeSlider from '../components/ui/FilterPrice'
 import DestinationSearch from '../components/ui/DestinationSearch'
-import { useCountryStore } from '../stores/HotelSearch'
 import CheckBox from '../components/ui/CheckBox'
+import { useCountryStore } from '../stores/HotelSearchStore'
 
 const fetcher = (url: string) => fetch(url).then(response => response.json())
 

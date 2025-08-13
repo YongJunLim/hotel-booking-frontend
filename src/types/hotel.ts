@@ -30,7 +30,7 @@ export interface Hotel {
   longitude: number
   address: string
   rating: number
-  categories: HotelCategories
+  categories?: HotelCategories
   description: string
   amenities: HotelAmenities
   image_details: ImageDetails
