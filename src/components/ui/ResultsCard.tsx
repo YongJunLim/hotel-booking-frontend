@@ -9,6 +9,7 @@ interface Results {
   checkout?: string
   guests?: string
   destinationId?: string
+  tags?: string[]
 }
 
 export const HotelCard = ({
@@ -18,6 +19,7 @@ export const HotelCard = ({
   checkout,
   guests,
   destinationId,
+  tags,
 }: Results) => {
   const [, navigate] = useLocation()
 
@@ -46,6 +48,15 @@ export const HotelCard = ({
             data-testid="hotel-rating"
           />
         </div>
+        {tags && tags.length > 0 && (
+          <div className="flex gap-2 mt-2">
+            {tags.map(tag => (
+              <span key={tag} className="badge badge-info">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
         <div>
           <p
             className="text-green-600 font-semibold text-xl flex justify-end"
