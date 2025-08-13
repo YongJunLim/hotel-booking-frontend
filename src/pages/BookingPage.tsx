@@ -22,6 +22,10 @@ const stripePromise = loadStripe(
 const CheckoutForm = () => {
   const stripe = useStripe()
   const elements = useElements()
+
+  console.log('Stripe:', stripe)
+  console.log('Elements:', elements)  
+
   const [, setLocation] = useLocation()
   const [formData, setFormData] = useState({
     firstName: '',
@@ -44,6 +48,9 @@ const CheckoutForm = () => {
 
   const { accessToken, userDetails } = useAuthStore()
   const [errorMessages, setErrorMessages] = useState<{ [key: string]: string }>({})
+
+  const [cardError, setCardError] = useState<string | null>(null);
+  const [cardComplete, setCardComplete] = useState(false);
 
   // ========== Redirect if nothing in checkout ==========
   useEffect(() => {
@@ -122,7 +129,7 @@ const CheckoutForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Form validation
+    // ========== Form validation ==========
     const newErrors: { [key: string]: string } = {}
 
     if (!formData.firstName.trim()) {
@@ -141,12 +148,27 @@ const CheckoutForm = () => {
       newErrors.billingAddress = 'Billing address is required'
     }
 
+    if (!stripe || !elements) {
+      console.error("Stripe has not loaded yet");
+      return;
+    }
+
+    // ========== Stripe card validation ==========
+    if (!cardComplete) {
+      setCardError('Please enter your valid card details.');
+      return;
+    }
+    if (cardError) {
+      setCardError('Error with card');
+      alert(cardError);
+      return;
+    }
+
+
     if (Object.keys(newErrors).length > 0) {
       setErrorMessages(newErrors)
       return
     }
-
-    //if (!stripe || !elements) return
 
     // ========== Update User Information ==========
     const profilePayload = {
@@ -156,8 +178,7 @@ const CheckoutForm = () => {
       phoneNumber: formData.phone
     }
 
-    /*
-    const profileUpdateRes = await fetch(`${BACKEND_URL}/users/profile`, {
+    const profileUpdateRes = await fetch(`${BACKEND_URL}/users/profileold`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -176,7 +197,6 @@ const CheckoutForm = () => {
       alert('Failed to update profile')
       return
     }
-    */
 
     // ========== Send Booking Request ==========
     const email = userDetails.email
@@ -215,10 +235,95 @@ const CheckoutForm = () => {
     if (!bookingRes.ok) {
       alert('Failed to create bookings')
       return
-    } else {
-      roomBookingStore.clearRoomBookingData()
-      setLocation(`/confirmation?count=${resData.bookings.length}`)
     }
+
+    const bookingId = resData.bookings[0]
+
+    const paymentPayload = {
+      payeeId: userDetails.email,
+      bookingId,
+      amount: roomBookingStore.getTotalPrice() * 100, // cents
+      currency: 'usd',
+    };
+
+    // ========== Create payment ==========
+    console.log('Creating payment with:', paymentPayload)
+
+    const paymentRes = await fetch(`${BACKEND_URL}/payments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(paymentPayload),
+    });
+
+    console.log('Create payment response status:', paymentRes.status)
+    console.log('Create payment response ok:', paymentRes.ok)
+
+    const paymentResData = await paymentRes.json()
+    console.log('Create payment response body:', paymentResData)
+
+    if (!paymentRes.ok) {
+      alert('Failed to create payment');
+      return;
+    }
+
+    // ========== Get client secret ==========
+    /*
+    const paymentId = paymentResData.paymentId;
+
+    console.log('Getting client secret with:', { _id: paymentId })
+
+    const secretRes = await fetch(`${BACKEND_URL}/payments/secret`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ _id: paymentId }),
+    });
+
+    console.log('Client secret response status:', secretRes.status)
+    console.log('Client secret response ok:', secretRes.ok)
+
+    const secretResData = await secretRes.json()
+    console.log('Client secret response body:', secretResData)
+
+    if (!secretRes.ok) {
+      alert('Failed to get client secret');
+      return;
+    }
+
+    const { client_secret } = await secretRes.json();
+
+    // ========== Confirm payment ==========
+    const cardElement = elements.getElement(CardElement);
+    const { error, paymentIntent } = await stripe.confirmCardPayment(client_secret, {
+      payment_method: {
+        card: cardElement!,
+        billing_details: {
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          phone: formData.phone,
+          address: { line1: formData.billingAddress },
+        },
+      },
+    });
+
+    if (error) {
+      console.error(error);
+      alert(error.message);
+      return;
+    }
+
+    if (paymentIntent.status === 'succeeded') {
+      roomBookingStore.clearRoomBookingData();
+      setLocation(`/confirmation?count=${resData.bookings.length}`);
+    }
+    */
+    roomBookingStore.clearRoomBookingData();
+    setLocation(`/confirmation?count=${resData.bookings.length}`);
   }
 
   return (
@@ -279,12 +384,13 @@ const CheckoutForm = () => {
       <h2 className="text-2xl font-bold">Booking Infomation</h2>
       <textarea
         name="specialRequests"
-        placeholder="Special Requests"
+        placeholder="Special Requests (Optional)"
         value={formData.specialRequests}
         onChange={handleChange}
         className="textarea textarea-bordered w-full"
       />
 
+      <h2 className="text-2xl font-bold">Payment Information</h2>
       <div>
         <input
           name="billingAddress"
@@ -296,12 +402,17 @@ const CheckoutForm = () => {
         />
         {errorMessages.billingAddress && <p className="text-red-500 text-sm mt-1">{errorMessages.billingAddress}</p>}
       </div>
-
-      <h2 className="text-2xl font-bold mt-6">Payment Information</h2>
       <CardElement
-        options={{ style: { base: { fontSize: '16px' } } }}
-        className="p-2 border rounded-md"
+        options={{
+          style: { base: { fontSize: '16px', color: '#fff', '::placeholder': { color: '#a0aec0' } } },
+        }}
+        onChange={(event) => {
+          setCardError(event.error ? event.error.message : null);
+          setCardComplete(event.complete);
+        }}
+        className="p-2 border rounded-md h-12"
       />
+      {cardError && <p className="text-red-500 text-sm mt-1">{cardError}</p>}
 
       <button type="submit" className="btn btn-primary mt-4 w-full">
         Submit Booking
