@@ -18,6 +18,7 @@ import { MapSelect } from '../components/ui/MapSelect'
 import StarRatingFilter from '../components/ui/FilterStar'
 import RangeSlider from '../components/ui/FilterPrice'
 import DestinationSearch from '../components/ui/HotelSearch'
+import CheckBox from '../components/ui/CheckBox'
 import { useCountryStore } from '../stores/HotelSearchStore'
 
 const fetcher = (url: string) => fetch(url).then(response => response.json())
@@ -114,6 +115,14 @@ export const ResultsPage = () => {
   const [minstar, setminstar] = useState(0.5)
   const [maxstar, setmaxstar] = useState(5)
 
+  // filter sustainability
+  const [sustainability, setsustainability] = useState({
+    mosque: false,
+    temple: false,
+    church: false,
+    heritage: false,
+  })
+
   // filter star and price
   const filteredlist: StitchedHotel[] = useMemo(() => {
     return stichedata.filter((hotel) => {
@@ -122,9 +131,22 @@ export const ResultsPage = () => {
         = hotel.price !== undefined
           && hotel.price >= pricerange[0]
           && hotel.price <= pricerange[1]
-      return starRange && priceRange
+      const desc = hotel.description.toLowerCase()
+      const mosqueMatch = !sustainability.mosque || desc.includes('mosque')
+      const templeMatch = !sustainability.temple || desc.includes('temple')
+      const churchMatch = !sustainability.church || desc.includes('church')
+      const heritageMatch
+        = !sustainability.heritage || desc.includes('heritage')
+      return (
+        starRange
+        && priceRange
+        && mosqueMatch
+        && templeMatch
+        && churchMatch
+        && heritageMatch
+      )
     })
-  }, [stichedata, minstar, maxstar, pricerange])
+  }, [stichedata, minstar, maxstar, pricerange, sustainability])
 
   // sort for dropdown
   const [sortby, setsortby] = useState('Price (Ascending)')
@@ -260,7 +282,7 @@ export const ResultsPage = () => {
                   />
                 </div>
 
-                <div className="flex flex-col items-center rounded-lg h-50 border-4 border-double pr-3 pt-3">
+                <div className="flex flex-col items-center rounded-lg h-67 border-4 border-double pr-3 pt-3">
                   <h2 className="text-lg font-semibold flex pb-2 ">
                     {' '}
                     Filter By:
@@ -282,6 +304,13 @@ export const ResultsPage = () => {
                     >
                     </RangeSlider>
                   </div>
+                  <div className="pt-2 pl-2">
+                    <CheckBox
+                      value={sustainability}
+                      onChange={setsustainability}
+                    >
+                    </CheckBox>
+                  </div>
                 </div>
               </aside>
 
@@ -296,17 +325,27 @@ export const ResultsPage = () => {
                   )
                   : (
                     <>
-                      {shownlist.map((hotel: StitchedHotel) => (
-                        <HotelCard
-                          key={hotel.id}
-                          hotel={hotel}
-                          hotelprice={hotel.price}
-                          checkin={checkin}
-                          checkout={checkout}
-                          guests={guests}
-                          destinationId={destinationId}
-                        />
-                      ))}
+                      {shownlist.map((hotel: StitchedHotel) => {
+                        const desc = hotel.description.toLowerCase()
+                        const tags = []
+                        if (desc.includes('mosque')) tags.push('Mosque nearby')
+                        if (desc.includes('temple')) tags.push('Temple nearby')
+                        if (desc.includes('church')) tags.push('Church nearby')
+                        if (desc.includes('heritage')) tags.push('Heritage site')
+
+                        return (
+                          <HotelCard
+                            key={hotel.id}
+                            hotel={hotel}
+                            hotelprice={hotel.price}
+                            checkin={checkin}
+                            checkout={checkout}
+                            guests={guests}
+                            destinationId={destinationId}
+                            tags={tags}
+                          />
+                        )
+                      })}
                       {shownlist.length < sortedlist.length && (
                         <button
                           className="btn btn-primary mt-4"

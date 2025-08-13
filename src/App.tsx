@@ -10,6 +10,7 @@ import { HotelDetailPage } from './pages/HotelDetailPage'
 import { Signup } from './pages/SignupPage'
 import { Login } from './pages/LoginPage'
 import { UserPage } from './pages/UserPage'
+import { ConfirmationPage } from './pages/ConfirmationPage'
 import useAuthStore from './stores/AuthStore'
 
 function App() {
@@ -29,6 +30,11 @@ function App() {
         <Route path="/booking/:hotel_id">
           <ProtectedRoute>
             <BookingPage />
+          </ProtectedRoute>
+        </Route>
+        <Route path="/confirmation">
+          <ProtectedRoute>
+            <ConfirmationPage />
           </ProtectedRoute>
         </Route>
         <Route path="/signup" component={Signup} />
