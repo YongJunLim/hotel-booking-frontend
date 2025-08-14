@@ -82,6 +82,14 @@ jobs:
           echo "Backend did not start in time" >&2
           exit 1
 
+      - name: Import destinations into MongoDB
+        run: |
+          docker run --rm \
+            --network ${{ job.container.network || 'bridge' }} \
+            -v ${{ github.workspace }}/destinations_mongoimport.json:/import.json \
+            mongo:8.0 \
+            mongoimport --host mongo --port 27017 --db hotel-bookings --collection destinations --file /import.json --jsonArray
+
       - name: Run tests
         env:
           VITE_BACKEND_URL: http://localhost:9000
