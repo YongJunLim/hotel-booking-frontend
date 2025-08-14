@@ -1,37 +1,45 @@
-name: Run Tests
+name: Run Frontend Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
+  backend:
+    uses: YongJunLim/hotel-booking-backend/.github/workflows/backend-setup.yml@main
+    secrets:
+      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+
   test:
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         bun-version: [latest]
-    
+
+    env:
+      VITE_BACKEND_URL: ${{ needs.backend.outputs.backend_url }}
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v2
-      with:
-        bun-version: ${{ matrix.bun-version }}
-        
-    - name: Install dependencies
-      run: bun install --frozen-lockfile
-      
-    # - name: Run linter
-    #   run: bun run lint
-    # Currently, CheckoutForm.test.tsx and BookingPage.tsx will fail
-      
-    - name: Run type checking
-      run: bun run build
-      
-    - name: Run tests
-      run: bun run test
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ matrix.bun-version }}
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # - name: Run linter
+      #   run: bun run lint
+      # Currently, CheckoutForm.test.tsx and BookingPage.tsx will fail
+
+      - name: Run type checking
+        run: bun run build
+
+      - name: Run tests
+        run: bun run test
