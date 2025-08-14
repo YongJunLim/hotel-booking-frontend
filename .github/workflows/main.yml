@@ -36,11 +36,11 @@ jobs:
           ALLOWED_ORIGINS: "*"
         ports:
           - 9000:9000
-        options: >-
-          --health-cmd="curl --fail http://localhost:9000/api/v1/health || exit 1"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
+        # options: >-
+        #   --health-cmd="curl --fail http://localhost:9000/api/v1/health || exit 1"
+        #   --health-interval=10s
+        #   --health-timeout=5s
+        #   --health-retries=5
 
     steps:
       # - name: Log in to GitHub Container Registry
@@ -67,6 +67,20 @@ jobs:
 
       - name: Run type checking
         run: bun run build
+
+      # Manual wait for backend to be ready
+      - name: Wait for backend to start
+        run: |
+          for i in {1..30}; do
+            if curl -sSf http://localhost:9000/api/v1/health; then
+              echo "Backend is up!"
+              exit 0
+            fi
+            echo "Waiting for backend..."
+            sleep 2
+          done
+          echo "Backend did not start in time" >&2
+          exit 1
 
       - name: Run tests
         env:
