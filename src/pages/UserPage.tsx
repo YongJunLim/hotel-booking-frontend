@@ -109,12 +109,13 @@ export const UserPage = () => {
       console.log(reqbody)
       try {
         const response = await editProfile(reqbody)
-        console.log(response)
-        setToast(response.message, response.success ? 'success' : 'error')
+        console.log("res",response)
+        setToast(response.message, response.updatedUser ? 'success' : 'error')
         // if (response.success) {
         if (response.updatedUser) {
           console.log('getting profile')
           await getProfile() // Refresh profile data
+          setToast('Profile updated successfully', 'success')
         }
       }
       catch {
@@ -220,7 +221,7 @@ export const UserPage = () => {
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                       Email
                     </p>
-                    <p className="text-gray-900 dark:text-white">
+                    <p id="displayemail" className="text-gray-900 dark:text-white">
                       {userDetails.email}
                     </p>
                   </div>
@@ -231,7 +232,7 @@ export const UserPage = () => {
                       <p className="text-sm text-gray-500 dark:text-gray-400">
                         Phone
                       </p>
-                      <p className="text-gray-900 dark:text-white">
+                      <p id="displayphoneNumber" className="text-gray-900 dark:text-white">
                         {userDetails.phoneNumber}
                       </p>
                     </div>
@@ -264,19 +265,19 @@ export const UserPage = () => {
                   <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                       <tr>
-                        <th scope="col" className="px-6 py-3">
+                        <th id="typeheader" scope="col" className="px-6 py-3">
                           Room Type
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th id="startheader" scope="col" className="px-6 py-3">
                           Start Date
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th id="endheader" scope="col" className="px-6 py-3">
                           End Date
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th id="nightheader" scope="col" className="px-6 py-3">
                           Nights
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th id="infoheader" scope="col" className="px-6 py-3">
                           More info
                         </th>
                       </tr>
