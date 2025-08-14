@@ -4,8 +4,7 @@ import { render, screen, act } from "@testing-library/react";
 import { HotelDetailPage } from "../src/pages/HotelDetailPage";
 import useAuthStore from "../src/stores/AuthStore";
 import useRoomBookingStore from "../src/stores/RoomBookingStore";
-import useSWR from "swr";
-import type { SWRConfiguration } from "swr";
+import UseSWR from "swr";
 import userEvent from "@testing-library/user-event";
 
 const mockRooms = [
@@ -63,11 +62,13 @@ const mockRooms = [
   },
 ];
 
-// Mock SWR
 vi.mock("swr", () => ({
   __esModule: true,
   default: vi.fn(),
 }));
+
+// Mock SWR
+const mockedUseSWR = UseSWR as Mock;
 
 // Mock useSearchParams to control query params
 vi.mock("../../hooks/useSearchParams", () => ({
@@ -86,7 +87,7 @@ describe("HotelDetailPage", () => {
   describe("Loading", () => {
     it("shows skeleton loader and continues polling every 5000ms when loading", () => {
       // Simulate SWR loading state (data not ready, isLoading true)
-      (useSWR as Mock).mockReturnValue({
+      mockedUseSWR.mockReturnValue({
         data: undefined,
         error: undefined,
         isLoading: true,
@@ -96,14 +97,14 @@ describe("HotelDetailPage", () => {
 
       // Skeleton loader should be present
       expect(document.querySelector(".skeleton")).toBeTruthy();
-      const config = useSWR.mock.calls[0][2] as SWRConfiguration;
+      const config = mockedUseSWR.mock.calls[0][2];
       expect(config.refreshInterval!({ completed: false })).toBe(5000);
       expect(config.refreshInterval!({ completed: true })).toBe(0);
     });
   });
   describe("API failure", () => {
     it("shows error if rooms field is empty after API returns and stops polling", () => {
-      (useSWR as Mock).mockReturnValue({
+      mockedUseSWR.mockReturnValue({
         data: { completed: true, rooms: [] },
         error: undefined,
         isLoading: false,
@@ -116,12 +117,12 @@ describe("HotelDetailPage", () => {
         screen.getByText(/No available rooms were found/i),
       ).toBeInTheDocument();
       // Polling should stop
-      const config = useSWR.mock.calls[0][2] as SWRConfiguration;
+      const config = mockedUseSWR.mock.calls[0][2];
       expect(config.refreshInterval!({ completed: true })).toBe(0);
     });
 
     it("shows error message if API fails (500) and stops polling", () => {
-      (useSWR as Mock).mockReturnValue({
+      mockedUseSWR.mockReturnValue({
         data: undefined,
         error: { message: "Internal Server Error" },
         isLoading: false,
@@ -133,13 +134,13 @@ describe("HotelDetailPage", () => {
       expect(screen.getByText(/Error loading price data/i)).toBeInTheDocument();
       expect(screen.getByText(/Internal Server Error/i)).toBeInTheDocument();
       // Polling should stop
-      const config = useSWR.mock.calls[0][2] as SWRConfiguration;
+      const config = mockedUseSWR.mock.calls[0][2];
       expect(config.refreshInterval!({ completed: true })).toBe(0);
     });
   });
   describe("Successful Room Display", () => {
     it("groups and displays rooms, shows details and Add Room button, stops polling", () => {
-      (useSWR as Mock).mockReturnValue({
+      mockedUseSWR.mockReturnValue({
         data: { completed: true, rooms: mockRooms },
         error: undefined,
         isLoading: false,
@@ -160,13 +161,13 @@ describe("HotelDetailPage", () => {
 
       // Polling should stop
       expect(
-        (useSWR as Mock).mock.calls[0][2].refreshInterval({ completed: true }),
+        mockedUseSWR.mock.calls[0][2].refreshInterval({ completed: true }),
       ).toBe(0);
     });
   });
   describe("Room Selection", () => {
     it("disables room selection if user is not logged in", () => {
-      (useSWR as Mock).mockReturnValue({
+      mockedUseSWR.mockReturnValue({
         data: { completed: true, rooms: mockRooms },
         error: undefined,
         isLoading: false,
@@ -184,7 +185,7 @@ describe("HotelDetailPage", () => {
       });
     });
     it('shows "Remove" button after selecting a room when logged in', async () => {
-      (useSWR as Mock).mockReturnValue({
+      mockedUseSWR.mockReturnValue({
         data: { completed: true, rooms: mockRooms },
         error: undefined,
         isLoading: false,
@@ -209,7 +210,7 @@ describe("HotelDetailPage", () => {
     });
     it("disables further room selection after reaching the max rooms limit", () => {
       // guests: '2|2' means maxRooms = 2
-      (useSWR as Mock).mockReturnValue({
+      mockedUseSWR.mockReturnValue({
         data: { completed: true, rooms: mockRooms },
         error: undefined,
         isLoading: false,
