@@ -85,11 +85,13 @@ jobs:
       - name: Import destinations into MongoDB
         run: |
           docker run --rm \
-            --network ${{ job.container.network || 'bridge' }} \
             -v ${{ github.workspace }}/destinations_mongoimport.json:/import.json \
+            --network ${{ job.container.network || 'bridge' }} \
             mongo:8.0 \
-            mongoimport --host mongo --port 27017 --db hotel-bookings --collection destinations --file /import.json --jsonArray
-
+            mongoimport --uri mongodb://mongo:27017/hotel-bookings \
+                        --collection destinations \
+                        --type json \
+                        --file /import.json
       - name: Run tests
         env:
           VITE_BACKEND_URL: http://localhost:9000
