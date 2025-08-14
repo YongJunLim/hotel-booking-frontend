@@ -1,6 +1,6 @@
-import DestinationSearch from '../../../src/components/ui/DestinationSearch'
+import DestinationSearch from '../../../src/components/ui/HotelSearch'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { vi, expect } from 'vitest'
+import { vi, expect, describe, it, beforeEach } from 'vitest'
 import {
   useFormStore,
   useCountryStore,
@@ -68,7 +68,7 @@ mockUseCountryStore.mockImplementation((selector) => {
   return mockCountryStoreState
 })
 
-describe('DestinationSearch Integration Test (Errors)', () => {
+describe('HotelSearch Integration Test (Errors)', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockNavigate.mockClear()
@@ -442,17 +442,19 @@ describe('DestinationSearch Integration Test (Errors)', () => {
       'input[name="country_"]',
     ) as HTMLInputElement
 
-    if (startInput) {
-      fireEvent.change(startInput, { target: { value: startDate } })
-    }
-    if (endInput) {
-      fireEvent.change(endInput, { target: { value: endDate } })
-    }
-    if (countryInput) {
-      fireEvent.change(countryInput, {
-        target: { value: JSON.stringify(testMockCountryStoreState.country) },
-      })
-    }
+    act(() => {
+      if (startInput) {
+        fireEvent.change(startInput, { target: { value: startDate } })
+      }
+      if (endInput) {
+        fireEvent.change(endInput, { target: { value: endDate } })
+      }
+      if (countryInput) {
+        fireEvent.change(countryInput, {
+          target: { value: JSON.stringify(testMockCountryStoreState.country) },
+        })
+      }
+    })
 
     act(() => {
       fireEvent.click(screen.getByTestId('search-button'))
@@ -545,17 +547,19 @@ describe('DestinationSearch Integration Test (Errors)', () => {
     const start = startDate.toLocaleDateString('sv-SE')
     const end = endDate.toLocaleDateString('sv-SE')
 
-    if (startInput) {
-      fireEvent.change(startInput, { target: { value: start } })
-    }
-    if (endInput) {
-      fireEvent.change(endInput, { target: { value: end } })
-    }
-    if (countryInput) {
-      fireEvent.change(countryInput, {
-        target: { value: JSON.stringify(testMockCountryStoreState.country) },
-      })
-    }
+    act(() => {
+      if (startInput) {
+        fireEvent.change(startInput, { target: { value: start } })
+      }
+      if (endInput) {
+        fireEvent.change(endInput, { target: { value: end } })
+      }
+      if (countryInput) {
+        fireEvent.change(countryInput, {
+          target: { value: JSON.stringify(testMockCountryStoreState.country) },
+        })
+      }
+    })
 
     act(() => {
       fireEvent.click(screen.getByTestId('search-button'))
@@ -649,17 +653,19 @@ describe('DestinationSearch Integration Test (Errors)', () => {
     const start = startDate.toLocaleDateString('sv-SE')
     const end = endDate.toLocaleDateString('sv-SE')
 
-    if (startInput) {
-      fireEvent.change(startInput, { target: { value: start } })
-    }
-    if (endInput) {
-      fireEvent.change(endInput, { target: { value: end } })
-    }
-    if (countryInput) {
-      fireEvent.change(countryInput, {
-        target: { value: JSON.stringify(testMockCountryStoreState.country) },
-      })
-    }
+    act(() => {
+      if (startInput) {
+        fireEvent.change(startInput, { target: { value: start } })
+      }
+      if (endInput) {
+        fireEvent.change(endInput, { target: { value: end } })
+      }
+      if (countryInput) {
+        fireEvent.change(countryInput, {
+          target: { value: JSON.stringify(testMockCountryStoreState.country) },
+        })
+      }
+    })
 
     act(() => {
       fireEvent.click(screen.getByTestId('search-button'))
@@ -753,17 +759,19 @@ describe('DestinationSearch Integration Test (Errors)', () => {
     const start = startDate.toLocaleDateString('sv-SE')
     const end = endDate.toLocaleDateString('sv-SE')
 
-    if (startInput) {
-      fireEvent.change(startInput, { target: { value: start } })
-    }
-    if (endInput) {
-      fireEvent.change(endInput, { target: { value: end } })
-    }
-    if (countryInput) {
-      fireEvent.change(countryInput, {
-        target: { value: JSON.stringify(testMockCountryStoreState.country) },
-      })
-    }
+    act(() => {
+      if (startInput) {
+        fireEvent.change(startInput, { target: { value: start } })
+      }
+      if (endInput) {
+        fireEvent.change(endInput, { target: { value: end } })
+      }
+      if (countryInput) {
+        fireEvent.change(countryInput, {
+          target: { value: JSON.stringify(testMockCountryStoreState.country) },
+        })
+      }
+    })
 
     act(() => {
       fireEvent.click(screen.getByTestId('search-button'))
@@ -847,7 +855,9 @@ describe('DestinationSearch Integration Test (Errors)', () => {
     const start = startDate.toLocaleDateString('sv-SE')
     const end = endDate.toLocaleDateString('sv-SE')
 
-    render(<DestinationSearch />)
+    act(() => {
+      render(<DestinationSearch />)
+    })
 
     await new Promise(resolve => setTimeout(resolve, 200))
 
@@ -861,19 +871,18 @@ describe('DestinationSearch Integration Test (Errors)', () => {
       'input[name="country_"]',
     ) as HTMLInputElement
 
-    if (startInput) {
-      fireEvent.change(startInput, { target: { value: start } })
-    }
-    if (endInput) {
-      fireEvent.change(endInput, { target: { value: end } })
-    }
-    if (countryInput) {
-      fireEvent.change(countryInput, {
-        target: { value: JSON.stringify(testMockCountryStoreState.country) },
-      })
-    }
-
     act(() => {
+      if (startInput) {
+        fireEvent.change(startInput, { target: { value: start } })
+      }
+      if (endInput) {
+        fireEvent.change(endInput, { target: { value: end } })
+      }
+      if (countryInput) {
+        fireEvent.change(countryInput, {
+          target: { value: JSON.stringify(testMockCountryStoreState.country) },
+        })
+      }
       fireEvent.click(screen.getByTestId('search-button'))
     })
 
@@ -914,5 +923,62 @@ describe('DestinationSearch Integration Test (Errors)', () => {
         `/results/A6Dz?checkin=${start}&checkout=${end}&lang=en_US&currency=SGD&country_code=SG&guests=2|2`,
       ),
     )
+  })
+})
+
+describe('HotelSearch Integration Test (Real Backend)', () => {
+  it('should display autocorrected destination from backend in TypeaheadSearch', async () => {
+    render(<DestinationSearch />)
+    const input = screen.getByRole('combobox')
+    act(() => {
+      fireEvent.change(input, { target: { value: 'Sgapore' } })
+    })
+
+    await screen.findByText('Singapore, Singapore', {}, { timeout: 5000 })
+    expect(screen.getByText('Singapore, Singapore')).toBeInTheDocument()
+  })
+
+  it('should select dates using DayPicker and see them reflected in the UI', () => {
+    render(<DestinationSearch />)
+    const startInput = screen.getByTestId('start-date-button')
+    const endInput = screen.getByTestId('end-date-button')
+    act(() => {
+      fireEvent.change(startInput, { target: { value: '2025-08-10' } })
+      fireEvent.change(endInput, { target: { value: '2025-08-15' } })
+    })
+
+    expect((startInput as HTMLInputElement).value).toBe('2025-08-10')
+    expect((endInput as HTMLInputElement).value).toBe('2025-08-15')
+  })
+
+  it('should increment/decrement guests using DropDown buttons', () => {
+    render(<DestinationSearch />)
+    const adultIncBtn = screen.getByTestId('adult-increment-button')
+    const adultDecBtn = screen.getByTestId('adult-decrement-button')
+    const childrenIncBtn = screen.getByTestId('child-increment-button')
+    const childrenDecBtn = screen.getByTestId('child-decrement-button')
+
+    act(() => {
+      fireEvent.click(adultIncBtn)
+      fireEvent.click(childrenIncBtn)
+      fireEvent.click(adultDecBtn)
+      fireEvent.click(childrenDecBtn)
+    })
+
+    expect(screen.getByTestId('adult-count')).toHaveTextContent('1')
+    expect(screen.getByTestId('child-count')).toHaveTextContent('1')
+  })
+
+  it('should submit the form and navigate to results page', async () => {
+    render(<DestinationSearch />)
+    act(() => {
+      fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Rome' } })
+      fireEvent.change(screen.getByTestId('start-date-button'), { target: { value: '2025-08-10' } })
+      fireEvent.change(screen.getByTestId('end-date-button'), { target: { value: '2025-08-15' } })
+      fireEvent.click(screen.getByTestId('search-button'))
+    })
+
+    await new Promise(resolve => setTimeout(resolve, 500))
+    expect(mockNavigate).toHaveBeenCalled()
   })
 })

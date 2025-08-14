@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, vi, expect } from 'vitest'
+import { describe, it, vi, expect, beforeEach } from 'vitest'
 import DropDownWithButtons from '../../../src/components/ui/DropDown'
 import { useFormStore } from '../../../src/stores/HotelSearchStore'
 

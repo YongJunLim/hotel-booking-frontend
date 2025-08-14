@@ -55,7 +55,7 @@ export default function DropDownWithButtons() {
             >
               -
             </button>
-            <p>
+            <p data-testid="adult-count">
               {' '}
               {Adult}
             </p>
@@ -86,7 +86,7 @@ export default function DropDownWithButtons() {
             >
               -
             </button>
-            <p>
+            <p data-testid="child-count">
               {' '}
               {Child}
             </p>
@@ -117,7 +117,7 @@ export default function DropDownWithButtons() {
             >
               -
             </button>
-            <p>
+            <p data-testid="room-count">
               {' '}
               {Room}
             </p>

@@ -49,13 +49,19 @@ export const handleKeyDown = (
 export const evaluateEpiData = (term: string) => {
   const lowerTerm = term.toLowerCase()
   const a = epiData.filter(item => lowerTerm.includes(item.country.toLowerCase()))
-  if (a.length === 0) {
+  if (a.length === 0 && lowerTerm != '') {
     return {
       message: 'There is no environmental data available for this destination.',
       level: 'none',
     }
   }
-  if (a[0]['EPI.new'] >= 67 && a[0]['EPI.new'] <= 100) {
+  else if (a.length === 0 && lowerTerm === '') {
+    return {
+      message: 'No destination selected.',
+      level: 'none',
+    }
+  }
+  else if (a[0]['EPI.new'] >= 67 && a[0]['EPI.new'] <= 100) {
     return {
       message: 'This destination is highly environmentally friendly!',
       level: 'high',
@@ -80,3 +86,5 @@ export const evaluateEpiData = (term: string) => {
     }
   }
 }
+
+export const fetcher = (url: string) => fetch(url).then(res => res.json())

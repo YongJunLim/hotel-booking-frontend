@@ -17,7 +17,7 @@ import { BACKEND_URL } from '../config/api'
 import { MapSelect } from '../components/ui/MapSelect'
 import StarRatingFilter from '../components/ui/FilterStar'
 import RangeSlider from '../components/ui/FilterPrice'
-import DestinationSearch from '../components/ui/DestinationSearch'
+import DestinationSearch from '../components/ui/HotelSearch'
 import CheckBox from '../components/ui/CheckBox'
 import { useCountryStore } from '../stores/HotelSearchStore'
 

@@ -1,10 +1,10 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { HomePage } from '../src/pages/HomePage'
 
 // Mock the complex components that have their own tests
-vi.mock('../src/components/ui/DestinationSearch', () => ({
-  default: () => <div data-testid="destination-search">Destination Search</div>,
+vi.mock('../src/components/ui/HotelSearch', () => ({
+  default: () => <div data-testid="hotel-search">Hotel Search</div>,
 }))
 
 vi.mock('../src/components/ui/SustinabilityTips', () => ({
@@ -25,7 +25,7 @@ describe('Unit Test for HomePage', () => {
 
     // Check components are rendered
     expect(screen.getByTestId('navbar')).toHaveTextContent('Hotel Booking')
-    expect(screen.getByTestId('destination-search')).toBeInTheDocument()
+    expect(screen.getByTestId('hotel-search')).toBeInTheDocument()
     expect(screen.getByTestId('sustainability-tips')).toBeInTheDocument()
 
     // Check image

@@ -1,5 +1,5 @@
 import { NavBar } from '../components/layout/NavBar'
-import DestinationSearch from '../components/ui/DestinationSearch'
+import DestinationSearch from '../components/ui/HotelSearch'
 import { SustainabilityTips } from '../components/ui/SustainabilityTips'
 
 export const HomePage = () => {
