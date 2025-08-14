@@ -55,7 +55,7 @@ jobs:
         ports:
           - 6379:6379
       backend:
-        image: ghcr.io/your-org/hotel-booking-backend:latest
+        image: ghcr.io/YongJunLim/hotel-booking-backend:latest
         env:
           PORT: 9000
           MONGO_URI: mongodb://mongo:27017/hotel-bookings
