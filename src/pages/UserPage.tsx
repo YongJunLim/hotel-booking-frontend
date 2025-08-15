@@ -109,7 +109,7 @@ export const UserPage = () => {
       console.log(reqbody)
       try {
         const response = await editProfile(reqbody)
-        console.log("res",response)
+        console.log('res', response)
         setToast(response.message, response.updatedUser ? 'success' : 'error')
         // if (response.success) {
         if (response.updatedUser) {

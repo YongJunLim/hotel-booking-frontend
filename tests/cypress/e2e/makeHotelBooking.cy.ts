@@ -276,7 +276,7 @@ describe('Make Hotel Room(s) Booking', () => {
       .and('contain.text', 'Your Booking Summary')
   })
 
-  describe("User profile", () => {
+  describe('User profile', () => {
     it('should display user account page with correct user details and edit profile', () => {
       // Log in as E2E Test User
       cy.visit('/login')
@@ -290,7 +290,7 @@ describe('Make Hotel Room(s) Booking', () => {
         win => expect(win.localStorage.getItem('auth-storage')).to.not.be.null,
       )
       cy.wait(500)
-      
+
       cy.visit('/user')
 
       cy.get('[data-testid="username"]').should('contain', 'E2E Test User')
@@ -300,52 +300,28 @@ describe('Make Hotel Room(s) Booking', () => {
       // Open edit modal
       cy.get('button[aria-expanded]').click()
       cy.get('[data-testid="open-edit"]').click()
-      
+
       // Fill in updated information
       cy.get('#first_name').clear().type('E2E')
       cy.get('#last_name').clear().type('Test1 User')
       cy.get('#salutation').select('Dr')
       cy.get('#phone').clear().type('87654321')
       cy.get('#email').clear().type('updated-E2E@test.com')
-      cy.get('#passwd_edit').type("pass123")
-      
+      cy.get('#passwd_edit').type('pass123')
+
       // Submit the form
       cy.get('[data-testid="submit-edit"]').click()
-      
+
       // Verify success toast (assuming toast appears)
       // This might need adjustment based on your actual toast implementation
       cy.contains('Profile updated successfully', { timeout: 5000 }).should('be.visible')
-      
+
       // Verify updated details are reflected on the page
       cy.get('[data-testid="username"]').should('contain', 'Dr E2E Test1 User')
       cy.contains('updated-E2E@test.com').should('be.visible')
       cy.contains('87654321').should('be.visible')
     })
 
-    // it('should successfully update user profile with valid data', () => {
-      
-    //   cy.visit('/user')
-      
-      
-    // })
-
-    // it('should display booking list table with correct headers', () => {
-    //   cy.visit('/user')
-      
-    //   // Wait for bookings to load
-      
-    //   // Verify table headers
-    //   cy.get('typeheader').should('contain', 'Room Type')
-    //   cy.get('startheader').should('contain', 'Start Date')
-    //   cy.get('endheader').should('contain', 'End Date')
-    //   cy.get('nightheader').should('contain', 'Nights')
-    //   cy.get('infoheader').should('contain', 'More info')
-    //   // cy.contains('Room Type').should('be.visible')
-    //   // cy.contains('Start Date').should('be.visible')
-    //   // cy.contains('End Date').should('be.visible')
-    //   // cy.contains('Nights').should('be.visible')
-    //   // cy.contains('More info').should('be.visible')
-    // })
   })
 
   // Delete Test account
@@ -365,16 +341,16 @@ describe('Make Hotel Room(s) Booking', () => {
     // Go to user account page
     cy.visit('/user')
 
-    //Open the dropdown menu by clicking the three-dots button
+    // Open the dropdown menu by clicking the three-dots button
     cy.get('button[aria-expanded]').click()
 
-    //Delete button should be visible, then click
+    // Delete button should be visible, then click
     cy.get('button#deleteButton', { timeout: 5000 })
-    .should('be.visible')
-    .click()
+      .should('be.visible')
+      .click()
 
     // Click Delete Account button
-    //cy.get('button#deleteButton').click()
+    // cy.get('button#deleteButton').click()
 
     // Enter password in the confirmation dialog
     cy.get('input#passwd_del').type('pass123')
