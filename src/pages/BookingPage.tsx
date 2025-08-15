@@ -250,16 +250,16 @@ const CheckoutForm = () => {
       return
     }
 
+    // ========== Create payment ==========
     const bookingId = resData.bookings[0]
 
     const paymentPayload = {
       payeeId: userDetails.email,
       bookingId,
-      amount: roomBookingStore.getTotalPrice() * 100, // cents
+      amount: Math.round(roomBookingStore.getTotalPrice() * 100), // cents
       currency: 'usd',
     };
 
-    // ========== Create payment ==========
     console.log('Creating payment with:', paymentPayload)
 
     const paymentRes = await fetch(`${BACKEND_URL}/payments`, {
