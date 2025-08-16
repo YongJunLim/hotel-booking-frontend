@@ -934,9 +934,9 @@ describe('HotelSearch Integration Test (Real Backend)', () => {
       fireEvent.change(input, { target: { value: 'Sgapore' } })
     })
 
-    await screen.findByText('Singapore, Singapore', {}, { timeout: 5000 })
+    await screen.findByText('Singapore, Singapore', {}, { timeout: 10000 })
     expect(screen.getByText('Singapore, Singapore')).toBeInTheDocument()
-  })
+  }, 10000)
 
   it('should select dates using DayPicker and see them reflected in the UI', () => {
     render(<DestinationSearch />)

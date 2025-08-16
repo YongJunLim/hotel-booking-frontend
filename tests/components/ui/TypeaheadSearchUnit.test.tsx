@@ -47,7 +47,7 @@ afterEach(() => {
 
 afterAll(() => server.close())
 
-describe('TypeaheadSearch Component calling Destination Service Integration Test (searchDestinations())', () => {
+describe('TypeaheadSearch Component calling Destination Service unit Test', () => {
   it('should handle real end-to-end search flow', async () => {
     const uniqueTerm = `Rome${Date.now()}`
 

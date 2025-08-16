@@ -93,7 +93,7 @@ describe('DropDownWithButtons Component UI Test', () => {
     expect(newValue).toBe(4)
   })
 
-  it('decrements adult count when "-" button is clicked (and does not go below one)', () => {
+  it('decrements adult count when "-" button is clicked (and does not go below original value (one))', () => {
     mockStoreState.Adult = 2
     render(<DropDownWithButtons />)
 
@@ -108,9 +108,8 @@ describe('DropDownWithButtons Component UI Test', () => {
     expect(newValue).toBe(1)
   })
 
-  it('does not decrement adult count when "-" button is clicked if adult count is 1 and sum is less than equals to 1', () => {
+  it('does not decrement adult count when "-" button is clicked if adult count is below original value (one)', () => {
     mockStoreState.Adult = 1
-    mockStoreState.Children = 0
     render(<DropDownWithButtons />)
 
     fireEvent.click(screen.getByTestId('main-dropdown-button'))
@@ -122,38 +121,6 @@ describe('DropDownWithButtons Component UI Test', () => {
     const setterFn = mockStoreState.setAdult.mock.calls[0][0] as (prev: number) => number
     const newValue = setterFn(mockStoreState.Adult)
     expect(newValue).toBe(1)
-  })
-
-  it('decrements adult count when "-" button is clicked if adult count is 1 and sum is more than 1', () => {
-    mockStoreState.Adult = 1
-    mockStoreState.Children = 1
-    render(<DropDownWithButtons />)
-
-    fireEvent.click(screen.getByTestId('main-dropdown-button'))
-
-    const decrementAdultsButton = screen.getByTestId('adult-decrement-button')
-    fireEvent.click(decrementAdultsButton)
-
-    expect(mockStoreState.setAdult).toHaveBeenCalledTimes(1)
-    const setterFn = mockStoreState.setAdult.mock.calls[0][0] as (prev: number) => number
-    const newValue = setterFn(mockStoreState.Adult)
-    expect(newValue).toBe(0)
-  })
-
-  it('does not decrement adult count when "-" button is clicked if adult count is 0 and sum is more than 1', () => {
-    mockStoreState.Adult = 0
-    mockStoreState.Children = 2
-    render(<DropDownWithButtons />)
-
-    fireEvent.click(screen.getByTestId('main-dropdown-button'))
-
-    const decrementAdultsButton = screen.getByTestId('adult-decrement-button')
-    fireEvent.click(decrementAdultsButton)
-
-    expect(mockStoreState.setAdult).toHaveBeenCalledTimes(1)
-    const setterFn = mockStoreState.setAdult.mock.calls[0][0] as (prev: number) => number
-    const newValue = setterFn(mockStoreState.Adult)
-    expect(newValue).toBe(0)
   })
 
   it('increments children count when "+" button is clicked', () => {
@@ -179,7 +146,7 @@ describe('DropDownWithButtons Component UI Test', () => {
     expect(newValue).toBe(4)
   })
 
-  it('decrements children count when "-" button is clicked (and does not go below zero)', () => {
+  it('decrements children count when "-" button is clicked (and does not go below original value (zero))', () => {
     mockStoreState.Children = 1
     render(<DropDownWithButtons />)
 
@@ -194,39 +161,8 @@ describe('DropDownWithButtons Component UI Test', () => {
     expect(newValue).toBe(0)
   })
 
-  it('does not decrement children count when "-" button is clicked if children count is 1 and sum is less than equals to one', () => {
-    mockStoreState.Children = 1
-    mockStoreState.Adult = 0
-    render(<DropDownWithButtons />)
-
-    fireEvent.click(screen.getByTestId('main-dropdown-button'))
-
-    const decrementChildrenButton = screen.getByTestId('child-decrement-button')
-    fireEvent.click(decrementChildrenButton)
-
-    expect(mockStoreState.setChildren).toHaveBeenCalledTimes(1)
-    const setterFn = mockStoreState.setChildren.mock.calls[0][0] as (prev: number) => number
-    const newValue = setterFn(mockStoreState.Children)
-    expect(newValue).toBe(1)
-  })
-
-  it('decrements children count when "-" button is clicked if children count is 1 and sum is more than 1', () => {
-    mockStoreState.Children = 1
-    mockStoreState.Adult = 1
-    render(<DropDownWithButtons />)
-    fireEvent.click(screen.getByTestId('main-dropdown-button'))
-    const decrementChildrenButton = screen.getByTestId('child-decrement-button')
-    fireEvent.click(decrementChildrenButton)
-
-    expect(mockStoreState.setChildren).toHaveBeenCalledTimes(1)
-    const setterFn = mockStoreState.setChildren.mock.calls[0][0] as (prev: number) => number
-    const newValue = setterFn(mockStoreState.Children)
-    expect(newValue).toBe(0)
-  })
-
-  it('does not decrement children count when "-" button is clicked if children count is 0 and sum is more than 1', () => {
+  it('does not decrement children count when "-" button is clicked if children count is below original value (zero)', () => {
     mockStoreState.Children = 0
-    mockStoreState.Adult = 2
     render(<DropDownWithButtons />)
 
     fireEvent.click(screen.getByTestId('main-dropdown-button'))
@@ -266,7 +202,7 @@ describe('DropDownWithButtons Component UI Test', () => {
     expect(newValue).toBe(4)
   })
 
-  it('decrements room count when "-" button is clicked if room count is more than 1)', () => {
+  it('decrements room count when "-" button is clicked if room count is more than original value (one))', () => {
     mockStoreState.Room = 2
     render(<DropDownWithButtons />)
 
@@ -281,7 +217,7 @@ describe('DropDownWithButtons Component UI Test', () => {
     expect(newValue).toBe(1)
   })
 
-  it('does not decrement room count when "-" button is clicked if room count is 1', () => {
+  it('does not decrement room count when "-" button is clicked if room count is less than original value (one)', () => {
     mockStoreState.Room = 1
     render(<DropDownWithButtons />)
 

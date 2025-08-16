@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { TypeaheadSearch } from '../../../src/components/ui/TypeaheadSearch'
 import { act } from 'react'
 
-describe('TypeaheadSearch Unit Test', () => {
+describe('TypeaheadSearch Integration Test (searchDestinations())', () => {
   it('should not search for empty input', async () => {
     render(<TypeaheadSearch />)
 

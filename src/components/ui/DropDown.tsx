@@ -50,7 +50,7 @@ export default function DropDownWithButtons() {
               data-testid="adult-decrement-button"
               className="block w-full p-2"
               onClick={() => {
-                decrementBy(setAdult, 1, sum)
+                decrementBy(setAdult, 1, 1)
               }}
             >
               -
@@ -81,7 +81,7 @@ export default function DropDownWithButtons() {
               data-testid="child-decrement-button"
               className="block w-full p-2"
               onClick={() => {
-                decrementBy(setChild, 1, sum)
+                decrementBy(setChild, 1, 0)
               }}
             >
               -
@@ -112,7 +112,7 @@ export default function DropDownWithButtons() {
               data-testid="room-decrement-button"
               className="block w-full p-2"
               onClick={() => {
-                decrementBy(setRoom, 1, Room)
+                decrementBy(setRoom, 1, 1)
               }}
             >
               -

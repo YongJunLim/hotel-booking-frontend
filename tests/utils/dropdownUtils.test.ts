@@ -37,46 +37,24 @@ describe('incrementBy Unit Test', () => {
 })
 
 describe('decrementBy Unit Test', () => {
-  it('decrementBy should decrease the value by the given amount if the result is greater than or equal to 1 and sum is less than or equal to 1', () => {
+  it('decrementBy should decrease the value by the given amount if the result is greater than or equal to the original amount', () => {
     const { setter, getValue } = createMockState(4)
     const decrementAmount = 2
-    const sum = 1
-    decrementBy(setter, decrementAmount, sum)
+    const originalAmount = 2
+    decrementBy(setter, decrementAmount, originalAmount)
     expect(setter).toHaveBeenCalled()
     expect(getValue()).toBe(2)
   })
 })
 
 describe('decrementBy Unit Test', () => {
-  it('decrementBy should not decrease the value by the given amount if the result is less than 1 and the sum is less than or equal to 1', () => {
+  it('decrementBy should not decrease the value by the given amount if the result is less than the original amount', () => {
     const { setter, getValue } = createMockState(1)
     const decrementAmount = 1
-    const sum = 1
-    decrementBy(setter, decrementAmount, sum)
+    const originalAmount = 1
+    decrementBy(setter, decrementAmount, originalAmount)
     expect(setter).toHaveBeenCalled()
     expect(getValue()).toBe(1)
-  })
-})
-
-describe('decrementBy Unit Test', () => {
-  it('decrementBy should decrease the value by the given amount if the result is greater than or equal to 0 and sum is more than 1', () => {
-    const { setter, getValue } = createMockState(4)
-    const decrementAmount = 4
-    const sum = 6
-    decrementBy(setter, decrementAmount, sum)
-    expect(setter).toHaveBeenCalled()
-    expect(getValue()).toBe(0)
-  })
-})
-
-describe('decrementBy Unit Test', () => {
-  it('decrementBy should not decrease the value by the given amount if the result is less than 0 and the sum is more than 1', () => {
-    const { setter, getValue } = createMockState(5)
-    const decrementAmount = 6
-    const sum = 2
-    decrementBy(setter, decrementAmount, sum)
-    expect(setter).toHaveBeenCalled()
-    expect(getValue()).toBe(5)
   })
 })
 
