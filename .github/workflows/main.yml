@@ -14,13 +14,41 @@ jobs:
       matrix:
         bun-version: [latest]
 
+    services:
+      mongo:
+        image: mongo:8.0
+        ports:
+          - 27017:27017
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+      backend:
+        image: ghcr.io/yongjunlim/hotel-booking-backend:latest
+        env:
+          PORT: 9000
+          MONGO_URI: mongodb://mongo:27017/hotel-bookings
+          TEST_MONGO_URI: mongodb://mongo:27017/hotel-bookings-test
+          JWT_SECRET: abcdefg
+          API_URL: https://hotelapi.loyalty.dev/api/
+          REDIS_URL: redis://redis:6379
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          ALLOWED_ORIGINS: "*"
+        ports:
+          - 9000:9000
+        # options: >-
+        #   --health-cmd="curl --fail http://localhost:9000/api/v1/health || exit 1"
+        #   --health-interval=10s
+        #   --health-timeout=5s
+        #   --health-retries=5
+
     steps:
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.PAT }}
+      # - name: Log in to GitHub Container Registry
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.PAT }}
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -40,35 +68,37 @@ jobs:
       - name: Run type checking
         run: bun run build
 
+      # Manual wait for backend to be ready
+      - name: Wait for backend to start
+        run: |
+          for i in {1..30}; do
+            if curl -sSf http://localhost:9000/api/v1/health; then
+              echo "Backend is up!"
+              exit 0
+            fi
+            echo "Waiting for backend..."
+            sleep 2
+          done
+          echo "Backend did not start in time" >&2
+          exit 1
+
+      - name: Import destinations into MongoDB
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}/destinations_mongoimport.json:/import.json \
+            --network ${{ job.container.network || 'bridge' }} \
+            mongo:8.0 \
+            mongoimport --uri mongodb://mongo:27017/hotel-bookings \
+                        --collection destinations \
+                        --type json \
+                        --file /import.json
       - name: Run tests
         env:
           VITE_BACKEND_URL: http://localhost:9000
         run: bun run test
 
-    services:
-      mongo:
-        image: mongo:8.0
-        ports:
-          - 27017:27017
-      redis:
-        image: redis:7
-        ports:
-          - 6379:6379
-      backend:
-        image: ghcr.io/YongJunLim/hotel-booking-backend:latest
-        env:
-          PORT: 9000
-          MONGO_URI: mongodb://mongo:27017/hotel-bookings
-          TEST_MONGO_URI: mongodb://mongo:27017/hotel-bookings-test
-          JWT_SECRET: abcdefg
-          API_URL: https://hotelapi.loyalty.dev/api/
-          REDIS_URL: redis://redis:6379
-          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
-          ALLOWED_ORIGINS: "*"
-        ports:
-          - 9000:9000
-        options: >-
-          --health-cmd="curl --fail http://localhost:9000/health || exit 1"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
+      - name: Print backend logs on failure
+        if: failure()
+        run: |
+          docker ps -a
+          docker logs $(docker ps -aqf "ancestor=ghcr.io/yongjunlim/hotel-booking-backend:latest")
